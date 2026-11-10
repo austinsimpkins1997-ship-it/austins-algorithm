@@ -74,6 +74,15 @@ for point in result["amplitude_trace"]:
 
 The trace starts at round `0`, before Grover runs, then adds one point after each full oracle-and-diffuser round. The two plane coordinates show the ideal state's position along the unmarked and marked parts of the search space. For the built-in three-qubit example, the point moves from about `(0.866, 0.5)` to `(0, 1)` after one round. Per-state amplitudes are included too. This is the ordinary computer's ideal math simulation; it is not a measurement from quantum hardware. The trace is off by default so existing reports stay compact.
 
+To see the rotation and sampling in one picture, install the optional plotting extra and run the example:
+
+```powershell
+.\.venv\Scripts\python.exe -m pip install ".[visualization]"
+.\.venv\Scripts\python.exe .\examples\plot_grover_trace.py
+```
+
+The figure from [`examples/plot_grover_trace.py`](examples/plot_grover_trace.py) shows the marked/unmarked rotation, with `θ = arcsin(sqrt(M/N))` and a `2θ` turn for each Grover round, beside two histograms: ideal per-answer probabilities and frequencies from a finite number of simulated shots. The default uses two rounds to make it easier to see that extra rounds can pass the first success peak. Change `--iterations`, `--shots`, and `--seed` to explore. The shot histogram samples the ideal classical distribution; it does not add gate or readout noise and does not use quantum hardware. The plot is optional and limited to five qubits so its answer labels remain readable; the simulator's separate limit is 16 qubits.
+
 ## Try your own simple rule
 
 You can change the rule and ask the program to search four-bit strings whose first two bits are `11`:

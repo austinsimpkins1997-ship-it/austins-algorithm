@@ -32,7 +32,8 @@ dependencies = []
 [project.optional-dependencies]
 qiskit = ["qiskit>=2.0,<3"]
 cirq = ["cirq-core>=1.6,<2"]
-all = ["qiskit>=2.0,<3", "cirq-core>=1.6,<2"]
+visualization = ["matplotlib>=3.8,<4"]
+all = ["qiskit>=2.0,<3", "cirq-core>=1.6,<2", "matplotlib>=3.8,<4"]
 
 [project.scripts]
 austins-algorithm = "austins_algorithm.__main__:main"

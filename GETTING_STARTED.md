@@ -51,6 +51,15 @@ This teaching program checks every possible string on the regular computer, then
 
 To watch the amplitudes change, add `include_amplitude_trace=True` to the Python call. The report then includes the starting point (round `0`) and one point after each full Grover round. `unmarked_plane_coordinate` and `marked_plane_coordinate` are the two numbers for a simple picture of the Grover rotation. You can also add `--trace-amplitudes` when running the command-line program. This is an optional trace from the ordinary computer's ideal math simulation, not data from quantum hardware.
 
+For a picture, install the optional plotting tool and run [`examples/plot_grover_trace.py`](examples/plot_grover_trace.py):
+
+```powershell
+.\.venv\Scripts\python.exe -m pip install ".[visualization]"
+.\.venv\Scripts\python.exe .\examples\plot_grover_trace.py
+```
+
+The example puts the rotation path next to an ideal probability chart and a finite-shot sample chart. The angle is `θ = arcsin(sqrt(M/N))`; each Grover round turns by `2θ`. The sample chart shows ordinary random sampling from the ideal math, not noise measured from a quantum device. Use `--output .build/my_plot.png` to save the figure instead of opening a window.
+
 ## 3. Understand the oracle
 
 An **oracle** is the part that answers, “Does this candidate match the rule?” In a quantum circuit, it must do that reversibly and mark matching answers by changing their phase. Grover's **diffuser** then increases the chance that a measurement returns a marked answer.
