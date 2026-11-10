@@ -1,0 +1,44 @@
+[build-system]
+requires = ["setuptools>=77"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "chronorealm-austins-algorithm"
+version = "0.1.0"
+description = "A transparent Grover-search teaching package from ChronoRealm"
+readme = "README.md"
+requires-python = ">=3.10"
+license = "Apache-2.0"
+license-files = ["LICENSE"]
+authors = [
+  { name = "Austin Gregory Simpkins" },
+  { name = "Chandler Middlebrook" },
+]
+keywords = ["quantum", "grover", "amplitude-amplification", "chronorealm", "education"]
+classifiers = [
+  "Development Status :: 3 - Alpha",
+  "Intended Audience :: Education",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
+  "Programming Language :: Python :: 3.14",
+  "Topic :: Education",
+  "Topic :: Scientific/Engineering",
+]
+dependencies = []
+
+[project.optional-dependencies]
+qiskit = ["qiskit>=2.0,<3"]
+cirq = ["cirq-core>=1.6,<2"]
+all = ["qiskit>=2.0,<3", "cirq-core>=1.6,<2"]
+
+[project.scripts]
+austins-algorithm = "austins_algorithm.__main__:main"
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+
+[tool.setuptools.packages.find]
+where = ["src"]

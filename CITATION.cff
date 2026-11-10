@@ -1,0 +1,18 @@
+cff-version: 1.2.0
+message: "If you use this package, please cite it as software and cite Grover's original algorithm separately."
+title: "Austin's Algorithm: ChronoRealm Grover Search Package"
+type: software
+authors:
+  - family-names: Simpkins
+    given-names: Austin Gregory
+    affiliation: ChronoRealm
+  - family-names: Middlebrook
+    given-names: Chandler
+    affiliation: ChronoRealm
+version: 0.1.0
+license: Apache-2.0
+keywords:
+  - quantum computing
+  - Grover search
+  - amplitude amplification
+  - ChronoRealm
