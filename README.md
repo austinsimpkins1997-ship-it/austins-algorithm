@@ -54,6 +54,26 @@ The program prints a JSON report—a text page with labeled results. Look for th
 
 The simulator repeats the measurement many times (called `shots`) and shows the results. Because this example is ideal and so small, each sample should be one of the two accepted strings.
 
+### Watch the amplitudes change
+
+To include the starting amplitudes and the amplitudes after each Grover round in the JSON report, run:
+
+```powershell
+.\.venv\Scripts\python.exe -m austins_algorithm --trace-amplitudes
+```
+
+Or turn the trace on in Python:
+
+```python
+from austins_algorithm import austin_predicate, run_austin_search
+
+result = run_austin_search(3, austin_predicate, include_amplitude_trace=True)
+for point in result["amplitude_trace"]:
+    print(point["iteration"], point["unmarked_plane_coordinate"], point["marked_plane_coordinate"])
+```
+
+The trace starts at round `0`, before Grover runs, then adds one point after each full oracle-and-diffuser round. The two plane coordinates show the ideal state's position along the unmarked and marked parts of the search space. For the built-in three-qubit example, the point moves from about `(0.866, 0.5)` to `(0, 1)` after one round. Per-state amplitudes are included too. This is the ordinary computer's ideal math simulation; it is not a measurement from quantum hardware. The trace is off by default so existing reports stay compact.
+
 ## Try your own simple rule
 
 You can change the rule and ask the program to search four-bit strings whose first two bits are `11`:

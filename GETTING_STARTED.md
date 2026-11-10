@@ -49,6 +49,8 @@ On macOS or Linux, run `./.venv/bin/python ./my_search.py`.
 
 This teaching program checks every possible string on the regular computer, then models ideal Grover math. It is useful for learning and small checks; it does not show a speed advantage. The built-in simulator stops at 16 qubits to limit ordinary-computer memory and work.
 
+To watch the amplitudes change, add `include_amplitude_trace=True` to the Python call. The report then includes the starting point (round `0`) and one point after each full Grover round. `unmarked_plane_coordinate` and `marked_plane_coordinate` are the two numbers for a simple picture of the Grover rotation. You can also add `--trace-amplitudes` when running the command-line program. This is an optional trace from the ordinary computer's ideal math simulation, not data from quantum hardware.
+
 ## 3. Understand the oracle
 
 An **oracle** is the part that answers, “Does this candidate match the rule?” In a quantum circuit, it must do that reversibly and mark matching answers by changing their phase. Grover's **diffuser** then increases the chance that a measurement returns a marked answer.

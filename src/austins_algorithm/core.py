@@ -97,11 +97,14 @@ def run_austin_search(
     shots: int = 2048,
     seed: int = 20261109,
     predicate_name: str | None = None,
+    include_amplitude_trace: bool = False,
 ) -> dict[str, Any]:
     """Enumerate a Boolean predicate and simulate ideal Grover state evolution.
 
     This classical reference evaluates every input first. A real quantum
     implementation needs an efficient reversible oracle, not this callable.
+    Set ``include_amplitude_trace`` to include the initial point and each
+    post-round marked/unmarked amplitude in the two-dimensional Grover plane.
     """
     _bounded_int(qubits, MIN_QUBITS, MAX_SIMULATION_QUBITS, "qubits")
     if not callable(predicate):
@@ -109,6 +112,8 @@ def run_austin_search(
     _bounded_int(shots, 1, MAX_SHOTS, "shots")
     if isinstance(seed, bool) or not isinstance(seed, int):
         raise AustinAlgorithmError("seed must be an integer.")
+    if not isinstance(include_amplitude_trace, bool):
+        raise AustinAlgorithmError("include_amplitude_trace must be bool.")
 
     started = time.perf_counter()
     total = 1 << qubits
@@ -125,6 +130,7 @@ def run_austin_search(
                 marked_examples.append(bitstring)
 
     marked_count = len(marked_indices)
+    marked_lookup = set(marked_indices)
     suggested = recommended_iterations(qubits, marked_count)
     actual_iterations = suggested if iterations is None else _bounded_int(
         iterations, 0, MAX_ITERATIONS, "iterations"
@@ -132,11 +138,51 @@ def run_austin_search(
 
     amplitude = 1.0 / math.sqrt(total)
     state = [complex(amplitude, 0.0) for _ in range(total)]
+
+    amplitude_trace: list[dict[str, int | float | None]] = []
+    if include_amplitude_trace:
+        unmarked_representative = next(
+            (index for index in range(total) if index not in marked_lookup), None
+        )
+        marked_representative = marked_indices[0] if marked_indices else None
+
+        def record_amplitudes(iteration: int) -> None:
+            unmarked_amplitude = (
+                None
+                if unmarked_representative is None
+                else float(state[unmarked_representative].real)
+            )
+            marked_amplitude = (
+                None if marked_representative is None else float(state[marked_representative].real)
+            )
+            unmarked_coordinate = (
+                0.0
+                if unmarked_amplitude is None
+                else math.sqrt(total - marked_count) * unmarked_amplitude
+            )
+            marked_coordinate = (
+                0.0 if marked_amplitude is None else math.sqrt(marked_count) * marked_amplitude
+            )
+            amplitude_trace.append(
+                {
+                    "iteration": iteration,
+                    "unmarked_amplitude_per_state": unmarked_amplitude,
+                    "marked_amplitude_per_state": marked_amplitude,
+                    "unmarked_plane_coordinate": unmarked_coordinate,
+                    "marked_plane_coordinate": marked_coordinate,
+                    "success_probability": marked_coordinate**2,
+                }
+            )
+
+        record_amplitudes(0)
+
     for _ in range(actual_iterations):
         for index in marked_indices:
             state[index] = -state[index]
         mean = sum(state) / total
         state = [2 * mean - value for value in state]
+        if include_amplitude_trace:
+            record_amplitudes(len(amplitude_trace))
 
     probabilities = [abs(value) ** 2 for value in state]
     normalization = sum(probabilities)
@@ -154,7 +200,6 @@ def run_austin_search(
 
     rng = random.Random(seed)
     counts: dict[str, int] = {}
-    marked_lookup = set(marked_indices)
     successful_shots = 0
     for _ in range(shots):
         index = min(bisect.bisect_left(cumulative, rng.random()), total - 1)
@@ -162,7 +207,7 @@ def run_austin_search(
         counts[bitstring] = counts.get(bitstring, 0) + 1
         successful_shots += index in marked_lookup
 
-    return {
+    result = {
         "schema": "ChronoRealmAustinAlgorithmPCResult/1",
         "algorithm": ALGORITHM_NAME,
         "status": "CLASSICAL_IDEAL_STATEVECTOR_SIMULATION",
@@ -206,3 +251,6 @@ def run_austin_search(
             "Statevector amplitudes are not tomography and do not recover an unknown physical state.",
         ],
     }
+    if include_amplitude_trace:
+        result["amplitude_trace"] = amplitude_trace
+    return result

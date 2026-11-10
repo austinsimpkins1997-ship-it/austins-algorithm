@@ -13,6 +13,11 @@ def main() -> None:
     parser.add_argument("--iterations", type=int)
     parser.add_argument("--shots", type=int, default=2048)
     parser.add_argument("--seed", type=int, default=20261109)
+    parser.add_argument(
+        "--trace-amplitudes",
+        action="store_true",
+        help="include the initial and per-round ideal amplitude trace in the JSON report",
+    )
     args = parser.parse_args()
     try:
         if args.marked is not None:
@@ -31,6 +36,7 @@ def main() -> None:
             shots=args.shots,
             seed=args.seed,
             predicate_name=name,
+            include_amplitude_trace=args.trace_amplitudes,
         )
     except AustinAlgorithmError as exc:
         parser.error(str(exc))

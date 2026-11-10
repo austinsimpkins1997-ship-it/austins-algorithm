@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- Add an opt-in per-round ideal amplitude trace to the CPU simulator and `--trace-amplitudes` command-line option for teaching Grover's rotation.
 - Make the adaptation-use-case note self-contained so the package README does not depend on a sibling ChronoRealm project when published as its own repository.
 
 ## 0.1.0 — prepared 2026-11-09; not yet published
