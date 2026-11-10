@@ -3,7 +3,7 @@
 ## Unreleased
 
 - Add an opt-in per-round ideal amplitude trace to the CPU simulator and `--trace-amplitudes` command-line option for teaching Grover's rotation.
-- Add an optional Matplotlib example showing the marked/unmarked rotation, the `theta` and `2 theta` formulas, and ideal probabilities beside finite-shot samples.
+- Add an optional Matplotlib example showing the marked/unmarked rotation, the `theta` and `2 theta` formulas, the known-solution-count first-peak estimate, and ideal probabilities beside finite-shot samples.
 - Make the adaptation-use-case note self-contained so the package README does not depend on a sibling ChronoRealm project when published as its own repository.
 
 ## 0.1.0 — prepared 2026-11-09; not yet published

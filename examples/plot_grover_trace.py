@@ -41,6 +41,8 @@ def _make_plot(result: dict, output: str | None) -> None:
         )
 
     theta = math.asin(math.sqrt(marked_count / total))
+    first_peak_rounds = result["recommended_iterations_given_known_solution_count"]
+    round_label = "round" if first_peak_rounds == 1 else "rounds"
     points = result["amplitude_trace"]
     last_point = points[-1]
     marked_amplitude = last_point["marked_amplitude_per_state"]
@@ -59,8 +61,9 @@ def _make_plot(result: dict, output: str | None) -> None:
     fig, axes = plt.subplots(1, 3, figsize=(16, 5), layout="constrained")
     fig.suptitle(
         f"Grover learning view  |  θ = arcsin(sqrt(M/N)) = {theta:.3f} rad  |  "
-        f"rotation per round = 2θ = {2 * theta:.3f} rad",
-        fontsize=13,
+        f"turn per round = 2θ = {2 * theta:.3f} rad\n"
+        f"Known-M first-peak estimate: {first_peak_rounds} {round_label}",
+        fontsize=12,
     )
 
     rotation_ax, ideal_ax, sample_ax = axes
@@ -125,7 +128,7 @@ def _make_plot(result: dict, output: str | None) -> None:
     fig.text(
         0.5,
         0.005,
-        "Finite-shot bars are samples from the ideal classical distribution; no gate/readout noise or quantum hardware is modeled.",
+        "The first-peak estimate assumes known M (counted classically here). Finite-shot bars sample the ideal distribution; no gate/readout noise or QPU is modeled.",
         ha="center",
         fontsize=9,
     )

@@ -58,7 +58,7 @@ For a picture, install the optional plotting tool and run [`examples/plot_grover
 .\.venv\Scripts\python.exe .\examples\plot_grover_trace.py
 ```
 
-The example puts the rotation path next to an ideal probability chart and a finite-shot sample chart. The angle is `θ = arcsin(sqrt(M/N))`; each Grover round turns by `2θ`. The sample chart shows ordinary random sampling from the ideal math, not noise measured from a quantum device. Use `--output .build/my_plot.png` to save the figure instead of opening a window.
+The example puts the rotation path next to an ideal probability chart and a finite-shot sample chart. It also shows the recommended first-peak round count, based on `θ = arcsin(sqrt(M/N))` and a `2θ` turn each round. The computer finds `M` by checking all candidates, so that recommendation assumes the solution count is known. The sample chart shows ordinary random sampling from the ideal math, not noise measured from a quantum device. Use `--output .build/my_plot.png` to save the figure instead of opening a window.
 
 ## 3. Understand the oracle
 
