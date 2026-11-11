@@ -2,12 +2,28 @@ from __future__ import annotations
 
 import argparse
 import json
+import sys
 
 from .core import AustinAlgorithmError, austin_predicate, run_austin_search, validate_marked_states
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(description="Run the bounded CPU statevector reference for Grover search.")
+    if len(sys.argv) > 1 and sys.argv[1] in {
+        "compile", "search", "constraint", "constraint-classical", "constraint-sweep", "constraint-cover", "compare",
+    }:
+        from .workflows_cli import main as workflow_main
+
+        workflow_main(sys.argv[1:])
+        return
+    parser = argparse.ArgumentParser(description="Run a local ideal simulation of Grover search.")
+    parser.epilog = (
+        "Additional commands: compile, search, constraint, constraint-classical, "
+        "constraint-sweep, constraint-cover, compare."
+    )
+    parser.add_argument(
+        "--engine", choices=("cpu", "qiskit"), default="cpu",
+        help="CPU reference (default) or the built-in Austin circuit in Qiskit",
+    )
     parser.add_argument("--qubits", type=int, default=3)
     parser.add_argument("--marked", nargs="+", help="explicit MSB-first marked bitstrings")
     parser.add_argument("--iterations", type=int)
@@ -19,6 +35,32 @@ def main() -> None:
         help="include the initial and per-round ideal amplitude trace in the JSON report",
     )
     args = parser.parse_args()
+    if args.engine == "qiskit":
+        if args.qubits != 3 or args.marked is not None:
+            parser.error("--engine qiskit runs the built-in 3-qubit Austin circuit")
+        if args.trace_amplitudes:
+            parser.error("--trace-amplitudes is available with --engine cpu")
+        try:
+            from .qiskit_adapter import run_austin_circuit_local_statevector
+
+            result = run_austin_circuit_local_statevector(
+                iterations=1 if args.iterations is None else args.iterations,
+                shots=args.shots,
+                seed=args.seed,
+            )
+        except ImportError as exc:
+            if exc.name == "qiskit":
+                parser.exit(
+                    1, 'Qiskit is required for this engine. From the project folder, run python -m pip install ".[qiskit]".\n',
+                )
+            parser.exit(1, f"Qiskit circuit execution could not import a dependency: {exc}\n")
+        except ValueError as exc:
+            parser.error(str(exc))
+        except RuntimeError as exc:
+            parser.exit(1, f"Qiskit circuit execution failed: {exc}\n")
+        print(json.dumps(result, indent=2))
+        return
+
     try:
         if args.marked is not None:
             states = set(validate_marked_states(args.qubits, args.marked))

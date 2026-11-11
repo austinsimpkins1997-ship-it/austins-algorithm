@@ -128,7 +128,7 @@ The example's oracle is made for its exact three-switch rule. A useful search fo
 
 The package includes both a teaching rule that runs on a regular computer and quantum-circuit oracles for the project example and explicitly listed marked answers. These are different things: the regular-computer rule is checked against every candidate, and an arbitrary Python function cannot be converted automatically into an efficient quantum circuit. See [`GETTING_STARTED.md`](GETTING_STARTED.md) for the steps and limits.
 
-Want to connect a different simulator or quantum computer? The package includes an offline adapter for the classical simulator and an experimental interface for future plug-ins, but it has no real hardware connection. Each adapter request must name the kind of run it wants, such as a simulator or QPU, so a plug-in cannot quietly switch to a different kind of run. See [`ADAPTERS.md`](ADAPTERS.md) for the input-to-output path and what a new adapter must report. A device that has not been released cannot be connected until its real instructions and tools are known.
+The package includes an offline adapter for the classical simulator and an experimental interface for future plug-ins. Each adapter request names its execution mode. The IBM comparison command below has its own explicit physical job option. See [`ADAPTERS.md`](ADAPTERS.md) for the separate general adapter contract.
 
 ## Optional circuit examples
 
@@ -148,7 +148,55 @@ The commands below are for Windows PowerShell. On macOS or Linux, replace `.\.ve
 
 The Qiskit example draws `build_austin_circuit()` and samples that same circuit through `run_austin_circuit_local_statevector()`. That runner uses the built-in two-CZ reversible oracle and diffuser, then reports measured counts and ideal success probability. `LOCAL_IDEAL_STATEVECTOR_SIMULATION` means Qiskit simulated the circuit on an ordinary computer; the runner submits no provider job and uses no quantum hardware. The generic `run_local_statevector(...)` helper remains a separate route for circuits whose marked bitstrings are supplied explicitly.
 
-These examples run locally. They do not sign in to a service or send work to a real quantum computer. A real hardware run needs a supported device, an account and permission to use it, a circuit fitted to that device, and checks for errors and cost. Hardware access is not included here.
+After installing the Qiskit extra, run `python -m austins_algorithm --engine qiskit --shots 1024 --seed 7` with your environment's Python. The JSON report includes raw `counts` in `q2 q1 q0` order, `verified_candidates` checked against the Austin predicate, and `verified_shots`. The command uses one Grover round by default. Set `--iterations` to explore how the probability changes. For a custom list of marked bitstrings or an amplitude trace, use the default CPU engine.
+
+These examples run locally.
+
+## Compile, search, and compare
+
+From the package folder, use an isolated Python environment. The commands below use the Python executable for that environment.
+
+For a caller-defined Boolean search problem, see [the JSON constraint workflow](CONSTRAINT_WORKFLOW.md). The six-variable sensor kit uses one work qubit with automatic factorization. The workflow includes an exhaustive reversible oracle audit, OpenQASM export, a direct classical baseline, an optional offline IBM snapshot run, and a [fixed-placement round sweep](CONSTRAINT_WORKFLOW.md#compare-rounds-at-two-fixed-starting-placements) with separate calibration and validation shots. Eligible circuits can also use the [clean-ancilla diffuser](CONSTRAINT_WORKFLOW.md#reuse-a-clean-work-qubit-for-the-diffuser) without increasing circuit width. Use the [matched diffuser comparison](CONSTRAINT_WORKFLOW.md#replicate-the-diffuser-comparison-across-snapshots) to measure gate counts and verified hit rates over distinct seed batches.
+
+Run `python -m austins_algorithm constraint-classical examples/field_sensor_kit.json` for a dependency-free exact first witness. The [classical benchmark](CONSTRAINT_WORKFLOW.md#classical-first-witness-benchmark) compares unit propagation with the unsigned scan on five bounded formulas. The [unit-reduced oracle](CONSTRAINT_WORKFLOW.md#reduce-the-oracle-with-forced-literals) uses forced literals to cut work qubits in the reversible site interlock example. The [fixed-target comparison](CONSTRAINT_WORKFLOW.md#factorization-after-unit-reduction) shows how factorization changes width and compiled cost. The [complement phase cover](CONSTRAINT_WORKFLOW.md#phase-cover-using-failing-assignments) can reduce gates at the same active width. The [`constraint-cover` command](CONSTRAINT_WORKFLOW.md#select-a-cover-by-compiled-resources) compares exact compiled candidates and can export the one that fits a caller-supplied wire cap. It can also [sample those exact circuits](CONSTRAINT_WORKFLOW.md#sample-both-verified-covers-on-a-shared-layout) with a shared starting layout on an offline IBM snapshot. The [witness budget](CONSTRAINT_WORKFLOW.md#plan-and-check-a-verified-witness-budget) estimates shots for a caller-set probability and times fresh batches against the exact classical solver. [Repeated validation](CONSTRAINT_WORKFLOW.md#repeated-validation-at-fixed-budgets) measures batch success at the fixed planned budgets. The [snapshot method option](CONSTRAINT_WORKFLOW.md#choose-the-snapshot-simulation-method) can use Aer density-matrix simulation on verified physical-index circuits.
+
+```powershell
+python -m pip install ".[qasm]"
+python -m austins_algorithm compile --problem austin --qasm-output austin-compiled.qasm
+python -m austins_algorithm compile --problem mod4-range
+python -m austins_algorithm compile --problem mod4-range --oracle work-qubit
+python -m austins_algorithm search --problem mod4-range --strategy known --audit-oracle
+python -m austins_algorithm search --problem mod4-range --strategy unknown --max-shots 64 --max-oracle-queries 256
+python -m austins_algorithm compare --shots 1024 --seed 7
+```
+
+- **Compile** uses a reproducible synthetic line target, checks the ideal distribution in classical bit order after transpilation and after reimport, and reports depth and two-qubit gates. The portable OpenQASM carries the compiled active wires. Keep the report's wire map if physical qubit identity matters. `--qasm-output` creates a new file.
+- **Search** accepts a reversible phase oracle and an independent verifier through [`grover_search.py`](src/austins_algorithm/grover_search.py). The second example searches for a four-bit integer in `[8, 16)` with remainder 1 modulo 4. It defaults to the direct phase oracle on four data wires. Select `--oracle work-qubit` on either the search or compile command to run the five-wire reference. Both compilation variants use the same five-qubit target. The report names the oracle variant. The optional exhaustive audit verifies phases and clean work qubits separately. An unknown-count run records its attempt and logical oracle budgets. `BUDGET_EXHAUSTED` means the run ended before finding a verified candidate.
+- **Compare** reports direct classical solution time, ideal sampling, and a local synthetic per-gate depolarization experiment. The seed controls local sampling and compilation.
+
+IBM snapshot comparison uses packaged calibration snapshots and runs offline:
+
+```powershell
+python -m pip install ".[ibm]"
+python -m austins_algorithm compare --ibm-model all --shots 1024 --seed 7
+python -m austins_algorithm compare --problem mod4-range --ibm-model all --shots 1024 --seed 7
+python -m austins_algorithm compare --problem mod4-range --ibm-model all --round-sweep --shots 1024 --seed 7 --validation-seed 19 --transpiler-seed 7
+python -m austins_algorithm compare --problem mod4-range --ibm-model all --placement-check --minimum-hit-rate 0.40 --shots 512 --evaluation-seeds 29 43
+```
+
+Choose `manila`, `jakarta`, or `torino` for a single snapshot. The modulo-4 command runs both oracle variants with two Grover rounds and the same shot budget on each target. It checks ideal distribution equivalence after OpenQASM reimport and reports verified counts, compiled wire maps, and the observed hit-rate difference. A partial comparison leaves the difference unset. See [IBM model research and measured results](IBM_MODEL_RESEARCH.md).
+
+Add `--round-sweep` to compare zero through three rounds for the direct oracle. The shot budget applies to each circuit in each stage, up to 1,024 shots. The sweep fixes the starting placement on each snapshot, uses `--seed` for calibration shots, and tests the selected round count against the ideal baseline using `--validation-seed`. The calibration and validation seeds must differ. The report keeps both stages and records the compiled measurement maps and resources.
+
+Use `--placement-check` with your required `--minimum-hit-rate` to compare one and two rounds across two prespecified placements. It uses two distinct evaluation seeds and pools shots only within the same circuit and placement. A round count qualifies when both placements clear the specified rate using simultaneous confidence bounds. The report selects the qualifying round count with the fewest summed two-qubit gates across the tested placements. The 40% example is a demonstration threshold.
+
+A physical experiment uses a saved IBM account, an authorized service instance and a named backend. Only invoke this form when the account and usage budget are ready. Replace each placeholder with your local configuration.
+
+```powershell
+python -m austins_algorithm compare --shots 256 --backend BACKEND --account SAVED_PROFILE --instance SERVICE_INSTANCE --max-execution-seconds BUDGET_SECONDS
+```
+
+The hardware report distinguishes the provider's QPU usage from local elapsed time. A local wait timeout can leave the provider job running. Use the reported job ID to check its status. For paid accounts, use the provider's cost controls as well.
 
 ## What this package can and cannot do
 

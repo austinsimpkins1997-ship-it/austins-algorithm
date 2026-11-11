@@ -11,6 +11,8 @@ import math
 from collections.abc import Iterable
 from typing import Any
 
+from .core import austin_predicate
+
 
 MAX_LOCAL_SIMULATION_QUBITS = 16
 MAX_LOCAL_SHOTS = 100_000
@@ -166,12 +168,17 @@ def run_austin_circuit_local_statevector(
     counts = StatevectorSampler(seed=seed).run([circuit], shots=shots).result()[0].data.answer.get_counts()
     if sum(counts.values()) != shots:
         raise RuntimeError("sampler returned an unexpected shot total")
+    if any(len(state) != 3 or any(bit not in "01" for bit in state) for state in counts):
+        raise RuntimeError("sampler returned a bitstring outside the three-qubit basis")
     marked_states = ("011", "101")
-    successful = sum(count for state, count in counts.items() if state in marked_states)
+    verified_candidates = sorted(state for state in counts if austin_predicate(state))
+    verified_shots = sum(counts[state] for state in verified_candidates)
     return {
         "status": "LOCAL_IDEAL_STATEVECTOR_SIMULATION",
+        "execution_mode": "SIMULATOR",
         "circuit": "AUSTIN_3Q_TWO_CZ_CONSTRAINT_SEARCH",
         "n_qubits": 3,
+        "basis_order": "q2 q1 q0",
         "marked_states": list(marked_states),
         "marked_count": len(marked_states),
         "iterations": iterations,
@@ -179,7 +186,9 @@ def run_austin_circuit_local_statevector(
         "shots": shots,
         "seed": seed,
         "counts": dict(sorted(counts.items())),
-        "observed_success_fraction": successful / shots,
+        "verified_candidates": verified_candidates,
+        "verified_shots": verified_shots,
+        "observed_success_fraction": verified_shots / shots,
         "quantum_hardware_used": False,
         "provider_job_submitted": False,
     }
