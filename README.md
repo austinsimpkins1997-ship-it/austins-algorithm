@@ -1,6 +1,6 @@
 # Austin's Algorithm
 
-**Version:** 0.1.0 · **Status:** prepared locally, not yet published · **License:** [Apache-2.0](LICENSE)
+**Version:** 0.1.0 · **Status:** source repository is public on GitHub; no release tag is present · **License:** [Apache-2.0](LICENSE)
 
 **Project credit:** Austin Gregory Simpkins and Chandler Middlebrook / ChronoRealm.
 
@@ -134,6 +134,8 @@ Want to connect a different simulator or quantum computer? The package includes 
 
 The first example above needs no quantum software. If you want to build and run a circuit in a local simulator, install one optional tool from this folder:
 
+The basic teaching program supports Python 3.10 and newer. Use Python 3.11 or newer for the current Cirq releases and the `[all]` extra. These optional examples were run locally with Python 3.12.15, Qiskit 2.6.2, and Cirq 1.7.0.
+
 The commands below are for Windows PowerShell. On macOS or Linux, replace `.\.venv\Scripts\python.exe` with `./.venv/bin/python`.
 
 ```powershell
@@ -143,6 +145,8 @@ The commands below are for Windows PowerShell. On macOS or Linux, replace `.\.ve
 .\.venv\Scripts\python.exe -m pip install ".[cirq]"
 .\.venv\Scripts\python.exe examples\cirq_austin_circuit.py
 ```
+
+The Qiskit example draws `build_austin_circuit()` and samples that same circuit through `run_austin_circuit_local_statevector()`. That runner uses the built-in two-CZ reversible oracle and diffuser, then reports measured counts and ideal success probability. `LOCAL_IDEAL_STATEVECTOR_SIMULATION` means Qiskit simulated the circuit on an ordinary computer; the runner submits no provider job and uses no quantum hardware. The generic `run_local_statevector(...)` helper remains a separate route for circuits whose marked bitstrings are supplied explicitly.
 
 These examples run locally. They do not sign in to a service or send work to a real quantum computer. A real hardware run needs a supported device, an account and permission to use it, a circuit fitted to that device, and checks for errors and cost. Hardware access is not included here.
 

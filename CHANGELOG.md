@@ -2,11 +2,16 @@
 
 ## Unreleased
 
+- Run the built-in Austin Qiskit circuit directly with `StatevectorSampler`, so the example samples the same two-CZ-oracle circuit it displays rather than rebuilding a second circuit from the marked-answer list.
+- Place the plot's limitation note in a layout-managed figure caption so it does not collide with histogram axis labels.
+- Keep the optional Qiskit and Cirq circuit examples usable in legacy Windows consoles that cannot encode Unicode box-drawing characters; clarify the current Cirq Python version requirement.
+- Add regression tests that run both optional circuit examples with a simulated `cp1252` console.
+- Clarify that the source repository is public on GitHub and version 0.1.0 has no release tag.
 - Add an opt-in per-round ideal amplitude trace to the CPU simulator and `--trace-amplitudes` command-line option for teaching Grover's rotation.
 - Add an optional Matplotlib example showing the marked/unmarked rotation, the `theta` and `2 theta` formulas, the known-solution-count first-peak estimate, and ideal probabilities beside finite-shot samples.
 - Make the adaptation-use-case note self-contained so the package README does not depend on a sibling ChronoRealm project when published as its own repository.
 
-## 0.1.0 — prepared 2026-11-09; not yet published
+## 0.1.0 — prepared 2026-11-09; no release tag
 
 - Package the ChronoRealm three-qubit Grover example with a dependency-free CPU statevector reference.
 - Add optional Qiskit/Cirq circuits, generic explicit-marked-state circuit construction, documentation, tests, CI, citation and license files.

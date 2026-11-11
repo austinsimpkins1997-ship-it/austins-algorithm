@@ -4,6 +4,7 @@
 
 - A project-specific, three-qubit Grover circuit for `q0 == 1 and q1 != q2`, implemented in Qiskit and Cirq.
 - A dependency-free CPU reference that classically enumerates small predicates and simulates ideal statevectors up to 16 qubits.
+- An optional Qiskit `StatevectorSampler` path that samples the built-in Austin circuit itself, including its two-CZ reversible oracle and diffuser; this remains an ideal classical simulation.
 - A generic optional Qiskit circuit builder for explicitly supplied marked bitstrings, local ideal sampling, OpenQASM example, and local transpilation against a caller-supplied target.
 - An experimental Python adapter contract for declared workload formats/capabilities and honest status, output, and timing records. It is not a provider connection and has no hardware plugin yet.
 - A local `AustinCpuAdapter` that runs the same bounded classical simulator through that contract; it is explicitly labeled `SIMULATOR` and does not perform quantum computation.

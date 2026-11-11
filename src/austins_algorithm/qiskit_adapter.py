@@ -140,6 +140,51 @@ def build_austin_circuit(*, iterations: int = 1):
     return circuit
 
 
+def run_austin_circuit_local_statevector(
+    *,
+    iterations: int = 1,
+    shots: int = 2048,
+    seed: int = 20261109,
+) -> dict[str, Any]:
+    """Sample Austin's actual reversible Qiskit circuit on a local ideal simulator.
+
+    Unlike :func:`run_local_statevector`, this path does not rebuild the oracle
+    from a caller-supplied truth table: it runs ``build_austin_circuit`` with
+    the project's two-CZ phase oracle and diffuser. The execution is still a
+    classical statevector simulation, never a provider or hardware job.
+    """
+    if isinstance(iterations, bool) or not isinstance(iterations, int) or not 0 <= iterations <= 256:
+        raise ValueError("iterations must be an integer from 0 to 256")
+    if isinstance(shots, bool) or not isinstance(shots, int) or not 1 <= shots <= MAX_LOCAL_SHOTS:
+        raise ValueError(f"shots must be an integer from 1 to {MAX_LOCAL_SHOTS}")
+    if isinstance(seed, bool) or not isinstance(seed, int):
+        raise ValueError("seed must be an integer")
+
+    circuit = build_austin_circuit(iterations=iterations)
+    from qiskit.primitives import StatevectorSampler
+
+    counts = StatevectorSampler(seed=seed).run([circuit], shots=shots).result()[0].data.answer.get_counts()
+    if sum(counts.values()) != shots:
+        raise RuntimeError("sampler returned an unexpected shot total")
+    marked_states = ("011", "101")
+    successful = sum(count for state, count in counts.items() if state in marked_states)
+    return {
+        "status": "LOCAL_IDEAL_STATEVECTOR_SIMULATION",
+        "circuit": "AUSTIN_3Q_TWO_CZ_CONSTRAINT_SEARCH",
+        "n_qubits": 3,
+        "marked_states": list(marked_states),
+        "marked_count": len(marked_states),
+        "iterations": iterations,
+        "theoretical_success_probability": theoretical_success_probability(3, len(marked_states), iterations),
+        "shots": shots,
+        "seed": seed,
+        "counts": dict(sorted(counts.items())),
+        "observed_success_fraction": successful / shots,
+        "quantum_hardware_used": False,
+        "provider_job_submitted": False,
+    }
+
+
 def run_local_statevector(
     n_qubits: int,
     marked_states: Iterable[str],

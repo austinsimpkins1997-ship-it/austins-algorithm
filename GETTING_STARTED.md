@@ -73,14 +73,14 @@ The Python function in step 2 is a **classical teaching rule**, not a quantum or
 
 ## 4. Optional: see the quantum circuit
 
-These commands install Qiskit only in this project's virtual environment and print/run the local example:
+These commands install Qiskit only in this project's virtual environment. The example draws the built-in two-CZ Austin circuit and samples that exact circuit with Qiskit's local ideal statevector simulator:
 
 ```powershell
 .\.venv\Scripts\python.exe -m pip install ".[qiskit]"
 .\.venv\Scripts\python.exe .\examples\qiskit_austin_circuit.py
 ```
 
-On macOS or Linux, replace the Python path with `./.venv/bin/python`. This optional example is still a local simulation. It does not sign in, upload data, or submit a hardware job.
+On macOS or Linux, replace the Python path with `./.venv/bin/python`. The result is still a classical ideal simulation. It does not sign in, upload data, or submit a hardware job. The printed `provider_job_submitted: False` and `quantum_hardware_used: False` fields are part of that boundary.
 
 ## 5. Before applying it to a real problem
 

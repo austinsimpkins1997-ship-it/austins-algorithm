@@ -125,11 +125,8 @@ def _make_plot(result: dict, output: str | None) -> None:
     upper = max(max(ideal_probabilities), max(sampled_frequencies), 0.05) * 1.18
     ideal_ax.set_ylim(0, upper)
     sample_ax.set_ylim(0, upper)
-    fig.text(
-        0.5,
-        0.005,
+    fig.supxlabel(
         "The first-peak estimate assumes known M (counted classically here). Finite-shot bars sample the ideal distribution; no gate/readout noise or QPU is modeled.",
-        ha="center",
         fontsize=9,
     )
 
