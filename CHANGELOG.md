@@ -4,6 +4,13 @@ Austin's Algorithm package version is 0.1.0. These records cover the published G
 
 ## Current changes
 
+### 2026-11-12 15:22:13 -05:00 — local CI repair
+
+- **#143** Isolate the controlled benchmark worker subprocess binding in the test fixture. Keep the shared standard-library `subprocess` module available to Linux platform metadata collection. Production algorithm and benchmark code are unchanged; package version stays 0.1.0 (alpha).
+- Inspect all nine failed jobs in GitHub Actions run #9 for commit `10533c88b96ddca98045904095a5d0203900ac9c`. Each reports the same eight failures and sixteen errors in the new benchmark-verifier fixtures; the Windows Manila smoke job passed. Reproduce the fixture failure on WSL Ubuntu and preserve the job logs and pre-fix results.
+- Add a regression separating host-metadata subprocess calls from the controlled worker launches. It fails with the old shared mock on Windows and passes with the module-local binding. Preserve worker ordering, timeout simulation and independent saved-record verification.
+- Both copies pass 635 SDK tests with four skips, 391 SDK-free tests with 248 skips on Windows Python 3.10/3.12, and 393 SDK-free tests with 246 optional-dependency skips on WSL Ubuntu Python 3.12.3. Update the README, guide and roadmap without substituting local results for a new hosted run.
+
 ### 2026-11-12 13:05:35 -05:00 — local update
 
 - **#142** Add `checkpoint-benchmark-verify` for an explicitly pinned saved benchmark. Check local stage files, canonical ordering, checkpoint handoffs, round/counter bounds, aggregate arithmetic, storage and available paired-study evidence without loading the quantum SDK or rerunning workers.

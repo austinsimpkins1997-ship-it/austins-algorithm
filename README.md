@@ -8,7 +8,7 @@ For a short, ordered, beginner-friendly walkthrough, start with [`GETTING_STARTE
 
 ## Current state
 
-Reviewed **2026-11-12** against the local source through implementation milestone **#142**. The package version matches [`pyproject.toml`](pyproject.toml); dated development updates are recorded separately in the [changelog](CHANGELOG.md).
+Reviewed **2026-11-12** against the local source through implementation milestone **#143**. The package version matches [`pyproject.toml`](pyproject.toml); dated development updates are recorded separately in the [changelog](CHANGELOG.md).
 
 The project starts with a three-qubit Grover teaching example and supports bounded Boolean-constraint search with independent classical verification. The base package runs on Python 3.10 and newer. Optional Qiskit and Aer workflows compile for local targets, verify OpenQASM measurement behavior, and compare search budgets on dated IBM models.
 
@@ -253,17 +253,20 @@ The simulator finds `M` by checking every choice first. A real quantum search ne
 
 ## Tests and project guide
 
-The latest local implementation checks, recorded on **2026-11-12** for milestone **#142**, passed in both maintained package copies:
+The latest local implementation checks, recorded on **2026-11-12** for milestone **#143**, passed in both maintained package copies:
 
 | Environment | Passed | Skipped | Failures or errors |
 | --- | ---: | ---: | ---: |
-| Python 3.12.15 with Qiskit 2.6.2, Aer 0.18.2 and IBM Runtime 0.51.0 | 634 | 4 (2 Cirq; 2 symlink privilege) | 0 |
-| Python with optional SDKs excluded | 390 | 248 (optional dependencies and symlink privilege) | 0 |
-| Python 3.10.22 with optional SDKs excluded | 390 | 248 (optional dependencies and symlink privilege) | 0 |
+| Python 3.12.15 with Qiskit 2.6.2, Aer 0.18.2 and IBM Runtime 0.51.0 | 635 | 4 (2 Cirq; 2 symlink privilege) | 0 |
+| Python with optional SDKs excluded | 391 | 248 (optional dependencies and symlink privilege) | 0 |
+| Python 3.10.22 with optional SDKs excluded | 391 | 248 (optional dependencies and symlink privilege) | 0 |
+| WSL Ubuntu Python 3.12.3 with optional SDKs excluded | 393 | 246 (optional dependencies) | 0 |
 
 These are dated results for the tested source and environments. The eight-layout Jakarta benchmark produced identical uninterrupted and continued study bytes in both copies, with all eight reference and fusion generations independently checked by SDK-free processes. The measured restart costs are recorded in the constraint guide. The new benchmark-record audit also passes both existing eight-layout records and a byte-preserving relocation in each copy, without the SDK or evidence changes. Full runtime archive checks cover all 67 package files, including the previously stale unchanged Qiskit adapter.
 
 [GitHub Actions run #8](https://github.com/austinsimpkins1997-ship-it/austins-algorithm/actions/runs/43249759269) passed all ten jobs for commit `6c2370b060dbfdcf2ea3feeca72963a282c386ad` on **2026-11-12**, including Python 3.10–3.14, optional frameworks, and the packaged Manila smoke regression. That result applies to that committed revision; later local updates need their own hosted run.
+
+[GitHub Actions run #9](https://github.com/austinsimpkins1997-ship-it/austins-algorithm/actions/runs/43286454985) failed all nine Ubuntu matrix jobs for commit `10533c88b96ddca98045904095a5d0203900ac9c`; its Windows Manila smoke job passed. The new benchmark test fixture had replaced the shared `subprocess.run` function, intercepting Linux host-metadata queries as worker launches. Update #143 scopes that test replacement to the benchmark module and adds a regression that reproduces the interaction on Windows too. The local Windows and Linux checks above pass the correction. Hosted verification of the corrected commit remains pending; run #8 does not establish its status.
 
 To run the package checks:
 

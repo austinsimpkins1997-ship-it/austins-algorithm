@@ -776,6 +776,8 @@ The read-only evidence inventory excludes `summary.json` and is bounded to 8,192
 
 On 2026-11-12, SDK-free source and wheel processes in both maintained copies audited the existing #140 and #141 nine-worker eight-layout records, plus a byte-preserving relocated copy. Each saved directory contained 64 files including the summary. Before/after fingerprints confirmed the audits were read-only. The wheel CLI matched the API result, and an incorrect trusted summary pin returned exit code one. Regression fixtures additionally cover stopped/failing/timed-out workers, publication errors, corrupted embedded captures, chain corruption, counter and handoff changes, and unsafe paths. These are local consistency checks of the available records.
 
+The #143 CI repair changes only the controlled test fixture: it substitutes the benchmark module's subprocess binding instead of changing the shared standard-library module. Linux `platform.processor()` can launch a read-only host query; that query must stay separate from simulated benchmark workers. The regression forces this interaction on Windows too. Production benchmark execution, evidence schemas, cancellation behavior and verifier rules are unchanged. GitHub run #9 failed before this repair; the corrected hosted result remains pending.
+
 #### Verify a saved paired calibration study offline
 
 Save the paired study JSON and retain its file SHA-256. Supply the same constraint document and the known digest when reviewing or transferring the result. The verifier supports files up to 64 MiB, including the output of a receipt-backed study.

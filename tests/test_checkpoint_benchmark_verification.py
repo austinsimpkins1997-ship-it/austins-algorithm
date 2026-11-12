@@ -136,6 +136,10 @@ class CheckpointBenchmarkVerificationTests(unittest.TestCase):
 
             memory = {name: None for name in ("working_set_bytes", "peak_working_set_bytes", "private_usage_bytes")}
             memory["reason"] = "Controlled resource fixture"
+            worker_subprocess = SimpleNamespace(
+                run=controlled_process, TimeoutExpired=subprocess.TimeoutExpired,
+                CREATE_NO_WINDOW=getattr(subprocess, "CREATE_NO_WINDOW", 0),
+            )
             with (
                 patch.object(comparison, "compile_and_verify", new=no_sdk),
                 patch.object(comparison, "_prepare_density_snapshot", new=no_sdk),
@@ -147,7 +151,7 @@ class CheckpointBenchmarkVerificationTests(unittest.TestCase):
                 patch.object(bundles, "_bundle_software_versions", return_value=versions),
                 patch.object(fusion_checkpoint, "_bundle_software_versions", return_value=versions),
                 patch.object(benchmark, "_process_memory", return_value=memory),
-                patch.object(benchmark.subprocess, "run", new=controlled_process),
+                patch.object(benchmark, "subprocess", new=worker_subprocess),
             ):
                 result = benchmark.run_benchmark(self.scenario, root)
         return root, result, calls
@@ -174,6 +178,34 @@ class CheckpointBenchmarkVerificationTests(unittest.TestCase):
         if pin is None:
             pin = sha256((root / "summary.json").read_bytes()).hexdigest()
         return verification.verify_checkpoint_benchmark(self.constraint, root, expected_summary_sha256=pin)
+
+    def test_worker_control_keeps_host_metadata_subprocesses_separate(self):
+        original_run = subprocess.run
+        commands = []
+
+        def host_process(command, **_options):
+            self.assertEqual(command, ["chronorealm-host-metadata"])
+            commands.append(command)
+            return subprocess.CompletedProcess(command, 0, stdout="fixture processor", stderr="")
+
+        def processor():
+            self.assertIs(subprocess.run, host_process)
+            return subprocess.run(["chronorealm-host-metadata"], capture_output=True, text=True, check=True).stdout
+
+        with (
+            patch.object(subprocess, "run", new=host_process),
+            patch.object(benchmark.platform, "processor", new=processor),
+            patch.object(benchmark.platform, "platform", return_value="controlled host fixture"),
+        ):
+            root, summary, roles = self.make_record(layouts=1)
+
+        self.assertIs(subprocess.run, original_run)
+        self.assertEqual(summary["status"], "BENCHMARK_COMPLETED", summary.get("error"))
+        self.assertEqual(roles, ["baseline", "reference-start", "fusion"])
+        self.assertEqual(len(commands), len(summary["stages"]))
+        for stage in summary["stages"]:
+            self.assertEqual(stage["metrics"]["processor"], "fixture processor")
+        self.assertEqual(self.verify(root)["recorded_status"], "BENCHMARK_COMPLETED")
 
     def test_completed_eight_layout_record_and_portable_copy_verify_without_external_reads(self):
         root, summary, calls = self.make_record(layouts=8)
