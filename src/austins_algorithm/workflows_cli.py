@@ -359,7 +359,8 @@ def _constraint_receipt_compare(args: argparse.Namespace) -> dict:
 def _constraint_regression(args: argparse.Namespace) -> dict:
     from .replay_regression import run_replay_regression
 
-    return run_replay_regression(args.manifest, output_directory=args.output_dir)
+    roundoff = {"probability_roundoff": True} if args.allow_probability_roundoff else {}
+    return run_replay_regression(args.manifest, output_directory=args.output_dir, **roundoff)
 
 
 def _unknown_count_plan(args: argparse.Namespace) -> dict:
@@ -560,9 +561,42 @@ def _snapshot_calibration_study_verify(args: argparse.Namespace) -> dict:
     )
 
 
-def _snapshot_calibration_study(args: argparse.Namespace) -> dict:
+def _snapshot_calibration_study_inputs(args: argparse.Namespace) -> tuple:
     from .constraints import load_constraint
     from .snapshot_calibration_comparison import SnapshotCalibrationFiles
+
+    return load_constraint(args.constraint), SnapshotCalibrationFiles(*args.earlier), SnapshotCalibrationFiles(*args.later)
+
+
+def _snapshot_calibration_study_options(args: argparse.Namespace) -> dict:
+    return {
+        "initial_layouts": args.initial_layout, "target_probability": args.target_probability,
+        "shot_caps": args.shot_caps, "query_caps": args.query_caps, "max_rounds_per_shot": args.max_rounds_per_shot,
+        "seed_transpiler": args.seed_transpiler, "validation_trials": args.validate_trials,
+        "prefer_native_qasm": args.native_qasm,
+    }
+
+
+def _snapshot_calibration_study_checkpoint(args: argparse.Namespace) -> dict:
+    from .snapshot_calibration_study_checkpoint import save_snapshot_calibration_study_checkpoint
+
+    return save_snapshot_calibration_study_checkpoint(
+        *_snapshot_calibration_study_inputs(args), destination=args.directory,
+        **_snapshot_calibration_study_options(args), batch_density=args.batch_density,
+        fusion_probability_tolerance=args.fusion_probability_tolerance,
+    )
+
+
+def _snapshot_calibration_study_resume(args: argparse.Namespace) -> dict:
+    from .snapshot_calibration_study_checkpoint import resume_snapshot_calibration_study_checkpoint
+
+    return resume_snapshot_calibration_study_checkpoint(
+        *_snapshot_calibration_study_inputs(args), checkpoint=args.directory,
+        expected_checkpoint_sha256=args.expected_checkpoint_sha256,
+    )
+
+
+def _snapshot_calibration_study(args: argparse.Namespace) -> dict:
     from .snapshot_calibration_compilation_cache import SnapshotCalibrationCompilationCache
     from .snapshot_calibration_study import (
         check_snapshot_calibration_compilation_coverage, compare_snapshot_calibration_compilation_coverage,
@@ -616,15 +650,8 @@ def _snapshot_calibration_study(args: argparse.Namespace) -> dict:
     elif destination is not None and overlaps is None:
         cache = SnapshotCalibrationCompilationCache(max_entries=256, max_bytes=32 * 1024 * 1024)
 
-    inputs = (
-        load_constraint(args.constraint), SnapshotCalibrationFiles(*args.earlier), SnapshotCalibrationFiles(*args.later),
-    )
-    options = {
-        "initial_layouts": args.initial_layout, "target_probability": args.target_probability,
-        "shot_caps": args.shot_caps, "query_caps": args.query_caps, "max_rounds_per_shot": args.max_rounds_per_shot,
-        "seed_transpiler": args.seed_transpiler, "validation_trials": args.validate_trials,
-        "prefer_native_qasm": args.native_qasm,
-    }
+    inputs = _snapshot_calibration_study_inputs(args)
+    options = _snapshot_calibration_study_options(args)
     if replay is not None:
         receipt, receipt_pin = replay
         output, output_pin = args.load_compilation_bundle
@@ -652,6 +679,30 @@ def _snapshot_calibration_study(args: argparse.Namespace) -> dict:
     if destination is not None:
         cache.save_bundle(destination)
     return result
+
+
+def _add_calibration_archives(parser: argparse.ArgumentParser, archive_fields: tuple[str, ...]) -> None:
+    parser.add_argument("--earlier", nargs=4, metavar=archive_fields, required=True)
+    parser.add_argument("--later", nargs=4, metavar=archive_fields, required=True)
+
+
+def _add_calibration_study_options(parser: argparse.ArgumentParser, *, checkpoint: bool = False) -> None:
+    parser.add_argument("--initial-layout", type=int, nargs="+", action="append", required=True,
+                        help="ordered physical wires for one layout, repeat for additional layouts")
+    parser.add_argument("--target-probability", type=float, required=True)
+    parser.add_argument("--shot-caps", type=int, nargs="+", required=True)
+    parser.add_argument("--query-caps", type=int, nargs="+", required=True)
+    parser.add_argument("--max-rounds-per-shot", type=int, default=MAX_ITERATIONS)
+    parser.add_argument("--seed-transpiler", type=int, default=7)
+    parser.add_argument("--native-qasm", action="store_true", help="prefer Qiskit's native OpenQASM importer")
+    parser.add_argument("--batch-density", action="store_true",
+                        help="group consecutive rounds on the same local density simulator")
+    parser.add_argument(
+        "--fusion-probability-tolerance", type=float, metavar="TV", required=checkpoint,
+        help="total-variation tolerance for the resumed fusion audit" if checkpoint
+        else "also run Aer density fusion and audit it against the default capture",
+    )
+    parser.add_argument("--validate-trials", type=int, default=0)
 
 
 def _witness_schedule(args: argparse.Namespace) -> dict:
@@ -749,15 +800,16 @@ def _diffuser_benchmark_compare(args: argparse.Namespace) -> dict:
 def _diffuser_regression(args: argparse.Namespace) -> dict:
     from .diffuser_regression import run_diffuser_regression, run_diffuser_regression_suite
 
+    roundoff = {"probability_roundoff": True} if args.allow_probability_roundoff else {}
     if args.manifest is not None:
         if args.max_sampling_shots is not None or args.timeout_seconds is not None:
             raise ValueError("the manifest supplies per-case shot limits and timeouts")
-        return run_diffuser_regression_suite(args.manifest, output_directory=args.output_dir)
+        return run_diffuser_regression_suite(args.manifest, output_directory=args.output_dir, **roundoff)
     if args.max_sampling_shots is None or args.timeout_seconds is None:
         raise ValueError("a single baseline requires --max-sampling-shots and --timeout-seconds")
     return run_diffuser_regression(
         args.baseline, output_directory=args.output_dir, max_sampling_shots=args.max_sampling_shots,
-        timeout_seconds=args.timeout_seconds,
+        timeout_seconds=args.timeout_seconds, **roundoff,
     )
 
 
@@ -1002,6 +1054,8 @@ def main(argv: list[str]) -> None:
     regression_parser = commands.add_parser("constraint-regression", help="rerun named offline baselines under fixed limits")
     regression_parser.add_argument("manifest", type=Path)
     regression_parser.add_argument("--output-dir", type=Path, required=True, help="new directory for evidence and summary")
+    regression_parser.add_argument("--allow-probability-roundoff", action="store_true",
+                                   help="compare designated probabilities and variation distances within 1e-12")
     regression_parser.set_defaults(handler=_constraint_regression)
 
     unknown_plan = commands.add_parser("unknown-count-plan", help="model ideal hit probability and work under both query policies")
@@ -1160,22 +1214,8 @@ def main(argv: list[str]) -> None:
         "snapshot-calibration-study", help="capture, plan, and replay a shared budget grid across ordered layouts",
     )
     calibration_study.add_argument("constraint", type=Path)
-    calibration_study.add_argument("--earlier", nargs=4, metavar=archive_fields, required=True)
-    calibration_study.add_argument("--later", nargs=4, metavar=archive_fields, required=True)
-    calibration_study.add_argument("--initial-layout", type=int, nargs="+", action="append", required=True,
-                                   help="ordered physical wires for one layout, repeat for additional layouts")
-    calibration_study.add_argument("--target-probability", type=float, required=True)
-    calibration_study.add_argument("--shot-caps", type=int, nargs="+", required=True)
-    calibration_study.add_argument("--query-caps", type=int, nargs="+", required=True)
-    calibration_study.add_argument("--max-rounds-per-shot", type=int, default=MAX_ITERATIONS)
-    calibration_study.add_argument("--seed-transpiler", type=int, default=7)
-    calibration_study.add_argument("--native-qasm", action="store_true",
-                                   help="prefer Qiskit's native OpenQASM importer")
-    calibration_study.add_argument("--batch-density", action="store_true",
-                                   help="group consecutive rounds on the same local density simulator")
-    calibration_study.add_argument("--fusion-probability-tolerance", type=float, metavar="TV",
-                                   help="also run Aer density fusion and audit it against the default capture")
-    calibration_study.add_argument("--validate-trials", type=int, default=0)
+    _add_calibration_archives(calibration_study, archive_fields)
+    _add_calibration_study_options(calibration_study)
     bundle_output = calibration_study.add_mutually_exclusive_group()
     bundle_output.add_argument("--save-compilation-bundle", type=Path, metavar="PATH",
                                help="write completed compiled rounds to a new local bundle")
@@ -1195,6 +1235,24 @@ def main(argv: list[str]) -> None:
     calibration_study.add_argument("--run-after-overlap-replay", action="store_true",
                                    help="run the dated study after successful receipt replay using the same preparation")
     calibration_study.set_defaults(handler=_snapshot_calibration_study)
+
+    checkpoint = commands.add_parser(
+        "snapshot-calibration-study-checkpoint", help="save completed reference captures before running fusion",
+    )
+    checkpoint.add_argument("constraint", type=Path)
+    checkpoint.add_argument("directory", type=Path, help="new local checkpoint directory")
+    _add_calibration_archives(checkpoint, archive_fields)
+    _add_calibration_study_options(checkpoint, checkpoint=True)
+    checkpoint.set_defaults(handler=_snapshot_calibration_study_checkpoint)
+
+    resume_study = commands.add_parser(
+        "snapshot-calibration-study-resume", help="verify a checkpoint and continue the paired fusion study",
+    )
+    resume_study.add_argument("constraint", type=Path)
+    resume_study.add_argument("directory", type=Path, help="saved checkpoint directory")
+    resume_study.add_argument("--expected-checkpoint-sha256", required=True, help="known SHA-256 of checkpoint.json")
+    _add_calibration_archives(resume_study, archive_fields)
+    resume_study.set_defaults(handler=_snapshot_calibration_study_resume)
 
     schedule_parser = commands.add_parser("witness-schedule", help="size or check a fixed witness holdout before sampling")
     schedule_parser.add_argument("--comparison", choices=("cover", "diffuser"), default="cover",
@@ -1304,6 +1362,8 @@ def main(argv: list[str]) -> None:
     diffuser_regression.add_argument("--output-dir", type=Path, required=True, help="new directory for replay evidence")
     diffuser_regression.add_argument("--max-sampling-shots", type=int, help="maximum planned measurement shots for one baseline")
     diffuser_regression.add_argument("--timeout-seconds", type=int, help="local replay worker timeout for one baseline")
+    diffuser_regression.add_argument("--allow-probability-roundoff", action="store_true",
+                                     help="compare modeled probabilities within 1e-12 before validation shots")
     diffuser_regression.set_defaults(handler=_diffuser_regression)
 
     placement_receipt = commands.add_parser("placement-receipt-verify", help="verify a placement receipt offline")
@@ -1389,6 +1449,8 @@ def main(argv: list[str]) -> None:
     if args.workflow == "smoke-run-index-compare" and result["status"] != "SMOKE_RUN_INDEXES_COMPARED":
         parser.exit(1)
     if args.workflow == "snapshot-calibration-bundle-compose" and result["status"] != "COMPILATION_BUNDLE_COMPOSED":
+        parser.exit(1)
+    if args.workflow == "snapshot-calibration-study-checkpoint" and result["status"] != "CALIBRATION_STUDY_CHECKPOINT_SAVED":
         parser.exit(1)
     if (
         args.workflow == "snapshot-calibration-study" and args.resolve_compilation_overlap is not None

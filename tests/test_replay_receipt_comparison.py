@@ -12,7 +12,9 @@ PACKAGE_ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(PACKAGE_ROOT / "src"))
 
 from austins_algorithm.replay_receipt import _write_replay_receipt  # noqa: E402
-from austins_algorithm.replay_receipt_comparison import compare_replay_receipts  # noqa: E402
+from austins_algorithm.replay_receipt_comparison import (  # noqa: E402
+    _compare_verified_bundles, _read_comparison_bundle, compare_replay_receipts,
+)
 
 
 REQUEST = b'{"schema_version":1,"witness":{"validation_seeds":[41,43]}}'
@@ -76,6 +78,56 @@ class ReplayReceiptComparisonTests(unittest.TestCase):
         for name in ("request", "report"):
             self.assertFalse(result["sections"][name]["exact_bytes_match"])
             self.assertIsNone(result["sections"][name]["first_difference"])
+
+    def test_probability_roundoff_records_only_known_compilation_and_cover_leaves(self):
+        left = _report(0.1)
+        left["candidates"] = {"direct": {"compilation": {"verification": {
+            "compilation_total_variation_distance": 1e-15,
+            "compiled_probabilities": {"00": 0.25},
+        }}}}
+        left["cross_cover_total_variation_distance"] = 0.0
+        right = deepcopy(left)
+        right["candidates"]["direct"]["compilation"]["verification"].update(
+            compilation_total_variation_distance=2e-15, compiled_probabilities={"00": 0.250000000001},
+        )
+        right["cross_cover_total_variation_distance"] = 5e-16
+        self._bundle(self.left, report=left)
+        self._bundle(self.right, report=right)
+
+        def compare():
+            return _compare_verified_bundles(
+                self.left, self.right, _read_comparison_bundle(self.left), _read_comparison_bundle(self.right),
+                probability_roundoff=True,
+            )
+
+        self.assertEqual(compare_replay_receipts(self.left, self.right)["status"], "REPLAY_RECEIPTS_DIFFER")
+        result = compare()
+        self.assertEqual(result["status"], "REPLAY_RECEIPTS_MATCH")
+        report = result["sections"]["report"]
+        self.assertFalse(report["exact_bytes_match"])
+        evidence = report["probability_roundoff"]
+        self.assertEqual(evidence["accepted_count"], 3)
+        self.assertEqual(evidence["maximum_absolute_difference"], "1E-12")
+        self.assertTrue(evidence["comparison_complete"])
+        self.assertIn({
+            "path": "/candidates/direct/compilation/verification/compiled_probabilities/00",
+            "left": "0.25", "right": "0.250000000001", "absolute_difference": "1E-12",
+        }, evidence["accepted_differences"])
+
+        right["snapshot"]["candidates"]["complement"]["batches"][0]["counts"]["010"] = 14
+        self._replace_report(self.right, json.dumps(right).encode("utf-8"))
+        report = compare()["sections"]["report"]
+        self.assertFalse(report["matches"])
+        self.assertFalse(report["probability_roundoff"]["comparison_complete"])
+        self.assertEqual(report["first_difference"]["path"], "/snapshot/candidates/complement/batches/0/counts/010")
+
+        compiled = right["candidates"]["direct"]["compilation"]["verification"]["compiled_probabilities"]
+        compiled["00"] = 0.250000000002
+        self._replace_report(self.right, json.dumps(right).encode("utf-8"))
+        report = compare()["sections"]["report"]
+        self.assertFalse(report["matches"])
+        self.assertEqual(report["first_difference"]["path"],
+                         "/candidates/direct/compilation/verification/compiled_probabilities/00")
 
     def test_finds_reordered_seed_and_changed_counts_with_qasm_and_version_drift(self):
         self._bundle(self.left)

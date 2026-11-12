@@ -15,4 +15,6 @@ For circuit changes, add a basis-order/oracle test and compare measured ideal pr
 
 For adapter API changes, version the input/output schema when meanings change. Test capability mismatches and unknown limits without network access. Keep credentials out of request/result records and label each timing by source.
 
-Please include a concise changelog entry for user-visible behavior. Keep generated files, credentials, local simulator caches and datasets out of commits. Cite sources and preserve licenses when adding external code/data.
+For every package update, add a dated changelog entry with the time and UTC offset. Record what changed and the verification scope. Update the README's current-state summary and check its package version against `pyproject.toml`. Reconcile both maintained package copies and verify changed files by size and SHA-256 before delivery. Use an observed timestamp for historical entries and identify the source when the original edit time is unavailable.
+
+Keep generated files, credentials, local simulator caches and datasets out of commits. Cite sources and preserve licenses when adding external code/data.

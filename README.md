@@ -1,10 +1,23 @@
 # Austin's Algorithm
 
-**Version:** 0.1.0 · **Status:** source repository is public on GitHub; no release tag is present · **License:** [Apache-2.0](LICENSE)
+**Package version** 0.1.0 · **Source** public on GitHub · **License** [Apache-2.0](LICENSE)
 
 **Project credit:** Austin Gregory Simpkins and Chandler Middlebrook / ChronoRealm.
 
 For a short, ordered, beginner-friendly walkthrough, start with [`GETTING_STARTED.md`](GETTING_STARTED.md). This README remains the package overview and reference.
+
+## Current state
+
+The project starts with a three-qubit Grover teaching example and supports bounded Boolean-constraint search with independent classical verification. The base package runs on Python 3.10 and newer. Optional Qiskit and Aer workflows compile for local targets, verify OpenQASM measurement behavior, and compare search budgets on dated IBM models.
+
+- Use [the constraint guide](CONSTRAINT_WORKFLOW.md) for reversible oracles, classical baselines, verified exports, and bounded known- or unknown-count search.
+- Use [the paired calibration study](CONSTRAINT_WORKFLOW.md#run-both-density-policies-in-one-study) to compare default and fused density simulation on the same compiled circuits. The default capture drives budget selection and seeded replay. Live simulator setup is released before planning.
+- Use [the offline study verifier](CONSTRAINT_WORKFLOW.md#verify-a-saved-paired-calibration-study-offline) to check saved captures, plans and fusion decisions after the simulator exits.
+- Use [a restart checkpoint](CONSTRAINT_WORKFLOW.md#restart-a-paired-study-from-completed-reference-captures) to carry completed default captures and verified compiled rounds into a fresh process. Resume verifies the checkpoint, rebuilds the compact simulators, and runs the fusion phase.
+
+The measured results cover local simulations. The optional physical-job path requires a configured IBM account and budget. See the [dated changelog](CHANGELOG.md) for the update history and [GitHub Actions](https://github.com/austinsimpkins1997-ship-it/austins-algorithm/actions) for hosted verification of committed changes.
+
+The Manila smoke workflow runs from the source distribution. It can compare designated probability fields within an absolute tolerance of `1e-12` while still requiring matching circuit identities, work budgets, seeded counts, and decisions. Ordinary replay and receipt verification use their exact evidence contracts. See the [Manila smoke guide](CONSTRAINT_WORKFLOW.md#run-the-packaged-manila-smoke-baseline).
 
 ## What is this?
 

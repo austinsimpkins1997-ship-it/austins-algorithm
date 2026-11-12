@@ -2,12 +2,14 @@
 
 from __future__ import annotations
 
-from collections.abc import Collection, Iterable, Sequence
+from collections.abc import Callable, Collection, Iterable, Sequence
 from copy import deepcopy
+from functools import partial
 from hashlib import sha256
 from json import loads
 from pathlib import Path
 import sys
+from traceback import clear_frames, walk_tb
 from typing import TYPE_CHECKING, Any
 
 from .constraints import BooleanConstraint
@@ -35,12 +37,12 @@ if TYPE_CHECKING:
     from qiskit import QuantumCircuit
 
     from .compilation import CompiledProgram
-    from .snapshot_calibration_comparison import _PendingCalibrationFusion
     from .snapshot_calibration_overlap_receipt import _VerifiedOverlapReceipt
 
 
 MAX_COMPILATION_BUNDLE_CANDIDATES = 8
 _StudyRequest = tuple[tuple[tuple[int, ...], ...], dict[str, Any], int]
+_FusionCaptures = dict[str, Callable[[], dict[str, Any]]]
 
 
 def _prepare_study(
@@ -133,41 +135,66 @@ def _run_prepared_study(
     fusion_probability_tolerance: float | None = None,
 ) -> dict[str, Any]:
     requested = {",".join(map(str, layout)): layout for layout in prepared.layouts}
+    captures, completed, unavailable, pending = _capture_study_references(
+        prepared, requested, required, round_inputs=round_inputs, verified_programs=verified_programs,
+        prepare_fusion=fusion_probability_tolerance is not None,
+    )
+    return _finish_prepared_study(
+        constraint, prepared, options, required, validation_trials, requested=requested,
+        captures=captures, completed=completed, unavailable=unavailable, pending=pending,
+        fusion_probability_tolerance=fusion_probability_tolerance,
+    )
+
+
+def _capture_study_references(
+    prepared: _PreparedCalibrationComparison, requested: dict[str, tuple[int, ...]], required: int, *,
+    round_inputs: dict[tuple[int, ...], tuple[tuple[QuantumCircuit, str | None], ...]] | None = None,
+    verified_programs: dict[str, CompiledProgram] | None = None, prepare_fusion: bool = False,
+) -> tuple[dict[str, dict[str, Any]], dict[str, dict[str, Any]], list[str], _FusionCaptures]:
     captures = {}
     completed = {}
     unavailable = []
-    pending: dict[str, _PendingCalibrationFusion] = {}
-    reference_blocked = False
+    pending: _FusionCaptures = {}
     for key, layout in requested.items():
         capture_options = {} if round_inputs is None else {
             "round_inputs": round_inputs[layout], "verified_programs": verified_programs,
         }
         diagnostic = None
-        if fusion_probability_tolerance is None:
-            report = _capture_calibration_layout(prepared, layout, **capture_options)
-        else:
+        if prepare_fusion:
             report, diagnostic = _capture_calibration_layout_reference(prepared, layout, **capture_options)
+        else:
+            report = _capture_calibration_layout(prepared, layout, **capture_options)
         captures[key] = _seal_study_capture(report, layout, required)
-        if report["status"] == "COMPLETED":
+        capture_status = report["status"]
+        if capture_status == "COMPLETED":
             if diagnostic is not None:
-                pending[key] = diagnostic
-            elif fusion_probability_tolerance is not None:
+                pending[key] = partial(_capture_calibration_layout_fusion, prepared, diagnostic)
+            elif prepare_fusion:
                 raise RuntimeError("completed reference capture has no prepared fusion diagnostic")
             completed[key] = report
         else:
             unavailable.append(key)
-            if report["status"] == "LOCAL_RESULT_WAIT_TIMED_OUT":
-                cancelled = report.get("local_job_cancelled")
-                if cancelled is False or (fusion_probability_tolerance is not None and cancelled is not True):
-                    reference_blocked = True
-                    break
+        del diagnostic
+        if capture_status == "LOCAL_RESULT_WAIT_TIMED_OUT":
+            cancelled = report.get("local_job_cancelled")
+            if cancelled is False or (prepare_fusion and cancelled is not True):
+                pending.clear()
+                break
+    return captures, completed, unavailable, pending
 
+
+def _finish_prepared_study(
+    constraint: BooleanConstraint, prepared: _PreparedCalibrationComparison, options: dict[str, Any],
+    required: int, validation_trials: int, *, requested: dict[str, tuple[int, ...]],
+    captures: dict[str, dict[str, Any]], completed: dict[str, dict[str, Any]], unavailable: list[str],
+    pending: _FusionCaptures, fusion_probability_tolerance: float | None,
+) -> dict[str, Any]:
     planning = None
     fusion = None
     if fusion_probability_tolerance is not None:
         fusion, planning = _run_study_fusion(
-            constraint, prepared, options, required, validation_trials, fusion_probability_tolerance,
-            requested=requested, reference_reports=completed, pending={} if reference_blocked else pending,
+            constraint, options, required, validation_trials, fusion_probability_tolerance,
+            requested=requested, reference_reports=completed, pending=pending,
         )
     status = "CALIBRATION_STUDY_UNAVAILABLE"
     if completed:
@@ -208,36 +235,60 @@ def _seal_study_capture(report: dict[str, Any], layout: tuple[int, ...], require
     return {"report_sha256": _digest(report), "report": report}
 
 
+def _clear_fusion_error_frames(error: BaseException) -> None:
+    # A caller or worker can keep an error alive after we record its message.
+    # Release compact setup held by finished frames without changing the message.
+    owned_frames = {frame for frame, _ in walk_tb(error.__traceback__)}
+    errors = [error]
+    seen = set()
+    while errors:
+        item = errors.pop()
+        if id(item) in seen:
+            continue
+        seen.add(id(item))
+        frames = {frame for frame, _ in walk_tb(item.__traceback__)}
+        # An unrelated exception being handled by the caller can appear as context.
+        if not owned_frames.intersection(frames):
+            continue
+        owned_frames.update(frames)
+        clear_frames(item.__traceback__)
+        errors.extend(link for link in (item.__cause__, item.__context__) if link is not None)
+
+
 def _run_study_fusion(
-    constraint: BooleanConstraint, prepared: _PreparedCalibrationComparison, options: dict[str, Any],
+    constraint: BooleanConstraint, options: dict[str, Any],
     required: int, validation_trials: int, tolerance: float, *, requested: dict[str, tuple[int, ...]],
-    reference_reports: dict[str, dict[str, Any]], pending: dict[str, _PendingCalibrationFusion],
+    reference_reports: dict[str, dict[str, Any]], pending: _FusionCaptures,
 ) -> tuple[dict[str, Any], dict[str, Any] | None]:
     captures = {}
     completed = {}
     unavailable = []
     failures = {}
-    for key, layout in requested.items():
-        if key not in pending:
-            continue
-        try:
-            report = _capture_calibration_layout_fusion(prepared, pending[key])
-            captures[key] = _seal_study_capture(report, layout, required)
-        except Exception as error:
-            # A genuine QiskitError comes from an already imported SDK. The
-            # study module and its mocked capture tests can stay SDK-free.
-            qiskit_error = getattr(sys.modules.get("qiskit.exceptions"), "QiskitError", ())
-            if not isinstance(error, (RuntimeError, ValueError)) and not isinstance(error, qiskit_error):
-                raise
-            unavailable.append(key)
-            failures[key] = {"error_type": type(error).__name__, "message": str(error)}
-            break
-        if report["status"] == "COMPLETED":
-            completed[key] = report
-        else:
-            unavailable.append(key)
-            if report["status"] == "LOCAL_RESULT_WAIT_TIMED_OUT" and report.get("local_job_cancelled") is not True:
+    try:
+        for key, layout in requested.items():
+            if key not in pending:
+                continue
+            try:
+                report = pending.pop(key)()
+                captures[key] = _seal_study_capture(report, layout, required)
+            except Exception as error:
+                # A genuine QiskitError comes from an already imported SDK. The
+                # study module and its mocked capture tests can stay SDK-free.
+                qiskit_error = getattr(sys.modules.get("qiskit.exceptions"), "QiskitError", ())
+                if not isinstance(error, (RuntimeError, ValueError)) and not isinstance(error, qiskit_error):
+                    raise
+                unavailable.append(key)
+                failures[key] = {"error_type": type(error).__name__, "message": str(error)}
+                _clear_fusion_error_frames(error)
                 break
+            if report["status"] == "COMPLETED":
+                completed[key] = report
+            else:
+                unavailable.append(key)
+                if report["status"] == "LOCAL_RESULT_WAIT_TIMED_OUT" and report.get("local_job_cancelled") is not True:
+                    break
+    finally:
+        pending.clear()
 
     planning = check = None
     if len(completed) == len(requested):

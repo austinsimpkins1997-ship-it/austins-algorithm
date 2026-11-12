@@ -16,6 +16,7 @@ def main() -> None:
         "snapshot-calibration-budget-plan", "snapshot-calibration-bundle-inspect", "snapshot-calibration-bundle-compose",
         "snapshot-calibration-overlap-receipt-verify",
         "snapshot-calibration-study", "snapshot-calibration-study-verify",
+        "snapshot-calibration-study-checkpoint", "snapshot-calibration-study-resume",
         "constraint-replay",
         "constraint-receipt-verify", "constraint-receipt-compare",
         "constraint-regression", "placement-receipt-verify", "placement-receipt-compare", "placement-receipt-replay",
@@ -36,6 +37,7 @@ def main() -> None:
         "snapshot-calibration-budget-plan, snapshot-calibration-bundle-inspect, snapshot-calibration-bundle-compose, "
         "snapshot-calibration-overlap-receipt-verify, "
         "snapshot-calibration-study, snapshot-calibration-study-verify, "
+        "snapshot-calibration-study-checkpoint, snapshot-calibration-study-resume, "
         "constraint-replay, "
         "constraint-receipt-verify, constraint-receipt-compare, constraint-regression, "
         "placement-receipt-verify, placement-receipt-compare, placement-receipt-replay, "

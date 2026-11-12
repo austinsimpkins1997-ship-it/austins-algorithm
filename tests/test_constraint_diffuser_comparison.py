@@ -973,6 +973,90 @@ class ConstraintDiffuserComparisonTests(unittest.TestCase):
             with self.assertRaisesRegex(ValueError, "validation disagrees on completed_shots"):
                 verify_diffuser_receipt(changed)
 
+    def test_regression_allows_only_pinned_modeled_probability_roundoff_before_sampling(self):
+        from hashlib import sha256
+        from io import BytesIO
+        from types import SimpleNamespace
+
+        from austins_algorithm.constraint_diffuser_comparison import _diffuser_replay_plan
+        from austins_algorithm.diffuser_receipt import _read_verified_diffuser_receipt
+        from austins_algorithm.diffuser_receipt_comparison import _compare_verified_diffuser_bundles
+        from austins_algorithm.diffuser_regression import _worker_main
+        from austins_algorithm.diffuser_replay import run_diffuser_replay, save_diffuser_replay
+
+        def modeled(rate):
+            return {"verified_hit_probability": rate, "outcome_probabilities": {"0000": 1 - rate, "0001": rate}}
+
+        def changed_work(report, schedule):
+            plan = deepcopy(_diffuser_replay_plan(report, schedule))
+            if "witness_replay" not in report:
+                plan["variants"][0]["budget"]["nominal_two_qubit_gate_executions"] += 1
+                plan["variants"][-1]["budget"]["nominal_two_qubit_gate_executions"] -= 1
+            return plan
+
+        build = Path(__file__).resolve().parents[1] / ".build"
+        build.mkdir(exist_ok=True)
+        with (
+            TemporaryDirectory(dir=build) as directory,
+            patch(f"{MODULE}._prepared_snapshot_probabilities", return_value=modeled(.75)) as probabilities,
+            patch(f"{MODULE}._sample_snapshot", side_effect=_completed_witness_sample) as sampler,
+        ):
+            root = Path(directory)
+            request = root / "request.json"
+            baseline = root / "baseline"
+            save_diffuser_replay(
+                request, CONSTRAINT, model="manila", placements=PLACEMENTS, synthesis="clause-flags",
+                witness_probability=.05, witness_max_shots=2, witness_seed_schedule=(41, 43, 47, 53),
+                witness_validation_power=.5,
+            )
+            run_diffuser_replay(request, receipt_directory=baseline)
+            raw = request.read_bytes()
+            raw_request_pin = sha256(raw).hexdigest()
+            report_pin = sha256((baseline / "report.json").read_bytes()).hexdigest()
+            verified = _read_verified_diffuser_receipt(baseline)
+            sampler.reset_mock()
+
+            def worker(destination, pin=report_pin):
+                with patch.object(sys, "stdin", SimpleNamespace(buffer=BytesIO(raw))):
+                    _worker_main(str(destination), raw_request_pin, str(baseline), pin)
+
+            probabilities.return_value = modeled(.75 + 1e-13)
+            with self.assertRaisesRegex(ValueError, "modeled budget, seed schedule, or output differs"):
+                run_diffuser_replay(request)
+            with self.assertRaisesRegex(ValueError, "preflight report or request"):
+                worker(root / "wrong-report-pin", "f" * 64)
+            sampler.assert_not_called()
+
+            observed_path = root / "observed"
+            worker(observed_path)
+            observed = _read_verified_diffuser_receipt(observed_path)
+            comparison = _compare_verified_diffuser_bundles(verified, observed, probability_roundoff=True)
+            self.assertEqual(comparison["status"], "DIFFUSER_RECEIPTS_MATCH")
+            self.assertEqual(comparison["alignment"]["matching_completed_batches"], 16)
+            self.assertFalse(comparison["request_content_matches"])
+            roundoff = comparison["probability_roundoff"]
+            self.assertEqual(roundoff["status"], "MODELED_PROBABILITY_ROUNDOFF_MATCHED")
+            self.assertNotEqual(roundoff["baseline_plan_sha256"], roundoff["observed_plan_sha256"])
+            self.assertGreater(roundoff["changed_modeled_probability_values"], 0)
+            self.assertLessEqual(roundoff["maximum_absolute_difference"], 1e-12)
+            self.assertEqual(sampler.call_count, 16)
+            self.assertEqual((baseline / "request.json").read_bytes(), raw)
+            self.assertEqual(sha256((baseline / "report.json").read_bytes()).hexdigest(), report_pin)
+
+            sampler.reset_mock()
+            probabilities.return_value = modeled(.75 + 1e-9)
+            with self.assertRaisesRegex(ValueError, "modeled plan differs"):
+                worker(root / "material-probability-change")
+            sampler.assert_not_called()
+
+            probabilities.return_value = modeled(.75)
+            with (
+                patch(f"{MODULE}._diffuser_replay_plan", side_effect=changed_work),
+                self.assertRaisesRegex(ValueError, "nominal_two_qubit_gate_executions"),
+            ):
+                worker(root / "changed-variant-work")
+            sampler.assert_not_called()
+
     def test_native_replay_binds_importer_preference_and_actual_importer(self):
         from qiskit import qasm3
 

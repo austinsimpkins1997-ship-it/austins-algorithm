@@ -1,6 +1,6 @@
 """SDK-free orchestration checks for a dated calibration study."""
 
-from contextlib import redirect_stdout
+from contextlib import ExitStack, redirect_stdout
 from copy import deepcopy
 from hashlib import sha256
 from io import StringIO
@@ -43,24 +43,28 @@ class SnapshotCalibrationStudyTests(unittest.TestCase):
         build.mkdir(exist_ok=True)
         directory = TemporaryDirectory(dir=build, prefix="calibration-study-test-")
         self.addCleanup(directory.cleanup)
+        self.fixture_contexts = ExitStack()
+        self.addCleanup(self.fixture_contexts.close)
         self.directory = Path(directory.name)
         self.earlier = _snapshot(self.directory, "earlier", _DATES[0])
         self.later = _snapshot(self.directory, "later", _DATES[1])
         self.oracle = SimpleNamespace(num_qubits=2)
         self.backends = {label: SimpleNamespace(target=object()) for label in ("earlier", "later")}
         backends_by_date = dict(zip(_DATES, self.backends.values(), strict=True))
-        self.build_oracle = self.enterContext(patch.object(
+        self.build_oracle = self.fixture_contexts.enter_context(patch.object(
             snapshot_calibration_comparison, "build_constraint_phase_oracle", return_value=self.oracle,
         ))
-        self.audit_oracle = self.enterContext(patch.object(
+        self.audit_oracle = self.fixture_contexts.enter_context(patch.object(
             snapshot_calibration_comparison, "audit_phase_oracle",
             return_value={"states_checked": 4, "marked_count": 1, "marked_states": ["00"]},
         ))
-        self.build_backend = self.enterContext(patch.object(
+        self.build_backend = self.fixture_contexts.enter_context(patch.object(
             snapshot_calibration_comparison, "_offline_backend",
             side_effect=lambda configuration, properties: backends_by_date[properties["last_update_date"]],
         ))
-        self.enterContext(patch.object(snapshot_calibration_comparison, "version", side_effect=_VERSIONS.__getitem__))
+        self.fixture_contexts.enter_context(patch.object(
+            snapshot_calibration_comparison, "version", side_effect=_VERSIONS.__getitem__,
+        ))
 
     def study(self, **overrides):
         options = {"initial_layouts": [(0, 1)], "target_probability": .7, "shot_caps": [2], "query_caps": [1]}

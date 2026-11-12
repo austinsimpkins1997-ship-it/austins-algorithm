@@ -68,11 +68,10 @@ class _PreparedCalibrationComparison:
     density_fusion: bool = False
 
 
-@dataclass(frozen=True)
+@dataclass
 class _PendingCalibrationFusion:
     prepared: _PreparedCalibrationComparison
-    report: dict[str, Any]
-    programs: dict[int, CompiledProgram]
+    report: dict[str, Any] | None
     compact_by_date: dict[str, dict[int, tuple[QuantumCircuit, AerSimulator]]]
 
 
@@ -366,7 +365,7 @@ def _capture_calibration_layout_reference(
     )
     if report["status"] != "PENDING":
         return report, None
-    pending = _PendingCalibrationFusion(prepared, deepcopy(report), programs, {})
+    pending = _PendingCalibrationFusion(prepared, deepcopy(report), {})
     _simulate_calibration_layout(prepared, report, programs, compact_by_date=pending.compact_by_date)
     if report["status"] != "COMPLETED":
         return report, None
@@ -381,11 +380,32 @@ def _capture_calibration_layout_fusion(
     """Run the fused arm on the same verified circuits and compact simulators."""
     if pending.prepared is not prepared:
         raise ValueError("pending fusion capture belongs to a different calibration request")
-    if pending.compact_by_date.keys() != prepared.backends.keys():
+    report, compact_by_date = pending.report, pending.compact_by_date
+    if report is None:
+        raise ValueError("pending fusion capture has already been consumed")
+    if compact_by_date.keys() != prepared.backends.keys():
         raise RuntimeError("pending fusion capture requires every reference simulator")
-    report = deepcopy(pending.report)
+    pending.report = None
+    pending.compact_by_date = {}
     _record_requested_fusion(report, prepared)
-    _simulate_calibration_layout(prepared, report, pending.programs, compact_by_date=pending.compact_by_date)
+    _simulate_calibration_layout(prepared, report, None, compact_by_date=compact_by_date)
+    return report
+
+
+def _capture_restored_calibration_layout_fusion(
+    prepared: _PreparedCalibrationComparison, reference: dict[str, Any], programs: Mapping[int, CompiledProgram],
+) -> dict[str, Any]:
+    """Run the fused arm from verified physical rounds, rebuilding only its compact setup."""
+    static_rounds = {
+        key: {field: row[field] for field in ("compilation", "target_calibrations")}
+        for key, row in reference["rounds"].items()
+    }
+    report = deepcopy({
+        **reference, "status": "PENDING", "rounds": static_rounds,
+        "maximum_absolute_hit_probability_difference": None,
+    })
+    _record_requested_fusion(report, prepared)
+    _simulate_calibration_layout(prepared, report, programs)
     return report
 
 
@@ -451,7 +471,7 @@ def _compile_calibration_layout(
 
 
 def _simulate_calibration_layout(
-    prepared: _PreparedCalibrationComparison, report: dict[str, Any], programs: Mapping[int, CompiledProgram], *,
+    prepared: _PreparedCalibrationComparison, report: dict[str, Any], programs: Mapping[int, CompiledProgram] | None, *,
     compact_by_date: dict[str, dict[int, tuple[QuantumCircuit, AerSimulator]]] | None = None,
 ) -> None:
     from qiskit_aer import AerSimulator
@@ -459,11 +479,14 @@ def _simulate_calibration_layout(
     witnesses = set(report["audit"]["marked_states"])
     observed_fusion = report.get("density_fusion", {}).get("observed")
     fusion_options = {"density_fusion": True} if observed_fusion is not None else {}
+    round_reports = report["rounds"]
     distributions, readout = {}, {}
     for label, backend in prepared.backends.items():
         distributions[label], readout[label] = {}, {}
         compact = None if compact_by_date is None else compact_by_date.get(label)
         if compact is None:
+            if programs is None:
+                raise RuntimeError("fusion capture requires a prebuilt compact simulator")
             compact = _compact_snapshot_inputs(
                 backend, programs, AerSimulator, static_channels=prepared.static_channels.get(label),
                 prune_unused_gate_noise=True,
@@ -491,21 +514,21 @@ def _simulate_calibration_layout(
             for rounds, replay in zip(indices, replays, strict=True):
                 probabilities = _prepared_snapshot_probabilities(*replay, verifier=witnesses.__contains__)
                 distributions[label][rounds] = probabilities["outcome_probabilities"]
-                physical = programs[rounds].report["openqasm"]["export_wire_to_target_qubit"]
+                physical = round_reports[str(rounds)]["compilation"]["openqasm"]["export_wire_to_target_qubit"]
                 readout[label][rounds] = {
                     str(physical[wire]): channel["probabilities"]
                     for channel in replay[1].options.noise_model.to_dict()["errors"]
                     for (wire,) in channel["gate_qubits"]
                 }
 
-    for rounds in programs:
-        row = report["rounds"][str(rounds)]
+    for key, row in round_reports.items():
+        rounds = int(key)
         row["readout_assignment_matrices"] = {label: channels[rounds] for label, channels in readout.items()}
         row.update(_distribution_difference(
             distributions["earlier"][rounds], distributions["later"][rounds], witnesses,
         ))
     report["maximum_absolute_hit_probability_difference"] = max(
-        abs(row["right_minus_left_hit_probability"]) for row in report["rounds"].values()
+        abs(row["right_minus_left_hit_probability"]) for row in round_reports.values()
     )
     report["status"] = "COMPLETED"
 

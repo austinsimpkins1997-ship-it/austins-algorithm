@@ -10,6 +10,7 @@ from typing import Any
 from .constraint_diffuser_comparison import (
     _DiffuserExports,
     _diffuser_replay_digest,
+    _diffuser_replay_plan,
     run_constraint_diffuser_comparison,
 )
 from .constraint_oracle import SYNTHESIS_METHODS
@@ -130,34 +131,67 @@ def run_diffuser_replay(
 
 def _run_diffuser_replay_bytes(
     raw: bytes, *, path: str | Path, check_only: bool = False, receipt_directory: str | Path | None = None,
+    _baseline_report: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
     if len(raw) > MAX_REPLAY_BYTES:
         raise ValueError(f"replay request exceeds {MAX_REPLAY_BYTES} bytes")
     document, constraint = _decode_diffuser_replay(raw)
     if receipt_directory is None:
+        if _baseline_report is not None:
+            raise ValueError("a diffuser regression with roundoff evidence requires a new execution receipt")
         return _evaluate_diffuser_replay(path, document, constraint, check_only=check_only)
 
     from .replay_receipt import _new_receipt_directory, _write_replay_receipt
 
     with _new_receipt_directory(receipt_directory) as directory:
-        report = _evaluate_diffuser_replay(path, document, constraint, check_only=False)
+        options = {} if _baseline_report is None else {"_baseline_report": _baseline_report}
+        report = _evaluate_diffuser_replay(path, document, constraint, check_only=False, **options)
+        if _baseline_report is not None:
+            raw, content_sha256 = _diffuser_request_bytes_for_plan(raw, document, report["witness_replay_evidence"]["plan_sha256"])
+            if content_sha256 != document["content_sha256"]:
+                report["witness_replay"].update(replay_request=str(directory / "request.json"), content_sha256=content_sha256)
         _write_replay_receipt(directory, request=raw, report=report, openqasm=None)
     return report
+
+
+def _diffuser_request_bytes_for_plan(
+    raw: bytes, document: dict[str, Any], observed_plan_sha256: str,
+) -> tuple[bytes, str]:
+    if observed_plan_sha256 == document["expected"]["plan_sha256"]:
+        return raw, document["content_sha256"]
+    _require_digest(observed_plan_sha256, "observed plan_sha256")
+    updated = {key: value for key, value in document.items() if key != "content_sha256"}
+    updated["expected"] = {**document["expected"], "plan_sha256": observed_plan_sha256}
+    updated["content_sha256"] = _diffuser_replay_digest(updated)
+    encoded = (json.dumps(updated, indent=2, allow_nan=False) + "\n").encode("utf-8")
+    if len(encoded) > MAX_REPLAY_BYTES:
+        raise ValueError(f"observed diffuser replay request exceeds {MAX_REPLAY_BYTES} bytes")
+    return encoded, updated["content_sha256"]
 
 
 def _evaluate_diffuser_replay(
     path: str | Path, document: dict[str, Any], constraint: BooleanConstraint, *, check_only: bool,
     _openqasm_exports: _DiffuserExports | None = None,
+    _baseline_report: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
     witness = dict(document["witness"])
     if check_only:
         witness["witness_stop_on_futility"] = False
     expected = document["expected"]
+    plan_options = {}
+    if _baseline_report is not None:
+        plan_options["_expected_witness_replay_plan"] = _diffuser_replay_plan(
+            _baseline_report, _baseline_report["modeled_witness_validation"],
+        )
     report = run_constraint_diffuser_comparison(
         constraint, **document["sampling"], **witness, simulation_method="modeled_probabilities",
         witness_plan_only=check_only, _expected_witness_replay=expected, _openqasm_exports=_openqasm_exports,
+        **plan_options,
     )
-    if report.get("witness_replay_evidence") != expected:
+    evidence = report.get("witness_replay_evidence")
+    if _baseline_report is not None and isinstance(evidence, dict) and evidence.keys() == expected.keys():
+        evidence = {**evidence, "plan_sha256": expected["plan_sha256"]}
+    if evidence != expected:
         raise ValueError(f"diffuser replay preparation did not complete ({report['status']})")
     report["witness_replay"] = {
         "status": "DIFFUSER_REPLAY_VERIFIED", "replay_request": str(path),

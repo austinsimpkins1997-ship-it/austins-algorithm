@@ -115,17 +115,17 @@ jobs:
             @{
               Name = 'phase-cover'
               OutputName = 'manila-smoke-results'
-              Arguments = @('constraint-regression', (Join-Path $coverFixture 'manifest.json'))
+              Arguments = @('constraint-regression', (Join-Path $coverFixture 'manifest.json'), '--allow-probability-roundoff')
             }
             @{
               Name = 'diffuser'
               OutputName = 'manila-diffuser-smoke-results'
-              Arguments = @('diffuser-regression', '--manifest', (Join-Path $diffuserFixture 'manifest.json'))
+              Arguments = @('diffuser-regression', '--manifest', (Join-Path $diffuserFixture 'manifest.json'), '--allow-probability-roundoff')
             }
             @{
               Name = 'diffuser-native'
               OutputName = 'manila-diffuser-native-smoke-results'
-              Arguments = @('diffuser-regression', '--manifest', (Join-Path $diffuserFixture 'manifest-native.json'))
+              Arguments = @('diffuser-regression', '--manifest', (Join-Path $diffuserFixture 'manifest-native.json'), '--allow-probability-roundoff')
             }
           )
           Push-Location -LiteralPath $env:RUNNER_TEMP

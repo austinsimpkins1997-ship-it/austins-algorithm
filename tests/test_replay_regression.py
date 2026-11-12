@@ -285,6 +285,39 @@ class ReplayRegressionTests(unittest.TestCase):
         self.assertEqual(result["cases"][0]["comparison"]["sections"]["report"]["first_difference"],
                          {"path": "/witness_budget/status", "kind": "VALUE"})
 
+    def test_only_opted_in_regression_accepts_probability_roundoff(self):
+        self._write_manifest()
+        for baseline in (self.first, self.second):
+            other = baseline / "receipt.json"
+            raw = json.dumps({**REPORT, "cross_cover_total_variation_distance": 0.0}).encode("utf-8")
+            (baseline / "report.json").write_bytes(raw)
+            receipt = json.loads(other.read_bytes())
+            receipt["artifacts"]["report.json"] = {"bytes": len(raw), "sha256": sha256(raw).hexdigest()}
+            other.write_text(json.dumps(receipt), encoding="utf-8")
+
+        def run(request, directory, log, timeout, *, expected_sha256):
+            self.assertEqual(sha256(request.read_bytes()).hexdigest(), expected_sha256)
+            directory.mkdir()
+            self._save_bundle(directory, report={**REPORT, "cross_cover_total_variation_distance": 7e-16})
+            return 0
+
+        with patch(WORKER, side_effect=run) as worker:
+            strict = self._run()
+            tolerant = run_replay_regression(
+                self.manifest, output_directory=self.root / "roundoff-results", probability_roundoff=True,
+            )
+        self.assertEqual(worker.call_count, 4)
+        self.assertEqual(strict["status"], "REGRESSION_FAILED")
+        self.assertNotIn("probability_roundoff", strict)
+        self.assertEqual(tolerant["status"], "REGRESSION_MATCHED")
+        self.assertIs(tolerant["probability_roundoff"], True)
+        self.assertEqual(tolerant["planned_max_sampling_shots"], strict["planned_max_sampling_shots"])
+        for row in tolerant["cases"]:
+            comparison = row["comparison"]["sections"]
+            self.assertTrue(comparison["request"]["exact_bytes_match"])
+            self.assertTrue(comparison["selected_qasm"]["matches"])
+            self.assertEqual(comparison["report"]["probability_roundoff"]["accepted_count"], 1)
+
     def test_child_rejects_changed_staged_request_before_replay(self):
         staged, receipt, log = (self.root / name for name in ("staged.json", "receipt", "stderr.log"))
         staged.write_bytes(REQUEST_BYTES + b" ")
@@ -292,6 +325,17 @@ class ReplayRegressionTests(unittest.TestCase):
         self.assertNotEqual(code, 0)
         self.assertFalse(receipt.exists())
         self.assertIn(b"staged request differs", log.read_bytes())
+
+    def test_passes_explicit_worker_arguments_after_request_pin(self):
+        staged, receipt, log = (self.root / name for name in ("staged.json", "receipt", "stderr.log"))
+        staged.write_bytes(REQUEST_BYTES)
+        pin = sha256(REQUEST_BYTES).hexdigest()
+        extra = ("baseline directory", "f" * 64)
+        with patch("austins_algorithm.replay_regression.subprocess.run",
+                   return_value=subprocess.CompletedProcess([], 0)) as worker:
+            code = _run_worker(staged, receipt, log, 5, expected_sha256=pin, worker_arguments=extra)
+        self.assertEqual(code, 0)
+        self.assertEqual(worker.call_args.args[0][-4:], [str(receipt), pin, *extra])
 
     def test_large_staged_request_does_not_block_worker_timeout(self):
         staged, receipt, log = (self.root / name for name in ("large.json", "receipt", "stderr.log"))

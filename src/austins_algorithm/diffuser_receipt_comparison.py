@@ -6,8 +6,12 @@ from math import fsum, isclose, isfinite
 from pathlib import Path
 from typing import Any
 
-from .constraint_diffuser_comparison import _diffuser_circuit_identity
+from .constraint_diffuser_comparison import (
+    DIFFUSER_PLAN_PROBABILITY_ROUNDOFF, _compare_diffuser_plan_roundoff, _diffuser_circuit_identity,
+    _diffuser_replay_plan,
+)
 from .diffuser_receipt import _VerifiedDiffuserBundle, _read_verified_diffuser_receipt
+from .diffuser_replay import _decode_diffuser_replay, _diffuser_request_bytes_for_plan
 
 
 _CircuitKey = tuple[tuple[int, ...], int, str]
@@ -230,9 +234,27 @@ def compare_diffuser_receipts(
 
 def _compare_verified_diffuser_bundles(
     left: _VerifiedDiffuserBundle, right: _VerifiedDiffuserBundle, *, include_timings: bool = False,
+    probability_roundoff: bool = False,
 ) -> dict[str, Any]:
-    left_receipt, left_report, _ = left
-    right_receipt, right_report, _ = right
+    left_receipt, left_report, left_request = left
+    right_receipt, right_report, right_request = right
+    roundoff = None
+    if probability_roundoff:
+        observed_digest = right_report["witness_replay_evidence"]["plan_sha256"]
+        document, _ = _decode_diffuser_replay(left_request)
+        expected_request, _ = _diffuser_request_bytes_for_plan(left_request, document, observed_digest)
+        if right_request != expected_request:
+            raise ValueError("diffuser replay receipt differs from the preflight request beyond the observed plan digest")
+        statistics = _compare_diffuser_plan_roundoff(
+            _diffuser_replay_plan(left_report, left_report["modeled_witness_validation"]),
+            _diffuser_replay_plan(right_report, right_report["modeled_witness_validation"]),
+        )
+        baseline_digest = document["expected"]["plan_sha256"]
+        roundoff = {
+            "status": "EXACT_PLAN_MATCH" if baseline_digest == observed_digest else "MODELED_PROBABILITY_ROUNDOFF_MATCHED",
+            "absolute_tolerance": DIFFUSER_PLAN_PROBABILITY_ROUNDOFF,
+            "baseline_plan_sha256": baseline_digest, "observed_plan_sha256": observed_digest, **statistics,
+        }
     left_snapshot = left_report["witness_replay_evidence"]["snapshot"]
     right_snapshot = right_report["witness_replay_evidence"]["snapshot"]
     context_changes = [
@@ -256,7 +278,7 @@ def _compare_verified_diffuser_bundles(
             left_record, right_record = left_variant[1], right_variant[1]
             for field, matches in (
                 ("compiled_circuit", _diffuser_circuit_identity(left_record) == _diffuser_circuit_identity(right_record)),
-                ("modeled_output", left_record["modeled_output"] == right_record["modeled_output"]),
+                ("modeled_output", probability_roundoff or left_record["modeled_output"] == right_record["modeled_output"]),
                 ("shots_per_batch", left_record["modeled_witness_budget"]["shots_required"] ==
                  right_record["modeled_witness_budget"]["shots_required"]),
             ):
@@ -276,8 +298,9 @@ def _compare_verified_diffuser_bundles(
 
     left_workload, right_workload = left_receipt["workload"], right_receipt["workload"]
     same_request = left_receipt["content_sha256"] == right_receipt["content_sha256"]
-    matches = same_request and left_workload == right_workload and all(
-        not row["context_changes"] and not row["batches"]["differences"] for row in variants
+    matches = (same_request or probability_roundoff) and left_workload == right_workload and all(
+        not row["context_changes"] and not row["batches"]["differences"]
+        and (not probability_roundoff or row["left"] == row["right"]) for row in variants
     )
     report = {
         "status": "DIFFUSER_RECEIPTS_MATCH" if matches else "DIFFUSER_RECEIPTS_DIFFER",
@@ -303,4 +326,6 @@ def _compare_verified_diffuser_bundles(
     }
     if include_timings:
         report["compilation_timing"] = _summarize_compilation_timing(variants)
+    if roundoff is not None:
+        report["probability_roundoff"] = roundoff
     return report

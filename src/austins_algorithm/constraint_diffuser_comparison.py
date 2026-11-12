@@ -59,6 +59,11 @@ MAX_DIFFUSER_BATCHES_PER_VARIANT = 8
 FAMILY_CONFIDENCE = 0.95
 DIFFUSER_VARIANT_COUNT = 2 * len(COMPARISON_ROUNDS) * len(COMPARED_DIFFUSERS)
 DIFFUSER_CONFIDENCE_PER_VARIANT = 1 - (1 - FAMILY_CONFIDENCE) / DIFFUSER_VARIANT_COUNT
+DIFFUSER_PLAN_PROBABILITY_ROUNDOFF = 1e-12
+_MODELED_BUDGET_PROBABILITIES = {
+    "modeled_hit_probability", "success_probability_at_cap", "success_probability_at_budget",
+    "validation_power_at_cap", "validation_power_at_budget",
+}
 
 
 def _split_diffuser_seeds(seeds: Sequence[int]) -> dict[str, list[int]]:
@@ -283,33 +288,81 @@ def _diffuser_replay_circuit_digest(cells: Sequence[dict[str, Any]]) -> str:
     return _diffuser_replay_digest(circuits)
 
 
+def _diffuser_replay_plan(report: dict[str, Any], schedule: dict[str, Any]) -> dict[str, Any]:
+    return {
+        "constraint_sha256": report["constraint_sha256"],
+        "target": report["modeled_witness_target"],
+        "confidence_per_variant": schedule["confidence_per_variant"],
+        "required_successful_batches": schedule["required_successful_batches"],
+        "seed_schedule": schedule["seed_schedule"],
+        "variants": [
+            {
+                "placement": cell["placement"], "rounds": cell["rounds"], "diffuser": diffuser,
+                "budget": variant["modeled_witness_budget"], "modeled_output": variant["modeled_output"],
+            }
+            for cell in report["cells"] for diffuser, variant in cell["variants"].items()
+        ],
+    }
+
+
 def _diffuser_replay_plan_evidence(report: dict[str, Any], schedule: dict[str, Any]) -> dict[str, Any]:
-    variants = [
-        {
-            "placement": cell["placement"], "rounds": cell["rounds"], "diffuser": diffuser,
-            "budget": variant["modeled_witness_budget"], "modeled_output": variant["modeled_output"],
-        }
-        for cell in report["cells"] for diffuser, variant in cell["variants"].items()
-    ]
-    budgets = [variant["budget"] for variant in variants]
+    plan = _diffuser_replay_plan(report, schedule)
+    budgets = [variant["budget"] for variant in plan["variants"]]
     if len(budgets) != DIFFUSER_VARIANT_COUNT or any(budget["shots_required"] is None for budget in budgets):
         raise ValueError("diffuser replay requires a feasible witness budget for all eight variants")
     batches = schedule["batches_per_variant"]
     return {
-        "plan_sha256": _diffuser_replay_digest({
-            "constraint_sha256": report["constraint_sha256"],
-            "target": report["modeled_witness_target"],
-            "confidence_per_variant": schedule["confidence_per_variant"],
-            "required_successful_batches": schedule["required_successful_batches"],
-            "seed_schedule": schedule["seed_schedule"],
-            "variants": variants,
-        }),
+        "plan_sha256": _diffuser_replay_digest(plan),
         "planned_batches": batches * len(budgets),
         "planned_shots": batches * sum(budget["shots_required"] for budget in budgets),
         "planned_nominal_two_qubit_gate_executions": batches * sum(
             budget["nominal_two_qubit_gate_executions"] for budget in budgets
         ),
     }
+
+
+def _modeled_plan_probability(path: tuple[str | int, ...]) -> bool:
+    if len(path) < 4 or path[0] != "variants" or type(path[1]) is not int:
+        return False
+    section = path[2:]
+    return (
+        (len(section) == 2 and section[0] == "budget" and section[1] in _MODELED_BUDGET_PROBABILITIES)
+        or section == ("modeled_output", "verified_hit_probability")
+        or (len(section) == 3 and section[:2] == ("modeled_output", "outcome_probabilities")
+            and isinstance(section[2], str) and bool(section[2]) and set(section[2]) <= {"0", "1"})
+    )
+
+
+def _compare_diffuser_plan_roundoff(reference: dict[str, Any], observed: dict[str, Any]) -> dict[str, Any]:
+    """Require identical plan structure and permit only the named finite probability differences."""
+    changed = 0
+    maximum = 0.0
+
+    def compare(left: Any, right: Any, path: tuple[str | int, ...]) -> None:
+        nonlocal changed, maximum
+        if type(left) is type(right):
+            if isinstance(left, dict) and left.keys() == right.keys():
+                for key, value in left.items():
+                    compare(value, right[key], (*path, key))
+                return
+            if isinstance(left, list) and len(left) == len(right):
+                for index, (a, b) in enumerate(zip(left, right, strict=True)):
+                    compare(a, b, (*path, index))
+                return
+            if left == right and (type(left) is not float or left.hex() == right.hex()):
+                return
+            if (type(left) is float and _modeled_plan_probability(path)
+                    and 0 <= left <= 1 and 0 <= right <= 1):
+                difference = abs(right - left)
+                if difference <= DIFFUSER_PLAN_PROBABILITY_ROUNDOFF:
+                    changed += 1
+                    maximum = max(maximum, difference)
+                    return
+        location = "/".join(map(str, path))
+        raise ValueError(f"diffuser replay modeled plan differs at {location}")
+
+    compare(reference, observed, ())
+    return {"maximum_absolute_difference": maximum, "changed_modeled_probability_values": changed}
 
 
 def _plan_modeled_witness_validation(report: dict[str, Any]) -> None:
@@ -440,6 +493,7 @@ def run_constraint_diffuser_comparison(
     witness_validation_power: float | None = None, witness_search_max_batches: int | None = None,
     _capture_witness_replay: bool = False, _expected_witness_replay: Mapping[str, Any] | None = None,
     _openqasm_exports: _DiffuserExports | None = None,
+    _expected_witness_replay_plan: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
     """Compare fixed diffusers and optionally plan or run a modeled witness holdout."""
     if not isinstance(constraint, BooleanConstraint):
@@ -488,6 +542,11 @@ def run_constraint_diffuser_comparison(
     validation_seeds = None if witness_seed_schedule is None else _normalize_validation_seeds(witness_seed_schedule)
     validation_batches = 0 if validation_seeds is None else len(validation_seeds) // 2
     track_replay = _capture_witness_replay or _expected_witness_replay is not None
+    if _expected_witness_replay_plan is not None and (
+        _expected_witness_replay is None
+        or _diffuser_replay_digest(_expected_witness_replay_plan) != _expected_witness_replay["plan_sha256"]
+    ):
+        raise ValueError("diffuser roundoff requires the verified baseline plan")
     if track_replay and (validation_seeds is None or witness_validation_power is None):
         raise ValueError("diffuser replay requires a fixed seed schedule and validation power")
 
@@ -781,8 +840,15 @@ def run_constraint_diffuser_comparison(
             report["status"] = "COMPLETED"
         if track_replay:
             evidence = report["witness_replay_evidence"]
-            evidence.update(_diffuser_replay_plan_evidence(report, report[schedule_key]))
-            if _expected_witness_replay is not None and evidence != _expected_witness_replay:
+            schedule = report[schedule_key]
+            evidence.update(_diffuser_replay_plan_evidence(report, schedule))
+            if _expected_witness_replay_plan is not None:
+                if _diffuser_replay_digest({**evidence, "plan_sha256": _expected_witness_replay["plan_sha256"]}) != (
+                    _diffuser_replay_digest(dict(_expected_witness_replay))
+                ):
+                    raise ValueError("diffuser replay circuit, snapshot, software, or planned totals differ")
+                _compare_diffuser_plan_roundoff(_expected_witness_replay_plan, _diffuser_replay_plan(report, schedule))
+            elif _expected_witness_replay is not None and evidence != _expected_witness_replay:
                 raise ValueError("diffuser replay modeled budget, seed schedule, or output differs")
         if search_schedules:
             search_started = perf_counter()

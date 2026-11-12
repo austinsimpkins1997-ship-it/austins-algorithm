@@ -262,8 +262,12 @@
 
 134. **Verify a saved paired study offline.** Bind both capture sets to the constraint and round request, verify coverage, and recompute the default plan, seeded replay, and complete fusion diagnostic. See [verify a saved paired calibration study offline](CONSTRAINT_WORKFLOW.md#verify-a-saved-paired-calibration-study-offline).
 
+135. **Release paired simulator setup as each layout finishes.** Drop full programs after reference capture and release compact setup before planning, including after cancellation or error. Measure live objects and process memory and verify the resulting reports in fresh processes. See [release simulator setup and carry evidence across runs](CONSTRAINT_WORKFLOW.md#release-simulator-setup-and-carry-evidence-across-runs).
+
+136. **Restart a paired study from a pinned reference checkpoint.** Save completed default captures and verified compiled rounds before fusion, validate their request and scope after restart, and rebuild the compact simulators to complete the comparison. See [restart a paired study from completed reference captures](CONSTRAINT_WORKFLOW.md#restart-a-paired-study-from-completed-reference-captures).
+
 ## Remaining evidence
 
-- Measure simulator retention and peak memory in wider, multi-layout paired studies. Check whether earlier release of completed layout setup reduces memory while preserving capture order and exact reports.
+- Test incremental checkpointing after each completed reference layout. Measure the work recovered after a controlled interruption and retain the original request, scope, and cancellation boundary across restarts.
 - Run one authorized physical experiment with a named backend, record its actual job and measured results, and compare its hit rate and full cost with the local references.
 - Verify the Manila smoke job on a hosted Windows runner when the workflow reaches GitHub.

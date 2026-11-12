@@ -583,6 +583,36 @@ If a candidate fails, the study keeps the completed default captures and plan. `
 
 In the six- and seven-active-wire Jakarta checks, each paired study read four archive files, built two targets, audited the oracle once, and assembled two sets of compact simulators. Running the two captures separately doubled those setup counts. Both paths restored the same four verified rounds and submitted eight local Aer jobs over sixteen circuits. The two-layout Manila receipt check reproduced the saved default report and matched fusion decisions at its configured target. These checks use dated local IBM models.
 
+#### Release simulator setup and carry evidence across runs
+
+The reference phase keeps the compact circuits and dated simulators needed by the fusion phase. Each full compiled program can leave the reference scope after compaction, with any caller-owned cache retaining its own entries. The fusion phase releases each layout's compact setup as it completes and releases unused setup when it stops. The report keeps the compiled wire maps, outcome distributions, and capture digests needed for the audit.
+
+The three-layout Jakarta check retained 12 full compiled programs at the start of planning in the baseline and zero with early release. Compact simulators went from 12 to zero at that boundary. In the receipt-backed Manila check, compact simulators went from eight to zero and one verified overlap program remained in scope. These counts measure tracked Python objects. Process peak also includes simulator and allocator memory across the full run, including the point at which all compact layouts are still needed.
+
+The three-layout Jakarta and receipt-backed two-layout Manila checks produced byte-identical reports before and after the change. Fresh SDK-free processes independently verified both reports after the simulator processes exited. Keep the constraint document, study JSON and known SHA-256 together for that handoff.
+
+#### Restart a paired study from completed reference captures
+
+Use `snapshot-calibration-study-checkpoint` to run the default captures and stop before fusion. Choose a new directory. The command saves the completed captures, settings and archive scope in `checkpoint.json`, and saves the verified compiled rounds in `compilation-bundle.json`. Retain both files and the reported `checkpoint_sha256`.
+
+In this PowerShell example, `$archiveArgs` supplies the `--earlier` and `--later` archive arguments with their SHA-256 pins. Choose the layout and budget grid for the constraint.
+
+```powershell
+New-Item -ItemType Directory -Path .build -Force | Out-Null
+$saved = python -m austins_algorithm snapshot-calibration-study-checkpoint constraint.json .build/paired-checkpoint @archiveArgs `
+  --initial-layout 0 1 2 3 5 4 6 --target-probability 0.9 --shot-caps 1 4 8 9 --query-caps 0 1 2 3 `
+  --max-rounds-per-shot 3 --validate-trials 128 --native-qasm --batch-density --fusion-probability-tolerance 1e-12
+if ($LASTEXITCODE -ne 0) { throw 'Checkpoint creation did not complete' }
+$checkpointPin = (($saved -join [Environment]::NewLine) | ConvertFrom-Json).checkpoint_sha256
+
+python -m austins_algorithm snapshot-calibration-study-resume constraint.json .build/paired-checkpoint @archiveArgs `
+  --expected-checkpoint-sha256 $checkpointPin
+```
+
+Resume checks the checkpoint pin, reference capture digests, constraint, dated archives, compiler scope, software versions, restored circuits, target calibrations and readout matrices before submitting fusion jobs. It rebuilds each layout's compact simulator setup from the verified bundle and returns the ordinary paired study report with its authoritative default plan and seeded replay. The checkpoint stays reusable for an explicit later run.
+
+A ready checkpoint represents a complete reference phase. Reference failures leave coverage evidence and prevent publication of the ready manifest. Resume uses the settings saved in the checkpoint and runs only the fusion phase. The workflow uses local archived models and supports the ordinary paired study. Receipt-backed studies have a separate compiler lineage workflow.
+
 #### Verify a saved paired calibration study offline
 
 Save the paired study JSON and retain its file SHA-256. Supply the same constraint document and the known digest when reviewing or transferring the result. The verifier supports files up to 64 MiB, including the output of a receipt-backed study.

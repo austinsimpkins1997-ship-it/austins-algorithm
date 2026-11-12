@@ -5,6 +5,7 @@ from __future__ import annotations
 import json
 import subprocess
 import sys
+from collections.abc import Sequence
 from dataclasses import dataclass
 from hashlib import sha256
 from pathlib import Path
@@ -110,12 +111,12 @@ def _worker_main(directory: str, expected_sha256: str) -> None:
 
 def _run_worker(
     request: Path, directory: Path, log: Path, timeout_seconds: int, *, expected_sha256: str,
-    worker_entry: str | None = None,
+    worker_entry: str | None = None, worker_arguments: Sequence[str] = (),
 ) -> int:
     command = [
         sys.executable, "-B", "-c", _WORKER_ENTRY if worker_entry is None else worker_entry,
         str(Path(__file__).resolve().parents[1]),
-        str(directory), expected_sha256,
+        str(directory), expected_sha256, *worker_arguments,
     ]
     # File-backed stdin lets the process timeout apply even if startup never reads the request.
     with request.open("rb") as stdin, log.open("xb") as stderr:
@@ -126,7 +127,7 @@ def _run_worker(
 
 def _run_case(
     case: _Case, request: bytes, baseline_receipt: dict[str, Any],
-    directory: Path, row: dict[str, Any],
+    directory: Path, row: dict[str, Any], *, probability_roundoff: bool = False,
 ) -> None:
     staged = directory / "request.json"
     receipt = directory / "receipt"
@@ -158,15 +159,21 @@ def _run_case(
         if replay[1]["request.json"] != request:
             raise ValueError("replay receipt did not record the preflight request bytes")
         row["replay_execution"] = _execution_record(replay[1]["report.json"], "replay report")
-        row["comparison"] = _compare_verified_bundles(case.baseline, receipt, baseline, replay)
+        row["comparison"] = _compare_verified_bundles(
+            case.baseline, receipt, baseline, replay, probability_roundoff=probability_roundoff,
+        )
     except ValueError as exc:
         row.update(status="COMPARISON_FAILED", error=str(exc))
         return
     row["status"] = "MATCHED" if row["comparison"]["status"] == "REPLAY_RECEIPTS_MATCH" else "DIFFERED"
 
 
-def run_replay_regression(manifest: str | Path, *, output_directory: str | Path) -> dict[str, Any]:
+def run_replay_regression(
+    manifest: str | Path, *, output_directory: str | Path, probability_roundoff: bool = False,
+) -> dict[str, Any]:
     """Preflight all budgets, run each case once, and save a summary of the observed outcomes."""
+    if type(probability_roundoff) is not bool:
+        raise TypeError("probability_roundoff must be a boolean")
     manifest = Path(manifest).resolve()
     raw, cases, total_limit = _read_manifest(manifest)
     output = Path(output_directory).resolve()
@@ -214,7 +221,7 @@ def run_replay_regression(manifest: str | Path, *, output_directory: str | Path)
     else:
         for index, (case, row) in enumerate(zip(cases, rows), start=1):
             request, receipt = verified[case.id]
-            _run_case(case, request, receipt, output / f"{index:02d}", row)
+            _run_case(case, request, receipt, output / f"{index:02d}", row, probability_roundoff=probability_roundoff)
         status = "REGRESSION_MATCHED" if all(row["status"] == "MATCHED" for row in rows) else "REGRESSION_FAILED"
 
     summary = {
@@ -223,6 +230,8 @@ def run_replay_regression(manifest: str | Path, *, output_directory: str | Path)
         "max_worker_seconds": sum(case.timeout_seconds for case in cases),
         "cases": rows,
     }
+    if probability_roundoff:
+        summary["probability_roundoff"] = True
     with (output / "summary.json").open("x", encoding="utf-8", newline="\n") as stream:
         json.dump(summary, stream, indent=2, allow_nan=False)
         stream.write("\n")

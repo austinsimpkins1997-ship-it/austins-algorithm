@@ -2,6 +2,7 @@
 
 from contextlib import redirect_stderr, redirect_stdout
 from copy import deepcopy
+from gc import collect
 from importlib.util import find_spec
 from io import StringIO
 import json
@@ -10,6 +11,7 @@ import sys
 from types import SimpleNamespace
 import unittest
 from unittest.mock import patch
+from weakref import ref
 
 
 TESTS = Path(__file__).resolve().parent
@@ -19,6 +21,7 @@ sys.path.insert(0, str(TESTS.parent / "src"))
 from austins_algorithm import snapshot_calibration_comparison as comparison
 from austins_algorithm import snapshot_calibration_study as study
 from austins_algorithm.__main__ import main
+from austins_algorithm.compilation import CompiledProgram
 from austins_algorithm.snapshot_calibration_compilation_cache import SnapshotCalibrationCompilationCache
 from austins_algorithm.snapshot_calibration_fusion import compare_snapshot_calibration_fusion_budgets
 from austins_algorithm.unknown_count_snapshot_profile import _digest
@@ -36,6 +39,10 @@ _REFERENCE_COMPLETED = "CALIBRATION_STUDY_COMPLETED"
 _CHECKED = "CALIBRATION_FUSION_STUDY_CHECKED"
 _PARTIAL = "CALIBRATION_FUSION_STUDY_PARTIAL"
 _UNAVAILABLE = "CALIBRATION_FUSION_STUDY_UNAVAILABLE"
+
+
+class _LifetimeResource:
+    pass
 
 
 class SnapshotCalibrationPairedFusionInputTests(unittest.TestCase):
@@ -68,8 +75,12 @@ class SnapshotCalibrationPairedFusionInputTests(unittest.TestCase):
                 return _marked(self.timeout(prepared, layout, cancelled=kind == "confirmed"))
             return _marked(self.capture(prepared, layout))
 
-        self.enterContext(patch.object(study, "_capture_calibration_layout_reference", side_effect=reference))
-        self.enterContext(patch.object(study, "_capture_calibration_layout_fusion", side_effect=fusion))
+        self.fixture_contexts.enter_context(patch.object(
+            study, "_capture_calibration_layout_reference", side_effect=reference,
+        ))
+        self.fixture_contexts.enter_context(patch.object(
+            study, "_capture_calibration_layout_fusion", side_effect=fusion,
+        ))
         return events
 
     def assert_reference_complete(self, result):
@@ -195,6 +206,101 @@ class SnapshotCalibrationPairedFusionInputTests(unittest.TestCase):
         self.assertEqual(captured["status"], "LOCAL_RESULT_WAIT_TIMED_OUT")
         publish.assert_not_called()
         self.assertEqual(cache.stats()["entries"], 0)
+
+    def test_reference_releases_full_compilation_and_fusion_consumes_compact_setup(self):
+        prepared = SimpleNamespace(compilation_cache=None, backends={"earlier": None, "later": None})
+        compile_refs, compact_refs = [], []
+
+        def compile_layout(*_args, **_options):
+            circuit = _LifetimeResource()
+            program = CompiledProgram(circuit, "OPENQASM 3.0;", {})
+            compile_refs.extend((ref(program), ref(circuit)))
+            return {"status": "PENDING"}, {0: program}, {"round": program}
+
+        def simulate(_prepared, report, programs, *, compact_by_date):
+            if "density_fusion" in report:
+                self.assertIsNone(programs)
+                self.assertTrue(all(probe() is not None for probe in compact_refs))
+            else:
+                self.assertIs(programs[0], compile_refs[0]())
+                for label in prepared.backends:
+                    circuit, simulator = _LifetimeResource(), _LifetimeResource()
+                    compact_by_date[label] = {0: (circuit, simulator)}
+                    compact_refs.extend((ref(circuit), ref(simulator)))
+            report["status"] = "COMPLETED"
+
+        # Record only weak references so test instrumentation cannot keep the resources alive.
+        with (
+            patch.object(comparison, "_compile_calibration_layout", new=compile_layout),
+            patch.object(comparison, "_simulate_calibration_layout", new=simulate),
+        ):
+            reference, pending = comparison._capture_calibration_layout_reference(prepared, _LAYOUTS[0])
+            self.assertEqual(reference["status"], "COMPLETED")
+            self.assertIsNotNone(pending)
+            collect()
+            self.assertEqual(len(compile_refs), 2)
+            self.assertTrue(all(probe() is None for probe in compile_refs))
+            self.assertEqual(len(compact_refs), 4)
+            self.assertTrue(all(probe() is not None for probe in compact_refs))
+            candidate = comparison._capture_calibration_layout_fusion(prepared, pending)
+        self.assertEqual(candidate["status"], "COMPLETED")
+        collect()
+        self.assertTrue(all(probe() is None for probe in compact_refs))
+
+    def test_compact_setup_is_released_before_next_candidate_and_reference_planning(self):
+        compare = study.compare_snapshot_calibration_fusion_budgets
+        plan = study.plan_snapshot_calibration_budgets
+        cases = (
+            ("complete", _LAYOUTS, "comparison"),
+            ("confirmed candidate timeout", _LAYOUTS, "reference"),
+            ("unconfirmed candidate timeout", _LAYOUTS[:2], "reference"),
+            ("candidate exception", _LAYOUTS[:2], "reference"),
+            ("unconfirmed reference timeout", [], "reference"),
+        )
+        for outcome, expected_candidates, expected_planner in cases:
+            with self.subTest(outcome=outcome):
+                setup_refs, attempted, planning = {}, [], []
+                failure = RuntimeError("candidate preparation failed")
+
+                def reference(prepared, layout, **_options):
+                    if outcome == "unconfirmed reference timeout" and layout == _LAYOUTS[1]:
+                        return self.timeout(prepared, layout, cancelled=False), None
+                    setup = _LifetimeResource()
+                    setup_refs[layout] = ref(setup)
+                    return self.capture(prepared, layout), SimpleNamespace(layout=layout, setup=setup)
+
+                def candidate(prepared, pending):
+                    collect()
+                    self.assertTrue(all(setup_refs[layout]() is None for layout in attempted))
+                    layout = pending.layout
+                    self.assertIs(setup_refs[layout](), pending.setup)
+                    attempted.append(layout)
+                    if layout == _LAYOUTS[1]:
+                        if outcome == "candidate exception":
+                            raise failure
+                        if outcome.endswith("candidate timeout"):
+                            return _marked(self.timeout(prepared, layout, cancelled=outcome.startswith("confirmed")))
+                    return _marked(self.capture(prepared, layout))
+
+                def check_planning(function, name):
+                    def checked(*args, **kwargs):
+                        collect()
+                        self.assertTrue(all(probe() is None for probe in setup_refs.values()))
+                        planning.append(name)
+                        return function(*args, **kwargs)
+                    return checked
+
+                with (
+                    patch.object(study, "_capture_calibration_layout_reference", new=reference),
+                    patch.object(study, "_capture_calibration_layout_fusion", new=candidate),
+                    patch.object(study, "compare_snapshot_calibration_fusion_budgets",
+                                 new=check_planning(compare, "comparison")),
+                    patch.object(study, "plan_snapshot_calibration_budgets",
+                                 new=check_planning(plan, "reference")),
+                ):
+                    self.run_study(fusion_probability_tolerance=1e-12)
+                self.assertEqual(attempted, expected_candidates)
+                self.assertEqual(planning, [expected_planner])
 
     def cli_argv(self):
         constraint = self.directory / "constraint.json"
