@@ -613,6 +613,169 @@ Resume checks the checkpoint pin, reference capture digests, constraint, dated a
 
 A ready checkpoint represents a complete reference phase. Reference failures leave coverage evidence and prevent publication of the ready manifest. Resume uses the settings saved in the checkpoint and runs only the fusion phase. The workflow uses local archived models and supports the ordinary paired study. Receipt-backed studies have a separate compiler lineage workflow.
 
+#### Resume between reference layouts
+
+Use `snapshot-calibration-study-incremental` to publish one checkpoint per completed default layout. Each generation links to its predecessor by SHA-256 and stores one sealed reference capture and its compiled bundle. The generation file is published after its bundle and restored circuits verify. Keep the checkpoint directory and the returned `generation_sha256` together.
+
+This example pauses after the first layout. Supply the pinned archive arguments in `$archiveArgs` and use the same constraint and archives for both commands.
+
+```powershell
+New-Item -ItemType Directory -Path .build -Force | Out-Null
+$saved = python -m austins_algorithm snapshot-calibration-study-incremental constraint.json .build/layout-checkpoints @archiveArgs `
+  --initial-layout 0 1 2 3 5 4 6 --initial-layout 6 4 5 3 2 1 0 `
+  --target-probability 0.9 --shot-caps 1 4 8 9 --query-caps 0 1 2 3 --max-rounds-per-shot 3 `
+  --validate-trials 128 --native-qasm --batch-density --fusion-probability-tolerance 1e-12 --max-new-reference-layouts 1
+if ($LASTEXITCODE -ne 0) { throw 'Incremental capture stopped with a failure' }
+$pin = (($saved -join [Environment]::NewLine) | ConvertFrom-Json).generation_sha256
+
+python -m austins_algorithm snapshot-calibration-study-incremental-resume constraint.json .build/layout-checkpoints @archiveArgs `
+  --expected-generation-sha256 $pin --study-output .build/completed-paired-study.json
+```
+
+Resume verifies the chain, archives, compiler scope, captures, compiled circuits and readout evidence before submitting density jobs. It runs only the missing reference layouts. Fusion starts after the full reference grid completes. The completed JSON contains the paired result under `study`. Read `study.fusion.status` for the coverage of the fusion diagnostics. With `--study-output`, the command also writes the paired result to a new file and reports its SHA-256 for the offline verifier. If that file cannot be published, the command returns the result and checkpoint pin with the write error.
+
+After an interrupted process exits, choose a trusted generation file from `generations/` and use the SHA-256 in its filename. Resume verifies that filename against the bytes and follows the predecessor chain. A failed reference or publication leaves the earlier tip available. Keep that tip when comparing branches or investigating a stop. Add `--reference-only` to either incremental command to return `CALIBRATION_STUDY_INCREMENTAL_REFERENCES_COMPLETED` after the full reference grid, before any fusion. This mode returns `study: null`. Use the separate fusion continuation command below to save diagnostic progress.
+
+#### Resume between fusion attempts
+
+`snapshot-calibration-study-fusion-continue` requires a pinned complete incremental reference chain. It saves each completed diagnostic attempt in `fusion-generations/<SHA-256>.json`, including recognized failures and timed-out captures. Each record binds the reference tip, canonical layout, predecessor and outcome. It reuses the reference circuits without creating another compiled bundle.
+
+This example creates the complete reference chain, pauses after one fusion attempt, and finishes in another invocation. Supply the pinned archive arguments in `$archiveArgs` and the same seven-wire constraint as in the reference example.
+
+```powershell
+New-Item -ItemType Directory -Path .build -Force | Out-Null
+$reference = python -m austins_algorithm snapshot-calibration-study-incremental constraint.json .build/fusion-checkpoints @archiveArgs `
+  --initial-layout 0 1 2 3 5 4 6 --initial-layout 6 4 5 3 2 1 0 `
+  --target-probability 0.9 --shot-caps 1 4 8 9 --query-caps 0 1 2 3 --max-rounds-per-shot 3 `
+  --validate-trials 128 --native-qasm --batch-density --fusion-probability-tolerance 1e-12 --reference-only
+if ($LASTEXITCODE -ne 0) { throw 'Reference checkpoint did not complete' }
+$referencePin = (($reference -join [Environment]::NewLine) | ConvertFrom-Json).generation_sha256
+
+$first = python -m austins_algorithm snapshot-calibration-study-fusion-continue constraint.json .build/fusion-checkpoints @archiveArgs `
+  --expected-reference-generation-sha256 $referencePin --max-new-fusion-layouts 1
+if ($LASTEXITCODE -ne 0) { throw 'Fusion attempt stopped; inspect its returned status and pins' }
+$fusionPin = (($first -join [Environment]::NewLine) | ConvertFrom-Json).generation_sha256
+
+python -m austins_algorithm snapshot-calibration-study-fusion-continue constraint.json .build/fusion-checkpoints @archiveArgs `
+  --expected-reference-generation-sha256 $referencePin --expected-fusion-generation-sha256 $fusionPin `
+  --study-output .build/fusion-completed-study.json
+```
+
+Both pins are explicit evidence inputs. Omitting the fusion pin starts from the first attempt; the command does not discover a latest tip. Resume verifies the complete reference chain, software versions, archives, compiler scope, physical circuits, calibrations and readout evidence. It checks every saved fusion capture against its same-layout reference before launching any new density job. A recognized saved error or unconfirmed cancellation is terminal: reopening that tip returns the same partial report and starts no new diagnostic jobs. A timeout with confirmed cancellation can be saved and followed by later layouts.
+
+`--max-new-fusion-layouts` accepts 1–8 and limits new attempts. `CALIBRATION_STUDY_FUSION_CHECKPOINT_PAUSED` has `study: null`; `COMPLETED` and `TERMINAL` suffixes return the ordinary paired report under `study`. `COMPLETED` means all attempts are recorded; inspect `study.fusion.status` for diagnostic coverage. A terminal result exits with status 1. A full or terminal report exported with `--study-output` uses the existing SDK-free study verifier. An output-write failure retains the report and checkpoint pins in the command result.
+
+Publication validates the serialized outcome before the immutable marker is installed. Failure leaves the previous pin usable and reports the attempted outcome. If that unpublished attempt reports unconfirmed cancellation, establish that the local job has stopped before another attempt; a missing marker does not confirm cancellation. Keep the returned reference and fusion pins with the store. If a process exits after publication but before printing its result, recover the known marker's pin and verify it on resume. A job interrupted before publication is outside the saved prefix and may run again. These checkpoints preserve software evidence across runs; they do not keep a process alive or provide quantum-device evidence.
+
+#### Reuse verified checkpoint context within one invocation
+
+Fusion continuation retains its validated reference and history for the current invocation. Each new attempt validates its own outcome and runs the existing runtime callback. Before installing its marker, the store checks cached-state integrity and streams the raw SHA-256 of every ancestor manifest again. A failed callback or publication leaves the context at its previous tip. Reentrant appends to the same context are rejected.
+
+The public command, manifest schema and generation digests are unchanged. Each new invocation creates a fresh context; standalone readers and publishers still fully validate their explicit inputs. Archive, compiler, physical-circuit, calibration and readout checks remain in the runtime restoration path. This reuse does not skip those checks or select a different tip.
+
+The local three-append Jakarta store sequence used the same complete reference tip and exact saved candidate captures before and after the change:
+
+| Store operation | Previous implementation | Invocation context |
+| --- | ---: | ---: |
+| Reference manifests parsed | 9 | 3 |
+| Prior fusion manifests parsed | 3 | 0 |
+| Semantic capture validations | 6 | 3 |
+| Calibration profile calculations | 12 | 6 |
+| Publication callbacks | 3 | 3 |
+| Raw manifest bytes read | 1,070,154 | 1,338,000 |
+
+The extra 267,846 bytes preserve fresh raw-pin checks after callbacks while prior JSON/profile results are reused. These are instrumented operation counts for three store appends. The profiling callback checked staged ordinals; runtime callback validation, density execution and independent circuit restoration are outside these counts. They establish reduced repeated validation, not a general wall-time speedup. The resulting marker files retain the original generation pins and report evidence.
+
+#### Retain only the current restoration chunk
+
+Fusion continuation restores and validates all saved reference rounds, then keeps compiled-program objects only for the next canonical chunk allowed by `--max-new-fusion-layouts`. Saved attempts, layouts beyond that chunk, and completed or terminal histories require no pending fusion setup. Reference-only and predicted reference-pause calls also discard their restored programs. A reference call that completes the grid and runs fusion in the same invocation retains the programs needed by that full fusion phase.
+
+This changes object ownership after verification. It preserves the public commands, checkpoint schemas, generation pins, complete capture maps and report bytes. Every requested round still passes QPY restoration, exact compilation-report comparison, both dated target-calibration comparisons and readout checks before new density work. Late corruption in a skipped layout still rejects the call. Partially built callback maps are cleared on errors, and each temporary restored-program reference is released after its checks.
+
+The 2026-11-12 weak-reference probes used the same pinned eight-layout Jakarta store before and after the change, with four rounds per layout and two new fusion layouts allowed per call:
+
+| Call | Prior peak tracked programs | Current peak tracked programs | Prior programs retained after restoration | Current programs retained after restoration |
+| --- | ---: | ---: | ---: | ---: |
+| Two saved fusion attempts, next two allowed | 32 | 9 | 32 | 8 |
+| Six saved fusion attempts, final two allowed | 32 | 8 | 32 | 8 |
+| All eight fusion attempts saved | 32 | 1 | 32 | 0 |
+| Reference-only call with all eight references saved | 32 | 1 | 32 | 0 |
+
+Both maintained copies reproduced these counts. Each call still performed 32 round restorations, 64 dated calibration comparisons and eight readout-layout checks. Calls with pending fusion ran eight density preparations; complete and reference-only calls ran none. Each before/after result envelope matched byte-for-byte. The complete study remained identical to the eight-layout benchmark report below.
+
+The probes track returned `CompiledProgram` instances through weak references. The single transient object is observed while its own round is checked; other Python/native objects and memory retained by SDKs are outside this count. These object-lifetime measurements establish reduced retention under the tested conditions. Process-wide memory or latency savings require separate representative measurement.
+
+#### Benchmark checkpoint continuation at eight layouts
+
+[`examples/benchmark_checkpoint_continuation.py`](examples/benchmark_checkpoint_continuation.py) runs one uninterrupted paired study and a sequence of fresh reference/fusion workers. It checks exact final study bytes and runs the SDK-free verifier. A scenario supplies the constraint file and its raw SHA-256, both pinned archive records, study options, chunk sizes and a worker deadline. The example accepts one to eight layouts. Install the package with its IBM extra in the interpreter running the example.
+
+Use [`examples/checkpoint_constraint.json`](examples/checkpoint_constraint.json) for the measured six-variable case. It accepts `q0 = 0` and `q1 = 1`, with four free bits. Its reversible circuit uses seven active wires. Prepare the four local Jakarta archive files as in the dated calibration workflow, then construct the scenario with their actual paths and pins:
+
+```powershell
+function Get-ArchiveRecord([string]$configuration, [string]$properties) {
+  $config = (Resolve-Path -LiteralPath $configuration).Path
+  $props = (Resolve-Path -LiteralPath $properties).Path
+  return @{
+    configuration = $config; properties = $props
+    configuration_sha256 = (Get-FileHash -LiteralPath $config -Algorithm SHA256).Hash.ToLowerInvariant()
+    properties_sha256 = (Get-FileHash -LiteralPath $props -Algorithm SHA256).Hash.ToLowerInvariant()
+  }
+}
+$constraint = (Resolve-Path -LiteralPath examples/checkpoint_constraint.json).Path
+$scenario = @{
+  schema_version = 1
+  constraint = @($constraint, (Get-FileHash -LiteralPath $constraint -Algorithm SHA256).Hash.ToLowerInvariant())
+  earlier = Get-ArchiveRecord $earlierConfiguration $earlierProperties
+  later = Get-ArchiveRecord $laterConfiguration $laterProperties
+  study = @{
+    initial_layouts = @(
+      @(0,1,2,3,4,5,6), @(0,1,2,3,5,4,6), @(0,1,2,4,3,5,6), @(0,1,3,2,4,5,6),
+      @(0,2,1,3,4,5,6), @(1,0,2,3,4,5,6), @(1,2,3,5,4,6,0), @(6,4,5,3,2,1,0)
+    )
+    target_probability = 0.9; shot_caps = @(1,4,8,9); query_caps = @(0,1,2,3)
+    max_rounds_per_shot = 3; seed_transpiler = 7; validation_trials = 128
+    prefer_native_qasm = $true; batch_density = $true; fusion_probability_tolerance = 1e-12
+  }
+  limits = @{ reference_layouts_per_process = 2; fusion_layouts_per_process = 2; worker_timeout_seconds = 180 }
+}
+New-Item -ItemType Directory -Path .build -Force | Out-Null
+$scenario | ConvertTo-Json -Depth 8 | Set-Content -LiteralPath .build/checkpoint-scenario.json -Encoding utf8
+python -B examples/benchmark_checkpoint_continuation.py --scenario .build/checkpoint-scenario.json --directory .build/checkpoint-benchmark
+```
+
+Set `$earlierConfiguration`, `$earlierProperties`, `$laterConfiguration` and `$laterProperties` to the four archive paths before running the block. The output directory must be new. Each stage retains its stdout/stderr, result, metrics and any study export. `summary.json` records the last known reference/fusion pins, report hashes, preparation counts, per-phase wall time and storage. Failure or incomplete diagnostics stops later workers. A timeout records cancellation as `UNKNOWN`; confirm any local worker has stopped before resuming from trusted pins. The example does not automatically retry or overwrite evidence.
+
+On 2026-11-12, both maintained copies completed all nine workers: one baseline, four reference chunks and four fusion chunks. Each arm compiled 32 rounds and ran 64 density preparations, for 128 preparations across both arms under the general 256-preparation limit. The restart arm restored 208 compiled-round instances across its fresh processes. Both final reports contained 3,640,898 bytes and had SHA-256 `bf5333a5663c97b7960001a6a1336622e80df78e143f8b25eb4be39576f141f7`. The checkpoint store contained eight reference markers, eight fusion markers and eight compiled bundles: 24 files totaling 2,548,178 bytes. Separate SDK-free processes verified both reports and both eight-generation chains.
+
+| Local copy | Baseline worker wall seconds | Sum of continuation worker wall seconds | Baseline peak working set MiB | Highest continuation-worker peak MiB |
+| --- | ---: | ---: | ---: | ---: |
+| ChronoRealm workspace | 14.31 | 44.49 | 206.11 | 220.20 |
+| E: standalone | 11.22 | 40.06 | 206.54 | 221.19 |
+
+These are single-run observations on Windows with Python 3.12.15, Qiskit 2.6.2, Aer 0.18.2 and IBM Runtime 0.51.0. Thread settings were `QISKIT_PARALLEL=FALSE`, `OMP_NUM_THREADS=1`, and `RAYON_NUM_THREADS=2`. Parent wall time includes startup, input checks and output. Windows peak working set covers each worker's lifetime, including imports; endpoint private usage is recorded separately. The continuation columns aggregate different fresh processes and show added restart cost in these runs. They do not establish a speedup, reduced memory use, practical quantum advantage or a system capacity limit. Storage for all evidence explicitly excludes `summary.json` from its own count.
+
+#### Verify saved checkpoint benchmark records
+
+Keep a trusted SHA-256 of the benchmark's `summary.json`, then use the base package to audit its saved evidence. This command needs no Qiskit, Aer, IBM credentials or simulator rerun. Supply the original constraint document explicitly; its raw bytes must match the normalized scenario's recorded constraint pin.
+
+```powershell
+$summaryPin = (Get-FileHash -LiteralPath .build/checkpoint-benchmark/summary.json -Algorithm SHA256).Hash.ToLowerInvariant()
+python -m austins_algorithm checkpoint-benchmark-verify examples/checkpoint_constraint.json .build/checkpoint-benchmark `
+  --expected-summary-sha256 $summaryPin
+```
+
+Computing a digest from a newly received file records the bytes you have; it does not authenticate their origin. For transfer or later review, compare against the digest retained from the trusted run. Save any audit output outside the selected evidence directory: its storage totals cover the saved tree and exclude only `summary.json`.
+
+The verifier checks the supplied summary pin before parsing, strict finite and duplicate-free JSON, canonical local stage directories, available result/metrics/log files, scenario bindings, reference/fusion chain prefixes and checkpoint handoffs. It checks logical operation counts and caps, finite nonnegative durations, memory-field availability, recorded phase sums and actual storage totals. Available paired reports must match their stamps and pass the independent study verifier. Complete records must substantiate their final report comparison. Legitimately stopped records retain their last known reachable checkpoint pins and available evidence; no later stage may follow a failed or timed-out worker.
+
+An audit that passes returns `CHECKPOINT_BENCHMARK_RECORD_VERIFIED` and exit code zero. Inspect `recorded_status` and coverage before interpreting the original run: a valid worker-failure or timeout record can pass the audit. Corrupt or inconsistent available evidence returns a CLI error, including an invalid scientific report inside a summary marked `BENCHMARK_VERIFICATION_FAILED`. This command never resumes work or changes cancellation status.
+
+Schema 1 summaries embed parsed stage JSON rather than historical raw-stage digests. The audit requires those parsed values to match the local files and reports the current raw file hashes with `PARSED_CONTENT_MATCHES_SUMMARY`. Equal-length formatting changes can preserve that binding; changes in file sizes also have to satisfy the recorded storage totals. This is not a historical raw-byte signature or proof of execution. Original scenario, calibration-archive, report and module path labels are never followed; fixed local files and explicitly pinned local chains are used, allowing byte-preserving relocation of an evidence directory.
+
+The read-only evidence inventory excludes `summary.json` and is bounded to 8,192 files and 1 GiB. Each inspected file, including the separately pinned summary, is limited to 64 MiB. Unsafe path traversal, symlink/reparse entries, malformed records and inconsistent totals reject the audit. Worker execution, clocks, timing/memory accuracy, archive contents and recorded software/source identity remain `RECORDED_ONLY`; QPY circuits are not decoded. No hardware result, practical quantum advantage or memory-saving claim follows from this check.
+
+On 2026-11-12, SDK-free source and wheel processes in both maintained copies audited the existing #140 and #141 nine-worker eight-layout records, plus a byte-preserving relocated copy. Each saved directory contained 64 files including the summary. Before/after fingerprints confirmed the audits were read-only. The wheel CLI matched the API result, and an incorrect trusted summary pin returned exit code one. Regression fixtures additionally cover stopped/failing/timed-out workers, publication errors, corrupted embedded captures, chain corruption, counter and handoff changes, and unsafe paths. These are local consistency checks of the available records.
+
 #### Verify a saved paired calibration study offline
 
 Save the paired study JSON and retain its file SHA-256. Supply the same constraint document and the known digest when reviewing or transferring the result. The verifier supports files up to 64 MiB, including the output of a receipt-backed study.
@@ -2288,7 +2451,7 @@ The `manila-smoke-regression` job builds one source distribution and installs it
 
 The `manila-smoke-environment` artifact records the installed dependency versions, expected pins, exact source archive and requirements fingerprints, and available Python and runner details. Capture follows installation and writes its evidence before replay starts. A capture failure marks that step failed. The replay steps can still run after a capture failure if installation succeeded. [GitHub runner variables](https://docs.github.com/en/actions/reference/workflows-and-actions/variables)
 
-Before the placement lane was added, local verification ran the workflow command blocks from fresh source distributions in both copies. All three baselines matched their installed-package replays. For each manifest in turn, lowering its total limit by one shot rejected its replay before its worker started. The other two replays matched and the combined step failed. A scratch Git checkout with `core.autocrlf=true` reproduced the original bytes of both diffuser receipts and verified them offline. Hosted runner and artifact upload verification remain pending.
+Before the placement lane was added, local verification ran the workflow command blocks from fresh source distributions in both copies. All three baselines matched their installed-package replays. For each manifest in turn, lowering its total limit by one shot rejected its replay before its worker started. The other two replays matched and the combined step failed. A scratch Git checkout with `core.autocrlf=true` reproduced the original bytes of both diffuser receipts and verified them offline. Subsequently, [GitHub Actions run #8](https://github.com/austinsimpkins1997-ship-it/austins-algorithm/actions/runs/43249759269) passed the hosted Manila smoke job for commit `6c2370b060dbfdcf2ea3feeca72963a282c386ad` on 2026-11-12. Later local changes require their own hosted verification.
 
 #### Local replay timings
 

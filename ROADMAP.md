@@ -266,8 +266,20 @@
 
 136. **Restart a paired study from a pinned reference checkpoint.** Save completed default captures and verified compiled rounds before fusion, validate their request and scope after restart, and rebuild the compact simulators to complete the comparison. See [restart a paired study from completed reference captures](CONSTRAINT_WORKFLOW.md#restart-a-paired-study-from-completed-reference-captures).
 
+137. **Resume between completed reference layouts.** Save one immutable capture and compiled bundle per layout, verify an explicit generation chain after interruption, and continue the remaining references before fusion. See [resume between reference layouts](CONSTRAINT_WORKFLOW.md#resume-between-reference-layouts).
+
+138. **Resume between published fusion attempts.** Bind immutable diagnostic outcomes to a complete reference tip, verify both chains before new jobs, skip saved attempts, and retain terminal cancellation and failure boundaries. Export the ordinary paired report for offline verification. See [resume between fusion attempts](CONSTRAINT_WORKFLOW.md#resume-between-fusion-attempts).
+
+139. **Reuse fusion validation within one invocation.** Validate saved history once, retain explicit branch identity and cached-state integrity, and rehash every ancestor after the callback before publication. Verify exact generation/report parity and preserve standalone validation. See [reuse verified checkpoint context within one invocation](CONSTRAINT_WORKFLOW.md#reuse-verified-checkpoint-context-within-one-invocation).
+
+140. **Exercise eight-layout continuation and verify full package contents.** Add a bounded fresh-process benchmark with exact report checks, resource observations and preserved failure evidence. Run the full eight-layout request on dated Jakarta archives in both copies. Build wheels from a verified source archive and compare every runtime file to prevent stale build-cache contents from entering an artifact. See [benchmark checkpoint continuation at eight layouts](CONSTRAINT_WORKFLOW.md#benchmark-checkpoint-continuation-at-eight-layouts) and [the package build procedure](CONTRIBUTING.md#build-and-check-release-artifacts).
+
+141. **Retain restored programs only for eligible work.** Verify every saved physical round while keeping callback-owned programs only for the fusion chunk that can run now. Discard setup for complete, terminal, reference-only and reference-pause paths; preserve exact reports, pins and late-corruption rejection. See [retain only the current restoration chunk](CONSTRAINT_WORKFLOW.md#retain-only-the-current-restoration-chunk).
+
+142. **Audit saved checkpoint benchmark evidence offline.** Check a pinned summary against the local stage files, immutable chains, available studies, logical operation bounds and recorded totals without the SDK. Keep audit success separate from the original run outcome and resource observations. See [verify saved checkpoint benchmark records](CONSTRAINT_WORKFLOW.md#verify-saved-checkpoint-benchmark-records).
+
 ## Remaining evidence
 
-- Test incremental checkpointing after each completed reference layout. Measure the work recovered after a controlled interruption and retain the original request, scope, and cancellation boundary across restarts.
+- Extend regression coverage to additional supported simulator/OS combinations when a named environment is available. Keep checkpoint records and package artifacts bound to their exact revisions; local checks do not replace hosted verification or physical-device evidence.
 - Run one authorized physical experiment with a named backend, record its actual job and measured results, and compare its hit rate and full cost with the local references.
-- Verify the Manila smoke job on a hosted Windows runner when the workflow reaches GitHub.
+- Keep hosted verification tied to its exact committed revision. [GitHub Actions run #8](https://github.com/austinsimpkins1997-ship-it/austins-algorithm/actions/runs/43249759269) passed all ten jobs, including the Manila smoke regression, for commit `6c2370b060dbfdcf2ea3feeca72963a282c386ad` on 2026-11-12. Later local changes still need a hosted run.

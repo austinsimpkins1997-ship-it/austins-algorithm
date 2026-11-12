@@ -188,14 +188,22 @@ def _finish_prepared_study(
     required: int, validation_trials: int, *, requested: dict[str, tuple[int, ...]],
     captures: dict[str, dict[str, Any]], completed: dict[str, dict[str, Any]], unavailable: list[str],
     pending: _FusionCaptures, fusion_probability_tolerance: float | None,
+    fusion_attempts: tuple[dict[str, dict[str, Any]], dict[str, dict[str, str]]] | None = None,
 ) -> dict[str, Any]:
     planning = None
     fusion = None
     if fusion_probability_tolerance is not None:
-        fusion, planning = _run_study_fusion(
-            constraint, options, required, validation_trials, fusion_probability_tolerance,
-            requested=requested, reference_reports=completed, pending=pending,
-        )
+        if fusion_attempts is None:
+            fusion, planning = _run_study_fusion(
+                constraint, options, required, validation_trials, fusion_probability_tolerance,
+                requested=requested, reference_reports=completed, pending=pending,
+            )
+        else:
+            pending.clear()
+            fusion, planning = _summarize_study_fusion(
+                constraint, options, validation_trials, fusion_probability_tolerance, requested=requested,
+                reference_reports=completed, captures=fusion_attempts[0], failures=fusion_attempts[1],
+            )
     status = "CALIBRATION_STUDY_UNAVAILABLE"
     if completed:
         if planning is None:
@@ -261,34 +269,57 @@ def _run_study_fusion(
     reference_reports: dict[str, dict[str, Any]], pending: _FusionCaptures,
 ) -> tuple[dict[str, Any], dict[str, Any] | None]:
     captures = {}
-    completed = {}
-    unavailable = []
     failures = {}
     try:
         for key, layout in requested.items():
             if key not in pending:
                 continue
-            try:
-                report = pending.pop(key)()
-                captures[key] = _seal_study_capture(report, layout, required)
-            except Exception as error:
-                # A genuine QiskitError comes from an already imported SDK. The
-                # study module and its mocked capture tests can stay SDK-free.
-                qiskit_error = getattr(sys.modules.get("qiskit.exceptions"), "QiskitError", ())
-                if not isinstance(error, (RuntimeError, ValueError)) and not isinstance(error, qiskit_error):
-                    raise
-                unavailable.append(key)
-                failures[key] = {"error_type": type(error).__name__, "message": str(error)}
-                _clear_fusion_error_frames(error)
+            capture, failure = _capture_study_fusion_attempt(pending.pop(key), layout, required)
+            if failure is not None:
+                failures[key] = failure
                 break
-            if report["status"] == "COMPLETED":
-                completed[key] = report
-            else:
-                unavailable.append(key)
-                if report["status"] == "LOCAL_RESULT_WAIT_TIMED_OUT" and report.get("local_job_cancelled") is not True:
-                    break
+            captures[key] = capture
+            report = capture["report"]
+            if report["status"] == "LOCAL_RESULT_WAIT_TIMED_OUT" and report.get("local_job_cancelled") is not True:
+                break
     finally:
         pending.clear()
+    return _summarize_study_fusion(
+        constraint, options, validation_trials, tolerance, requested=requested,
+        reference_reports=reference_reports, captures=captures, failures=failures,
+    )
+
+
+def _capture_study_fusion_attempt(
+    capture: Callable[[], dict[str, Any]], layout: tuple[int, ...], required: int,
+) -> tuple[dict[str, Any] | None, dict[str, str] | None]:
+    report = None
+    try:
+        report = capture()
+        return _seal_study_capture(report, layout, required), None
+    except Exception as error:
+        # A genuine QiskitError comes from an already imported SDK. The
+        # study module and its mocked capture tests can stay SDK-free.
+        qiskit_error = getattr(sys.modules.get("qiskit.exceptions"), "QiskitError", ())
+        if not isinstance(error, (RuntimeError, ValueError)) and not isinstance(error, qiskit_error):
+            raise
+        failure = {"error_type": type(error).__name__, "message": str(error)}
+        _clear_fusion_error_frames(error)
+        return None, failure
+    finally:
+        del capture, report
+
+
+def _summarize_study_fusion(
+    constraint: BooleanConstraint, options: dict[str, Any], validation_trials: int, tolerance: float, *,
+    requested: dict[str, tuple[int, ...]], reference_reports: dict[str, dict[str, Any]],
+    captures: dict[str, dict[str, Any]], failures: dict[str, dict[str, str]],
+) -> tuple[dict[str, Any], dict[str, Any] | None]:
+    completed = {
+        key: captures[key]["report"] for key in requested
+        if key in captures and captures[key]["report"]["status"] == "COMPLETED"
+    }
+    unavailable = [key for key in requested if key in failures or (key in captures and key not in completed)]
 
     planning = check = None
     if len(completed) == len(requested):

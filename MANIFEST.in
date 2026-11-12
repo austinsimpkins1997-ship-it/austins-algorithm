@@ -6,6 +6,7 @@ recursive-include .github/workflows *.yml
 recursive-include circuits *.qasm
 recursive-include examples *.py
 include examples/field_sensor_kit.json examples/site_interlock.json examples/telemetry_power.json
+include examples/checkpoint_constraint.json
 include examples/smoke-regression/constraint.json examples/smoke-regression/manifest.json examples/smoke-regression/requirements.txt
 include examples/smoke-regression/baseline/request.json examples/smoke-regression/baseline/report.json
 include examples/smoke-regression/baseline/selected.qasm examples/smoke-regression/baseline/receipt.json
@@ -18,6 +19,7 @@ include examples/diffuser-smoke-regression/baseline-native/receipt.json
 include examples/placement-smoke-regression/baseline/request.json examples/placement-smoke-regression/baseline/report.json
 include examples/placement-smoke-regression/baseline/receipt.json
 recursive-include tests *.py
+recursive-include tools *.py
 prune .build
 prune build
 prune dist

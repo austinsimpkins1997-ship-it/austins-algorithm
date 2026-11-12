@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from collections.abc import Iterable, Sequence
+from collections.abc import Collection, Iterable, Sequence
 from functools import partial
 from pathlib import Path
 from typing import TYPE_CHECKING, Any
@@ -186,31 +186,44 @@ def _restore_fusion_captures(
     prepared: _PreparedCalibrationComparison, circuits: tuple[QuantumCircuit, ...],
     grid: dict[tuple[int, ...], tuple[str | None, ...]], entries: dict[str, dict[str, Any]],
     requested: dict[str, tuple[int, ...]], references: dict[str, dict[str, Any]],
+    *, retain_layouts: Collection[str] | None = None,
 ) -> _FusionCaptures:
     pending = {}
     later = prepared.backends["later"]
     seed = prepared.scope["seed_transpiler"]
     native = prepared.scope.get("prefer_native_qasm", False)
-    for key, layout in requested.items():
-        reference = references[key]
-        programs = {}
-        for index, (circuit, round_key) in enumerate(zip(circuits, grid[layout], strict=True)):
-            if round_key is None or round_key not in entries:
-                raise ValueError(f"checkpoint missing exact compilation for layout {key}, round {index}")
-            entry = entries[round_key]
-            row = reference["rounds"][str(index)]
-            if _json_bytes(entry["report"]) != _json_bytes(row["compilation"]):
-                raise ValueError(f"checkpoint bundle report differs for layout {key}, round {index}")
-            program = _restore_compiled_round(entry, circuit, later, layout, seed, prefer_native_qasm=native)
-            if _json_bytes(program.report) != _json_bytes(row["compilation"]):
-                raise ValueError(f"checkpoint restored compilation differs for layout {key}, round {index}")
-            calibrations = {label: _program_calibration(program, backend) for label, backend in prepared.backends.items()}
-            if _json_bytes(calibrations) != _json_bytes(row["target_calibrations"]):
-                raise ValueError(f"checkpoint target calibrations differ for layout {key}, round {index}")
-            programs[index] = program
-        _verify_checkpoint_readout(prepared, key, reference["rounds"])
-        pending[key] = partial(_capture_restored_calibration_layout_fusion, prepared, reference, programs)
-    return pending
+    programs = {}
+    try:
+        for key, layout in requested.items():
+            reference = references[key]
+            retain = retain_layouts is None or key in retain_layouts
+            programs = {}
+            for index, (circuit, round_key) in enumerate(zip(circuits, grid[layout], strict=True)):
+                if round_key is None or round_key not in entries:
+                    raise ValueError(f"checkpoint missing exact compilation for layout {key}, round {index}")
+                entry = entries[round_key]
+                row = reference["rounds"][str(index)]
+                if _json_bytes(entry["report"]) != _json_bytes(row["compilation"]):
+                    raise ValueError(f"checkpoint bundle report differs for layout {key}, round {index}")
+                program = _restore_compiled_round(entry, circuit, later, layout, seed, prefer_native_qasm=native)
+                try:
+                    if _json_bytes(program.report) != _json_bytes(row["compilation"]):
+                        raise ValueError(f"checkpoint restored compilation differs for layout {key}, round {index}")
+                    calibrations = {label: _program_calibration(program, backend) for label, backend in prepared.backends.items()}
+                    if _json_bytes(calibrations) != _json_bytes(row["target_calibrations"]):
+                        raise ValueError(f"checkpoint target calibrations differ for layout {key}, round {index}")
+                    if retain:
+                        programs[index] = program
+                finally:
+                    del program
+            _verify_checkpoint_readout(prepared, key, reference["rounds"])
+            if retain:
+                pending[key] = partial(_capture_restored_calibration_layout_fusion, prepared, reference, programs)
+        return pending
+    except BaseException:
+        programs.clear()
+        pending.clear()
+        raise
 
 
 def _checkpoint_readout_channels(backend: BackendV2, active: tuple[int, ...]) -> dict[int, list[list[float]]]:

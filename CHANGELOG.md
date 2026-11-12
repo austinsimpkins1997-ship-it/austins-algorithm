@@ -4,6 +4,56 @@ Austin's Algorithm package version is 0.1.0. These records cover the published G
 
 ## Current changes
 
+### 2026-11-12 13:05:35 -05:00 — local update
+
+- **#142** Add `checkpoint-benchmark-verify` for an explicitly pinned saved benchmark. Check local stage files, canonical ordering, checkpoint handoffs, round/counter bounds, aggregate arithmetic, storage and available paired-study evidence without loading the quantum SDK or rerunning workers.
+- Preserve schema 1 records and support consistent complete and stopped runs. Report the recorded benchmark outcome separately from the audit result. Reject corrupted available reports even when the original summary records a verification failure.
+- Resolve only the selected local evidence tree and caller-supplied constraint. Original scenario, archive, report and source-code path labels are recorded metadata. Check strict bounded JSON and file inventories; reject unsafe links and paths. Return current raw file fingerprints while labeling legacy stage binding as parsed-content equality with the pinned summary.
+- Update the README, constraint guide and roadmap in both maintained copies. Timing and memory shapes/arithmetic can be checked; actual worker execution, measurement accuracy, source identity and quantum hardware behavior remain outside this offline audit.
+
+- Full discovery exposes an import-order dependency in the controlled benchmark fixture; patch the fusion worker's version alias explicitly, preserve the initial failed-run logs and repeat the checks.
+- Both copies pass 634 SDK tests with four skips and 390 SDK-free tests with 248 skips, including Python 3.10. SDK-free source and wheel audits check the two existing eight-layout records and a byte-preserving relocation per copy. The full-runtime source-archive-first builder verifies 67 runtime files and 195 required source files; installed CLI and completed checkpoint reopening remain checked.
+
+### 2026-11-12 12:35:04 -05:00 — local update
+
+- **#141** Retain restored compiled programs only for the current eligible fusion chunk. Complete, terminal, reference-only and predicted reference-pause calls discard setup while preserving all round, compilation-report, dated calibration and readout checks.
+- Eight-layout before/after probes in both copies reduce peak tracked programs from 32 to nine or eight for two-layout fusion chunks, and to one transient object for complete/reference-only calls. All cases retain 32 restorations, 64 calibration comparisons and eight readout checks; result envelopes are byte-identical.
+- Add six weak-reference and failure regressions for selected/excluded layouts, late corrupt skipped data and cleanup with retained exceptions. Keep default full-checkpoint behavior and public schemas unchanged. Repeat the real eight-layout workflow with exact study and generation evidence.
+- Both copies pass 613 SDK tests with three skips and 369 SDK-free tests with 247 skips, including Python 3.10. The full eight-layout workflow again produces the same pinned study; package checks use the full-runtime source-archive-first builder.
+
+### 2026-11-12 11:52:39 -05:00 — local update
+
+- **#140** Add a pinned, bounded fresh-process checkpoint benchmark and its six-variable fixture. Both copies complete eight reference layouts and eight fusion attempts in chunks of two, producing the same 3,640,898-byte study as the uninterrupted arm. Record 128 density preparations across both arms, 24 checkpoint-store files, timings, memory observations and explicit failure/timeout evidence.
+- Add scenario, worker handoff, raw-report comparison, SDK-free verification, and preparation-budget regression cases. Record the observed restart overhead without a speed or memory-saving claim.
+- Detect a stale unchanged Qiskit adapter in the earlier E: #139 wheel. Its bytes matched an existing `build/lib` copy; the earlier artifact checks compared only changed paths and missed it. Preserve the artifact and finding record. Verify all 65 runtime files against a known-good core before continuing the E: numerical run.
+- Add a source-archive-first package builder that checks the complete runtime path set and bytes, declared source files, and metadata before building and verifying its wheel. Add regressions for stale unchanged modules, missing/extra/duplicate files, resource files, metadata drift and build failure evidence. Keep generated artifacts local and preserve prior build outputs.
+- Both copies pass 607 SDK tests with three skips and 363 SDK-free tests with 247 skips, including Python 3.10. The full-runtime guard rejects the preserved stale wheel and verifies newly built source archives and wheels against all 65 runtime files and 191 required source files.
+
+### 2026-11-12 11:33:58 -05:00 — local update
+
+- **#139** Reuse validated fusion reference/history within one invocation. Preserve explicit branch identity, cached-state integrity, and standalone validation; rehash raw ancestors after the callback before installing each marker.
+- In the fixed three-append Jakarta store sequence, reduce semantic capture validations from six to three and profile calculations from twelve to six. Raw reads increase by 267,846 bytes to preserve the fresh ancestor checks. Report operation counts separately from timing.
+- Add regressions for independent invocations, prior-file and cached-state mutation, callback changes, failed marker retry, reentrancy, and unchanged reports/pins. Update both copies and their README, guide and roadmap.
+- Both copies pass 591 SDK tests with three skips and 347 SDK-free tests with 247 skips, including Python 3.10. The skipped filesystem case requires symlink creation unavailable in this Windows session; the remaining skips reflect missing optional dependencies.
+
+### 2026-11-12 11:17:50 -05:00 — local update
+
+- **#138** Save immutable fusion attempts against a complete pinned reference chain. Resume with explicit reference and fusion pins, validate all saved evidence before new density jobs, and skip the saved canonical prefix.
+- Add `--reference-only` to incremental reference commands and the `snapshot-calibration-study-fusion-continue` command with bounded pauses and paired-study export. Preserve recognized failures, confirmed timeout continuation, terminal unconfirmed cancellation, and output/publication error evidence.
+- Share ordinary paired-report assembly between live and restored attempts. Verify fresh-process continuation against the uninterrupted Jakarta report, terminal reopening without new jobs, corrupt evidence rejection, and pre-publication failure recovery. Update the README, constraint guide and roadmap in both maintained copies.
+- Both copies pass 583 SDK tests with two Cirq skips and 339 SDK-free tests with 246 optional-dependency skips, including Python 3.10. Preserve the completed report and pins when export hits either an I/O error or its size limit.
+
+### 2026-11-12 11:08:45 -05:00 — documentation update
+
+- Review the README against implementation milestone #137 and package metadata version 0.1.0 (alpha). Name the checkpoint commands, explicit pause/export options, completed-reference recovery boundary, and remaining fusion-checkpoint work.
+- Add the dated local verification results and the successful hosted run for commit `6c2370b060dbfdcf2ea3feeca72963a282c386ad`, keeping the scopes separate. Correct stale pending Manila-hosted-check entries in the roadmap and constraint guide.
+- Link the per-update README/version/changelog and two-copy reconciliation requirements in `CONTRIBUTING.md`. Verify documentation links, version agreement, recorded evidence, and source parity in both copies; runtime behavior is unchanged.
+
+### 2026-11-12 10:47:37 -05:00 — local update
+
+- **#137** Save one immutable checkpoint per completed reference layout. Verify an explicitly pinned predecessor chain and restore its circuits before continuing the remaining references and fusion.
+- Add incremental start and resume commands, export completed paired reports, and document the workflow in the README and constraint guide.
+
 ### 2026-11-12 10:28:08 -05:00 — local update
 
 - **#136** Add pinned paired-study checkpoints after the default reference phase. The checkpoint records completed captures and exact compiled rounds. A fresh process verifies the saved scope and resumes fusion with rebuilt compact simulators.

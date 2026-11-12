@@ -577,6 +577,14 @@ def _snapshot_calibration_study_options(args: argparse.Namespace) -> dict:
     }
 
 
+def _checkpoint_benchmark_verify(args: argparse.Namespace) -> dict:
+    from .checkpoint_benchmark_verification import verify_checkpoint_benchmark
+
+    return verify_checkpoint_benchmark(
+        args.constraint, args.directory, expected_summary_sha256=args.expected_summary_sha256,
+    )
+
+
 def _snapshot_calibration_study_checkpoint(args: argparse.Namespace) -> dict:
     from .snapshot_calibration_study_checkpoint import save_snapshot_calibration_study_checkpoint
 
@@ -594,6 +602,66 @@ def _snapshot_calibration_study_resume(args: argparse.Namespace) -> dict:
         *_snapshot_calibration_study_inputs(args), checkpoint=args.directory,
         expected_checkpoint_sha256=args.expected_checkpoint_sha256,
     )
+
+
+def _preflight_study_output(destination: Path | None) -> None:
+    if destination is not None:
+        if destination.exists() or destination.is_symlink():
+            raise FileExistsError(f"study report already exists: {destination}")
+        if not destination.parent.is_dir():
+            raise FileNotFoundError(f"study report parent directory does not exist: {destination.parent}")
+
+
+def _publish_study_output(result: dict, destination: Path | None, error_status: str) -> dict:
+    if destination is not None and result["study"] is not None:
+        from .snapshot_calibration_compilation_bundle import _publish_bundle
+
+        raw = (json.dumps(result["study"], indent=2, allow_nan=False) + "\n").encode("utf-8")
+        try:
+            pin = _publish_bundle(destination, raw)
+        except (OSError, ValueError) as error:
+            result["status"] = error_status
+            result["study_output_error"] = {
+                "path": str(destination), "error_type": type(error).__name__, "message": str(error),
+            }
+        else:
+            result["study_output"] = {"path": str(destination), "sha256": pin, "bytes": len(raw)}
+    return result
+
+
+def _snapshot_calibration_study_incremental(args: argparse.Namespace) -> dict:
+    from .snapshot_calibration_study_incremental import (
+        resume_snapshot_calibration_study_incremental, run_snapshot_calibration_study_incremental,
+    )
+
+    destination = args.study_output
+    _preflight_study_output(destination)
+    inputs = _snapshot_calibration_study_inputs(args)
+    options = {"directory": args.directory, "max_new_reference_layouts": args.max_new_reference_layouts,
+               "reference_only": args.reference_only}
+    if args.workflow == "snapshot-calibration-study-incremental-resume":
+        result = resume_snapshot_calibration_study_incremental(
+            *inputs, **options, expected_generation_sha256=args.expected_generation_sha256,
+        )
+    else:
+        result = run_snapshot_calibration_study_incremental(
+            *inputs, **options, **_snapshot_calibration_study_options(args), batch_density=args.batch_density,
+            fusion_probability_tolerance=args.fusion_probability_tolerance,
+        )
+    return _publish_study_output(result, destination, "CALIBRATION_STUDY_INCREMENTAL_OUTPUT_FAILED")
+
+
+def _snapshot_calibration_study_fusion_continue(args: argparse.Namespace) -> dict:
+    from .snapshot_calibration_study_fusion_checkpoint import continue_snapshot_calibration_study_fusion_checkpoint
+
+    _preflight_study_output(args.study_output)
+    result = continue_snapshot_calibration_study_fusion_checkpoint(
+        *_snapshot_calibration_study_inputs(args), directory=args.directory,
+        expected_reference_generation_sha256=args.expected_reference_generation_sha256,
+        expected_fusion_generation_sha256=args.expected_fusion_generation_sha256,
+        max_new_fusion_layouts=args.max_new_fusion_layouts,
+    )
+    return _publish_study_output(result, args.study_output, "CALIBRATION_STUDY_FUSION_CHECKPOINT_OUTPUT_FAILED")
 
 
 def _snapshot_calibration_study(args: argparse.Namespace) -> dict:
@@ -1236,6 +1304,14 @@ def main(argv: list[str]) -> None:
                                    help="run the dated study after successful receipt replay using the same preparation")
     calibration_study.set_defaults(handler=_snapshot_calibration_study)
 
+    benchmark_verify = commands.add_parser(
+        "checkpoint-benchmark-verify", help="verify pinned benchmark stage records and saved studies offline",
+    )
+    benchmark_verify.add_argument("constraint", type=Path, help="explicit local constraint file matching the scenario pin")
+    benchmark_verify.add_argument("directory", type=Path, help="saved benchmark evidence directory")
+    benchmark_verify.add_argument("--expected-summary-sha256", required=True, help="known SHA-256 of summary.json")
+    benchmark_verify.set_defaults(handler=_checkpoint_benchmark_verify)
+
     checkpoint = commands.add_parser(
         "snapshot-calibration-study-checkpoint", help="save completed reference captures before running fusion",
     )
@@ -1253,6 +1329,39 @@ def main(argv: list[str]) -> None:
     resume_study.add_argument("--expected-checkpoint-sha256", required=True, help="known SHA-256 of checkpoint.json")
     _add_calibration_archives(resume_study, archive_fields)
     resume_study.set_defaults(handler=_snapshot_calibration_study_resume)
+
+    incremental = commands.add_parser(
+        "snapshot-calibration-study-incremental", help="save an immutable checkpoint after each completed reference layout",
+    )
+    incremental.add_argument("constraint", type=Path)
+    incremental.add_argument("directory", type=Path, help="new local incremental checkpoint directory")
+    _add_calibration_archives(incremental, archive_fields)
+    _add_calibration_study_options(incremental, checkpoint=True)
+    incremental_resume = commands.add_parser(
+        "snapshot-calibration-study-incremental-resume", help="continue from an explicitly pinned layout generation",
+    )
+    incremental_resume.add_argument("constraint", type=Path)
+    incremental_resume.add_argument("directory", type=Path, help="saved incremental checkpoint directory")
+    incremental_resume.add_argument("--expected-generation-sha256", required=True, help="known SHA-256 of the saved generation")
+    _add_calibration_archives(incremental_resume, archive_fields)
+    for command in (incremental, incremental_resume):
+        command.add_argument("--max-new-reference-layouts", type=int, help="pause after completing this many new layouts")
+        command.add_argument("--reference-only", action="store_true", help="stop after complete references before fusion")
+        command.add_argument("--study-output", type=Path, help="save the completed paired study in a new file")
+        command.set_defaults(handler=_snapshot_calibration_study_incremental)
+
+    fusion_continue = commands.add_parser(
+        "snapshot-calibration-study-fusion-continue", help="save fusion attempts and continue from explicitly pinned progress",
+    )
+    fusion_continue.add_argument("constraint", type=Path)
+    fusion_continue.add_argument("directory", type=Path, help="complete incremental reference checkpoint directory")
+    fusion_continue.add_argument("--expected-reference-generation-sha256", required=True,
+                                 help="known SHA-256 of the complete reference tip")
+    fusion_continue.add_argument("--expected-fusion-generation-sha256", help="known saved fusion tip; omit to start a new chain")
+    fusion_continue.add_argument("--max-new-fusion-layouts", type=int, help="pause after this many new fusion attempts")
+    fusion_continue.add_argument("--study-output", type=Path, help="save the final or terminal paired study in a new file")
+    _add_calibration_archives(fusion_continue, archive_fields)
+    fusion_continue.set_defaults(handler=_snapshot_calibration_study_fusion_continue)
 
     schedule_parser = commands.add_parser("witness-schedule", help="size or check a fixed witness holdout before sampling")
     schedule_parser.add_argument("--comparison", choices=("cover", "diffuser"), default="cover",
@@ -1451,6 +1560,15 @@ def main(argv: list[str]) -> None:
     if args.workflow == "snapshot-calibration-bundle-compose" and result["status"] != "COMPILATION_BUNDLE_COMPOSED":
         parser.exit(1)
     if args.workflow == "snapshot-calibration-study-checkpoint" and result["status"] != "CALIBRATION_STUDY_CHECKPOINT_SAVED":
+        parser.exit(1)
+    if args.workflow in ("snapshot-calibration-study-incremental", "snapshot-calibration-study-incremental-resume") and (
+        result["status"] not in ("CALIBRATION_STUDY_INCREMENTAL_COMPLETED", "CALIBRATION_STUDY_INCREMENTAL_PAUSED",
+                                 "CALIBRATION_STUDY_INCREMENTAL_REFERENCES_COMPLETED")
+    ):
+        parser.exit(1)
+    if args.workflow == "snapshot-calibration-study-fusion-continue" and result["status"] not in (
+        "CALIBRATION_STUDY_FUSION_CHECKPOINT_COMPLETED", "CALIBRATION_STUDY_FUSION_CHECKPOINT_PAUSED",
+    ):
         parser.exit(1)
     if (
         args.workflow == "snapshot-calibration-study" and args.resolve_compilation_overlap is not None

@@ -1,0 +1,5 @@
+{
+  "schema_version": 1,
+  "qubits": 6,
+  "clauses": [[1, 2], [-1]]
+}

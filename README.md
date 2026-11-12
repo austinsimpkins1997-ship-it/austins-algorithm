@@ -1,6 +1,6 @@
 # Austin's Algorithm
 
-**Package version** 0.1.0 · **Source** public on GitHub · **License** [Apache-2.0](LICENSE)
+**Package version** 0.1.0 (alpha) · **Source** public on GitHub · **License** [Apache-2.0](LICENSE)
 
 **Project credit:** Austin Gregory Simpkins and Chandler Middlebrook / ChronoRealm.
 
@@ -8,12 +8,23 @@ For a short, ordered, beginner-friendly walkthrough, start with [`GETTING_STARTE
 
 ## Current state
 
+Reviewed **2026-11-12** against the local source through implementation milestone **#142**. The package version matches [`pyproject.toml`](pyproject.toml); dated development updates are recorded separately in the [changelog](CHANGELOG.md).
+
 The project starts with a three-qubit Grover teaching example and supports bounded Boolean-constraint search with independent classical verification. The base package runs on Python 3.10 and newer. Optional Qiskit and Aer workflows compile for local targets, verify OpenQASM measurement behavior, and compare search budgets on dated IBM models.
 
 - Use [the constraint guide](CONSTRAINT_WORKFLOW.md) for reversible oracles, classical baselines, verified exports, and bounded known- or unknown-count search.
 - Use [the paired calibration study](CONSTRAINT_WORKFLOW.md#run-both-density-policies-in-one-study) to compare default and fused density simulation on the same compiled circuits. The default capture drives budget selection and seeded replay. Live simulator setup is released before planning.
 - Use [the offline study verifier](CONSTRAINT_WORKFLOW.md#verify-a-saved-paired-calibration-study-offline) to check saved captures, plans and fusion decisions after the simulator exits.
-- Use [a restart checkpoint](CONSTRAINT_WORKFLOW.md#restart-a-paired-study-from-completed-reference-captures) to carry completed default captures and verified compiled rounds into a fresh process. Resume verifies the checkpoint, rebuilds the compact simulators, and runs the fusion phase.
+- Use [`snapshot-calibration-study-checkpoint` and `snapshot-calibration-study-resume`](CONSTRAINT_WORKFLOW.md#restart-a-paired-study-from-completed-reference-captures) to carry completed default captures and verified compiled rounds into a fresh process. Resume verifies the checkpoint, rebuilds the compact simulators, and runs the fusion phase.
+- Use [`snapshot-calibration-study-incremental` and `snapshot-calibration-study-incremental-resume`](CONSTRAINT_WORKFLOW.md#resume-between-reference-layouts) to save after each reference layout. Continue from a trusted `generation_sha256` to recover the saved reference prefix, then export the completed study with `--study-output` for offline verification. `--max-new-reference-layouts` provides an explicit pause boundary.
+- Use [`snapshot-calibration-study-fusion-continue`](CONSTRAINT_WORKFLOW.md#resume-between-fusion-attempts) to save each fusion attempt against a pinned complete reference chain. Resume from both reference and fusion pins, skip saved attempts, and export the final paired report. `--reference-only` on incremental reference commands stops before fusion; `--max-new-fusion-layouts` pauses between diagnostic attempts.
+- Fusion continuation [reuses validated history within one invocation](CONSTRAINT_WORKFLOW.md#reuse-verified-checkpoint-context-within-one-invocation). It rehashes ancestor files before each publication and keeps fresh-process reference and circuit checks. The measured store sequence halves capture/profile validation work while reading additional raw bytes for those rechecks.
+- Run [the checkpoint continuation benchmark](CONSTRAINT_WORKFLOW.md#benchmark-checkpoint-continuation-at-eight-layouts) to compare an uninterrupted study with fresh-process reference and fusion chunks. The eight-layout Jakarta check produced identical study bytes in both maintained copies and recorded the additional restart cost.
+- Audit [saved benchmark records without the SDK](CONSTRAINT_WORKFLOW.md#verify-saved-checkpoint-benchmark-records). Supply a trusted summary pin to check the available stage sequence, checkpoint handoffs, counters, storage and paired reports. A successful audit can describe a stopped run; inspect `recorded_status` for the benchmark outcome. Worker execution, clocks, memory measurements and source identities remain recorded evidence.
+- Restoration [retains programs only for the eligible fusion chunk](CONSTRAINT_WORKFLOW.md#retain-only-the-current-restoration-chunk). Completed and reference-only calls discard their verified programs, while every saved round still receives the full physical and calibration checks. The eight-layout probes preserve exact results and reduce tracked object retention.
+- Use [the verified package builder](CONTRIBUTING.md#build-and-check-release-artifacts) to build a wheel from a checked source archive and compare every runtime file with the source. This catches stale unchanged modules that a selected-file artifact check can miss.
+
+Restart continuity preserves completed reference layouts, their compiled circuits, and published fusion attempts. A pause returns `study: null`; finishing or reaching a terminal failure returns the ordinary paired report. Check that report's `fusion.status` separately from reference completion, since a complete reference grid can have partial fusion diagnostics. Work interrupted before its checkpoint publishes may need to run again. A saved terminal error or unconfirmed cancellation prevents later diagnostic jobs on that chain.
 
 The measured results cover local simulations. The optional physical-job path requires a configured IBM account and budget. See the [dated changelog](CHANGELOG.md) for the update history and [GitHub Actions](https://github.com/austinsimpkins1997-ship-it/austins-algorithm/actions) for hosted verification of committed changes.
 
@@ -242,6 +253,18 @@ The simulator finds `M` by checking every choice first. A real quantum search ne
 
 ## Tests and project guide
 
+The latest local implementation checks, recorded on **2026-11-12** for milestone **#142**, passed in both maintained package copies:
+
+| Environment | Passed | Skipped | Failures or errors |
+| --- | ---: | ---: | ---: |
+| Python 3.12.15 with Qiskit 2.6.2, Aer 0.18.2 and IBM Runtime 0.51.0 | 634 | 4 (2 Cirq; 2 symlink privilege) | 0 |
+| Python with optional SDKs excluded | 390 | 248 (optional dependencies and symlink privilege) | 0 |
+| Python 3.10.22 with optional SDKs excluded | 390 | 248 (optional dependencies and symlink privilege) | 0 |
+
+These are dated results for the tested source and environments. The eight-layout Jakarta benchmark produced identical uninterrupted and continued study bytes in both copies, with all eight reference and fusion generations independently checked by SDK-free processes. The measured restart costs are recorded in the constraint guide. The new benchmark-record audit also passes both existing eight-layout records and a byte-preserving relocation in each copy, without the SDK or evidence changes. Full runtime archive checks cover all 67 package files, including the previously stale unchanged Qiskit adapter.
+
+[GitHub Actions run #8](https://github.com/austinsimpkins1997-ship-it/austins-algorithm/actions/runs/43249759269) passed all ten jobs for commit `6c2370b060dbfdcf2ea3feeca72963a282c386ad` on **2026-11-12**, including Python 3.10–3.14, optional frameworks, and the packaged Manila smoke regression. That result applies to that committed revision; later local updates need their own hosted run.
+
 To run the package checks:
 
 ```powershell
@@ -249,6 +272,8 @@ python -B -m unittest discover -s tests -v
 ```
 
 The package has more detail in [`USE_CASES.md`](USE_CASES.md), [`EXTENDING.md`](EXTENDING.md), [`ADAPTERS.md`](ADAPTERS.md), and [`ROADMAP.md`](ROADMAP.md). The test suite checks the example code and math; it does not certify a real device or prove that the method is useful in every field.
+
+For every package update, follow [`CONTRIBUTING.md`](CONTRIBUTING.md): review this README's current state, commands, limits and dated verification; check its version against `pyproject.toml`; add a timestamped changelog entry; and reconcile both maintained copies with byte-count and SHA-256 checks. Update the verification summary when new checks replace the dated results above.
 
 ## Credit and sources
 
