@@ -10,6 +10,18 @@ from .core import AustinAlgorithmError, austin_predicate, run_austin_search, val
 def main() -> None:
     if len(sys.argv) > 1 and sys.argv[1] in {
         "compile", "search", "constraint", "constraint-classical", "constraint-sweep", "constraint-cover", "compare",
+        "witness-schedule", "unknown-count-plan", "unknown-count-select", "unknown-count-snapshot-select",
+        "unknown-count-snapshot-profile-export", "unknown-count-snapshot-profile-verify",
+        "unknown-count-snapshot-profile-compare", "unknown-count-snapshot-layout-plan", "snapshot-calibration-compare",
+        "snapshot-calibration-budget-plan", "snapshot-calibration-bundle-inspect", "snapshot-calibration-bundle-compose",
+        "snapshot-calibration-overlap-receipt-verify",
+        "snapshot-calibration-study", "snapshot-calibration-study-verify",
+        "constraint-replay",
+        "constraint-receipt-verify", "constraint-receipt-compare",
+        "constraint-regression", "placement-receipt-verify", "placement-receipt-compare", "placement-receipt-replay",
+        "smoke-environment-compare", "smoke-run-index", "smoke-run-index-verify", "smoke-run-index-compare",
+        "diffuser-replay", "diffuser-receipt-verify", "diffuser-receipt-compare",
+        "diffuser-regression", "diffuser-benchmark", "diffuser-benchmark-verify", "diffuser-benchmark-compare",
     }:
         from .workflows_cli import main as workflow_main
 
@@ -18,7 +30,18 @@ def main() -> None:
     parser = argparse.ArgumentParser(description="Run a local ideal simulation of Grover search.")
     parser.epilog = (
         "Additional commands: compile, search, constraint, constraint-classical, "
-        "constraint-sweep, constraint-cover, compare."
+        "constraint-sweep, constraint-cover, compare, witness-schedule, unknown-count-plan, unknown-count-select, "
+        "unknown-count-snapshot-select, unknown-count-snapshot-profile-export, unknown-count-snapshot-profile-verify, "
+        "unknown-count-snapshot-profile-compare, unknown-count-snapshot-layout-plan, snapshot-calibration-compare, "
+        "snapshot-calibration-budget-plan, snapshot-calibration-bundle-inspect, snapshot-calibration-bundle-compose, "
+        "snapshot-calibration-overlap-receipt-verify, "
+        "snapshot-calibration-study, snapshot-calibration-study-verify, "
+        "constraint-replay, "
+        "constraint-receipt-verify, constraint-receipt-compare, constraint-regression, "
+        "placement-receipt-verify, placement-receipt-compare, placement-receipt-replay, "
+        "smoke-environment-compare, smoke-run-index, smoke-run-index-verify, smoke-run-index-compare, "
+        "diffuser-replay, diffuser-receipt-verify, diffuser-receipt-compare, diffuser-regression, "
+        "diffuser-benchmark, diffuser-benchmark-verify, diffuser-benchmark-compare."
     )
     parser.add_argument(
         "--engine", choices=("cpu", "qiskit"), default="cpu",

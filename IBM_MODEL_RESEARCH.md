@@ -4,6 +4,8 @@ Review and local experiment date **2026-11-11**. The workload is the one-round A
 
 ## Which models to use
 
+The calibration comparison command accepts a pair of pinned local IBM archives and uses one compiled program per Grover round for both. The Jakarta experiment uses the July 2021 and May 2024 calibration times recorded in the properties JSON. Their reported versions are 1.0.11 and 1.4.8. The same-device check preserves the version difference in the report. See the [matched-circuit workflow](CONSTRAINT_WORKFLOW.md#compare-two-dated-ibm-snapshots-on-the-same-circuits) and the [Qiskit fake-backend update](https://github.com/Qiskit/qiskit-ibm-runtime/pull/1710).
+
 IBM’s fake backends provide versioned snapshots of gate sets, coupling maps, qubit properties, and errors. This package loads snapshots already distributed with the installed SDK. Historical calibration dates are part of the result because error rates and device availability can change. IBM’s SDK also provides a live refresh path, which requires account access. [IBM Fake Provider](https://quantum.cloud.ibm.com/docs/en/api/qiskit-ibm-runtime/fake-provider)
 
 Manila and Jakarta exercise small historical CX targets. Torino adds a 133-qubit Heron snapshot whose compiled two-qubit operations for this circuit are CZ. IBM documents separate Heron revisions and the grid topology of Nighthawk. For a future device run, select the actual backend and use its current target, version, calibration, and connectivity. Circuit resources can change with the layout, supported instructions, and compiler settings. [IBM processor families](https://quantum.cloud.ibm.com/docs/en/ibm-quantum-compute/processor-types) · [IBM backend details](https://quantum.cloud.ibm.com/docs/en/ibm-quantum-compute/qpu-information)
@@ -90,6 +92,198 @@ Shots are pooled only within a circuit and placement. There are 12 prespecified 
 Manila had no qualifying round count. Jakarta selected one round, with a weakest lower bound of 40.07%. Torino also selected one round for this floor. Its two-round runs had higher raw hit rates, while one round met the same requirement with half the two-qubit gates. The 40% floor is a demonstration criterion. These decisions apply to the tested placements and the historical snapshot model. They do not measure calibration drift or predict current physical hardware performance.
 
 Reproduce with `python -m austins_algorithm compare --problem mod4-range --ibm-model all --placement-check --minimum-hit-rate 0.40 --shots 512 --evaluation-seeds 29 43`. The report includes raw batches, adjusted intervals, routed measurement maps, and compilation digests. An incomplete cell cannot qualify a circuit.
+
+## Choose an OpenQASM importer for offline comparisons
+
+The `ibm` install extra includes the standard OpenQASM importer. Add `--native-qasm` to any offline `compare --ibm-model` command to try Qiskit's experimental native importer. This covers Austin, both modulo-4 oracle variants, the modulo-4 round sweep, and the placement check. The Python runners accept the same opt-in through `prefer_native_qasm=True`. [Qiskit OpenQASM importer documentation](https://quantum.cloud.ibm.com/docs/en/api/qiskit/qasm3#experimental-import-interface)
+
+```powershell
+python -m austins_algorithm compare --ibm-model all --shots 32 --seed 7 --native-qasm
+python -m austins_algorithm compare --problem mod4-range --ibm-model all --shots 32 --seed 7 --native-qasm
+python -m austins_algorithm compare --problem mod4-range --ibm-model all --round-sweep --shots 32 --seed 7 --validation-seed 19 --transpiler-seed 7 --native-qasm
+python -m austins_algorithm compare --problem mod4-range --ibm-model all --placement-check --shots 32 --minimum-hit-rate 0.20 --evaluation-seeds 29 43 --transpiler-seed 7 --native-qasm
+```
+
+The preference applies to the verified compiles of sampled circuits. Each reported compilation records the actual importer and the native preference when requested. A native parse rejection falls back to the standard importer when available. The compiler checks the imported circuit's wire widths, measurement mapping, and ideal probabilities before the workflow samples the compiled circuit. The `compare` flag requires a bundled IBM snapshot selected through `--ibm-model`.
+
+On 2026-11-11, both copies ran all four modes on Manila, Jakarta, and Torino with CPython 3.12.15, Qiskit 2.6.2, IBM Runtime 0.51.0, Aer 0.18.2, and the standard importer 0.6.0. Each mode ran once per importer and copy at 32 shots per batch. The Austin batch count includes the ideal reference. The placement floor of 0.20 was fixed for this check.
+
+| Offline comparison | Compiler calls per importer and copy | Seeded batches per importer and copy |
+| --- | ---: | ---: |
+| Austin | 3 | 4 |
+| Modulo-4 oracles | 6 | 6 |
+| Modulo-4 round sweep | 15 | 18 |
+| Modulo-4 placement check | 15 | 24 |
+
+The original audit recorded 39 verified compiler calls per importer and copy, including six automatic layout compiles. The optimization below reduces that workload. Every call used the requested importer. Circuit hashes, measurement maps, ideal distributions, all 52 seeded histograms, and selection decisions matched after excluding importer fields and elapsed timings. The semantic report digests matched across both copies. These are local results under the recorded snapshots, seeds, and software. Physical execution remains unverified. [IBM fake backend documentation](https://quantum.cloud.ibm.com/docs/en/api/qiskit-ibm-runtime/fake-provider)
+
+## Select the starting layout without an export round trip
+
+The round sweep and placement check use a normal seeded, level-1 Qiskit transpilation to discover the starting layout. They read the ordered initial indices with ancillas filtered. Each sampled circuit then compiles at the chosen explicit placement and passes the complete OpenQASM and ideal measurement verification before sampling. The importer option applies to those verified exports. [Qiskit initial layout API](https://quantum.cloud.ibm.com/docs/en/api/qiskit/qiskit.transpiler.TranspileLayout#initial_index_layout)
+
+On 2026-11-11, both copies profiled the two-round direct modulo-4 circuit at transpiler seed 7 on the same Windows host with an Intel Core i5-13490F. They used the pinned stack above. Each path was warmed once per snapshot, then timed three times in rotating order. Backend creation and sampling were outside the timer. Each layout-only call returned the same initial mapping as the corresponding former full verification call.
+
+| Snapshot | ChronoRealm median ms, former standard / former native / layout only | E: median ms, former standard / former native / layout only |
+| --- | ---: | ---: |
+| Manila | 374.56 / 13.67 / 4.54 | 354.98 / 13.75 / 4.31 |
+| Jakarta | 329.65 / 14.07 / 4.55 | 320.68 / 12.57 / 4.31 |
+| Torino | 829.81 / 24.33 / 8.83 | 729.96 / 20.22 / 7.37 |
+
+Both copies also checked transpiler seed 23. Automatic and fixed-layout routing produced different export hashes on Manila and Torino even though they began at the same placement. The explicit sampled compiles preserve the intended circuit and comparison.
+
+Each mode now performs 12 verified exports across the three snapshots, down from 15. The replays repeated the 32-shot runs above with both importers. All 18 round-sweep histograms and all 24 placement-check histograms matched their respective saved baselines, as did the sampled circuit hashes, ideal distributions, measurement maps, and decisions. The local profiles and replay summaries are retained under `.build/layout-anchor-study` in each copy. The measured times apply to the layout selection step for these circuits and versions.
+
+## Profile repeated placement sampling
+
+The placement check constructs one Aer simulator per snapshot and uses each verified circuit for both seed jobs. Aer serializes its noise model for every job. In one instrumented 32-shot run in each copy, Torino serialized 965 error records with median times of 0.483 s in ChronoRealm and 0.518 s on E:. Manila and Jakarta serialized 33 and 47 error records. These measurements describe individual runs. [Aer simulator documentation](https://qiskit.github.io/qiskit-aer/stubs/qiskit_aer.AerSimulator.html)
+
+Both copies tested a noise model restricted to the active physical wires while keeping the verified physical circuit and original simulation method. The test used compiler seeds 7 and 23, simulator seeds 29 and 43, and 32 shots. Manila and Jakarta reproduced all 16 histograms per model and copy. Torino's MPS histograms differed in all 16 cases per copy. Exact seeded replay on the tested Torino circuits uses the full noise model. The local profiles and projection comparisons are saved under `.build/placement-prep-study`.
+
+## Reuse the calibrated simulator between oracle variants
+
+The modulo-4 oracle comparison now builds one full calibrated Aer simulator per snapshot and shares it across the two variants. Initialization waits for the first variant that fits the active-wire limit. Each variant has its own verified circuit and seeded job. When a timeout leaves cancellation unconfirmed, the report retains the attempted variant, identifies omitted variants or snapshots, and stops the comparison. Ideal and sampled comparison metrics require the corresponding pair of results. [IBM fake backend documentation](https://quantum.cloud.ibm.com/docs/en/api/qiskit-ibm-runtime/fake-provider)
+
+On 2026-11-11, both copies benchmarked 16 shots per variant with seed 23 and the native importer on the pinned Windows stack above. Each model had one warm-up followed by two alternating pairs. The control constructed a fresh simulator for each variant. The shared path constructed one. The timed interval covered the complete local comparison, and all paired compiled evidence, histograms, and hit-rate comparisons matched.
+
+| Snapshot | ChronoRealm median seconds, fresh per variant / shared | E: median seconds, fresh per variant / shared |
+| --- | ---: | ---: |
+| Manila | 0.231 / 0.175 | 0.216 / 0.182 |
+| Jakarta | 0.286 / 0.196 | 0.245 / 0.183 |
+| Torino | 6.815 / 4.724 | 6.827 / 4.735 |
+
+Both copies also matched their saved 32-shot, seed-7 reports on all three snapshots using each importer. For each parser, the workflow reproduced six histograms and built three simulators across the three snapshots. Local raw reports and timing samples are in `.build/mod4-reuse-study`. These observations apply to the bundled snapshots and recorded software and seeds. Physical execution remains unverified.
+
+## Reuse verified circuits across placement checks
+
+Use `PreparedMod4PlacementCheck` when several local requests share the same snapshot selection, compiler seed, and importer preference. The plan prepares the reached layouts and circuits on its first request. Later requests reuse those verified inputs and build fresh calibrated simulators. Each request can set its own hit-rate floor, shot count, and two evaluation seeds. [IBM fake backend documentation](https://quantum.cloud.ibm.com/docs/en/api/qiskit-ibm-runtime/fake-provider)
+
+```python
+from austins_algorithm.snapshot_placement import PreparedMod4PlacementCheck
+
+plan = PreparedMod4PlacementCheck(model="jakarta", transpiler_seed=7)
+first = plan.run(minimum_hit_rate=0.20, shots=32)
+second = plan.run(minimum_hit_rate=0.35, shots=16, evaluation_seeds=(31, 47))
+```
+
+Install the `ibm` extra to run this example. The one-shot CLI creates a fresh plan for each invocation. Calls on one reusable plan are serialized and return detached reports. An unconfirmed cancellation ends the request with partial evidence and makes that plan unavailable for later requests.
+
+On 2026-11-11, both copies compared two requests across Manila, Jakarta, and Torino against the archived one-shot implementation. The requests used the settings in the example and the standard importer on the pinned Windows stack above. ChronoRealm ran the fresh arm first. E: ran the prepared arm first. Each copy performed one paired comparison. The table uses the workflow's recorded wall time, including preparation in the first request.
+
+| Copy | First request seconds, fresh / prepared | Second request seconds, fresh / prepared | Two-request total seconds, fresh / prepared |
+| --- | ---: | ---: | ---: |
+| ChronoRealm | 17.65 / 19.00 | 19.04 / 13.98 | 36.69 / 32.99 |
+| E: drive | 18.68 / 18.82 | 18.52 / 13.20 | 37.20 / 32.02 |
+
+The first prepared request verified 12 circuits. The second reused them and built three fresh simulators. The 48 seeded histograms, circuit hashes, measurement maps, intervals, and decisions matched the fresh runs in each copy. Both copies also ran two prepared requests with the native importer and matched all 48 histograms against the saved native reference. Local reports and timing evidence are under `.build/prepared-placement-study`. These observations cover the named fixtures and versions.
+
+## Save and verify a placement receipt
+
+Add `--receipt-dir` to the local placement check, or pass `receipt_dir` to `PreparedMod4PlacementCheck.run`. The path must be new. The workflow reserves it before sampling and writes the receipt manifest after its evidence files are present.
+
+```powershell
+New-Item -ItemType Directory -Force .build | Out-Null
+python -m austins_algorithm compare --problem mod4-range --ibm-model all `
+  --placement-check --minimum-hit-rate 0.20 --shots 32 `
+  --receipt-dir .build/placement-receipt
+python -m austins_algorithm placement-receipt-verify .build/placement-receipt
+```
+
+The manifest binds the bytes of `request.json` and `report.json` by SHA-256. The report envelope contains the original placement report, canonical snapshot configuration and properties, the effective coupling map, and the exact OpenQASM text for each reached circuit. The whole folder can be moved. A receipt from an unconfirmed timeout retains the observed prefix and skipped snapshot list.
+
+The verifier uses the standard library. It recomputes the calibration digest, checks the alternative placement against the recorded coupling map, and validates wire mappings and gate counts in the static OpenQASM emitted for these snapshots. It verifies the seed schedule and predicate counts, then recomputes the Bonferroni-adjusted Clopperâ€“Pearson intervals. Interval endpoints must agree within `2e-11` absolute error. The validated endpoints drive the original floor comparisons, including equality at the lower endpoint. Round selection uses the verified two-qubit gate totals and the original fewer-rounds tie break. [NIST exact binomial confidence limits](https://www.itl.nist.gov/div898/software/dataplot/refman2/auxillar/exacbici.htm)
+
+A successful check establishes consistency of the supplied artifacts and selection. The recorded ideal probability evidence comes from the original verified compiler run. Receipt provenance depends on the source that supplied the bundle.
+
+On 2026-11-11, ChronoRealm captured an all-snapshot receipt with the native importer and E: captured one with the standard importer. Both verified with site packages disabled, checked 12 exports and 768 recorded shots, and selected one round on all three snapshots. Both relocated receipts verified, and a changed selection failed even with recomputed manifest hashes. An injected timeout test verified that receipt capture on a reused plan includes only the reached circuits. Local evidence is in `.build/placement-receipt-study`.
+
+## Compare two placement receipts
+
+Use the offline comparison to check two saved runs together. The command independently verifies each receipt before it compares any results. It aligns reached cells by snapshot, baseline or alternate placement label, and round count. Within each cell it pairs trials by the numeric seed. Both sides' physical wire maps are visible when a placement label refers to a different circuit.
+
+```powershell
+python -m austins_algorithm placement-receipt-compare .build/placement-baseline .build/placement-candidate
+```
+
+The result shows changes in calibration, effective coupling, physical layouts, circuit hashes, shots, and recorded software. Importer provenance appears alongside the compiled circuit. The requested seed order is retained, and a seed shared by the two schedules is paired by value. Hit-rate floor and confidence changes appear with the decision context.
+
+For two completed trials, the report shows both histograms and whether the raw counts match. Matching recorded sampling conditions allow a signed per-bitstring difference, calculated as right minus left. Unpaired seeds, unattempted trials, timeouts, and compile-only results have explicit states. The report includes eligible and selected rounds for each snapshot, with a decision change evaluated when both snapshot runs completed. These comparisons describe observed differences under the recorded conditions.
+
+On 2026-11-11, both copies exercised the following cases with site packages disabled during comparison.
+
+| Case | Verified outcome |
+| --- | --- |
+| Native and standard all-snapshot receipts | All 12 circuits and 24 histograms matched. Importer records differed. |
+| Manila seeds 29/43 and 29/47 | All four seed-29 histograms matched. Each receipt had four trials under its exclusive seed. |
+| Torino compiler seeds 7 and 23 | All four paired export hashes and eight histograms differed. The calibration, starting layouts, and selected round matched. |
+| Manila 32-shot and 4-shot trials | Eight completed pairs had different shot budgets. The model scope and confidence family also differed. |
+| Synthetic calibration marker and timeout cases | The comparison surfaced changed calibration despite identical counts, and distinguished a timed-out trial from planned work that was never attempted. |
+
+The saved results are under `.build/placement-receipt-compare-study` in each copy. A test with independently recomputed counts also checked signed histogram differences and a changed selection. Both inputs must pass receipt verification, including when someone has recomputed the file checksums after altering the evidence.
+
+## Replay a placement receipt
+
+Use the optional IBM dependencies to rebuild a verified receipt against the installed fake backends. The preflight checks every recorded snapshot and reached circuit before any noisy simulator is constructed. It compares the calibration fingerprint, directed effective coupling, anchor layout, exact OpenQASM bytes, physical wire maps, and compiled resources. The sampling phase uses those same compiled objects.
+
+```powershell
+python -m austins_algorithm placement-receipt-replay .build/placement-baseline --check-only
+python -m austins_algorithm placement-receipt-replay .build/placement-baseline
+```
+
+The first command reports verified identities with zero samples. The second reuses the original shots and seeds for each completed reference trial, compares per-seed histograms, and recomputes the interval evaluations and placement selections. Both commands read the receipt in place and print JSON to standard output. Identity mismatches exit before sampling. The report records both software environments and any importer differences. A complete replay under changed recorded sampling or decision software cannot qualify as an exact match, even when the counts agree.
+
+Replay of a partial reference covers only its completed trials. Historical timeouts, compile-only results, and unattempted seeds stay visible. An unconfirmed cancellation in the fresh replay stops the remaining submissions. The CLI exits with status 1 for incomplete or differing results or for matches under changed sampling or decision software. The result describes the installed local simulation and exact recorded conditions. Physical execution and cross-host reproducibility remain unverified.
+
+Python callers can use `austins_algorithm.placement_replay.replay_placement_receipt(directory, check_only=False)`. The SDK-free verifier and comparator still work without simulator dependencies.
+
+### Packaged Manila placement smoke check
+
+The source distribution includes `examples/placement-smoke-regression/baseline` with the request, the report, and their byte fingerprints. The baseline uses Manila, the standard OpenQASM importer, compiler seed 7, evaluation seeds 29 and 43, four shots per trial, and a 20% demonstration floor. Its four circuits use 32 total shots. Keep the three JSON files together with LF line endings so their checksums survive a Windows checkout.
+
+The [Windows smoke workflow](CONSTRAINT_WORKFLOW.md#run-the-manila-smoke-regressions-in-the-windows-workflow) installs the built source distribution using the shared smoke requirements. The placement step requires a completed offline verification with 32 recorded shots, four rebuilt exports with zero samples in check-only mode, and eight exact histogram matches in the full replay. Each phase writes separate JSON, stderr, and exit-code files to `manila-placement-smoke-evidence` for upload. The fixture measures local simulation reproducibility under the recorded toolchain. Hosted Windows execution and artifact upload require a separate observation.
+
+### Manila smoke environment evidence
+
+Each Windows smoke run captures `environment.json` after installing the packaged source distribution. The record identifies that archive and the packaged requirements by byte count and SHA-256. It lists the installed distribution names and versions, compares each exact pin with its installed version, and fingerprints the sorted name/version mapping. Use the dependency fingerprint to spot inventory changes and the package list to identify the changed versions.
+
+The record includes the Python implementation, compiler and bitness, the Windows build and architecture, uv and PowerShell versions, and available GitHub runner and image identifiers. Runner fields are null when the expected values are unavailable. The capture reads only those runner fields and distribution names and versions. A pin mismatch leaves a structured report and a failing capture step. The four replay lanes can still produce evidence after a capture failure when installation succeeded.
+
+`manila-smoke-environment` is a separate artifact beside the replay results. The installed inventory identifies observed metadata. It does not establish exact wheel bytes, a reproducible reinstall, or physical-device behavior. Compare archive fingerprints only when checking the exact built artifact. Independent archives can contain identical source files with different archive metadata. [GitHub runner variables](https://docs.github.com/en/actions/reference/workflows-and-actions/variables) · [GitHub runner image metadata](https://github.com/actions/runner-images/discussions/7661)
+
+### Compare saved smoke environments
+
+```powershell
+python -m austins_algorithm smoke-environment-compare baseline/environment.json candidate/environment.json
+```
+
+The command reads two version 1 reports and checks their shape, dependency fingerprints, and pin outcomes. It lists added, removed, and changed distribution versions and pin records. It also shows changed input fingerprints and recorded Python, host, tool, and runner fields. Observation times, run IDs, and commit identifiers are reported separately so a new capture alone does not count as an environment change. An unavailable field is reported for the side that lacks it.
+
+The comparison exits successfully for any two valid reports, including a pin mismatch or observed drift. Invalid evidence produces a failing exit and identifies the affected side. The comparator needs only the two JSON files and the standard library. It does not open the recorded input artifacts. A different source archive fingerprint can reflect packaging metadata, and matching dependency versions do not establish matching installed binaries.
+
+### Verify a Manila smoke run index
+
+The Windows smoke job writes `run-index.json` after the five evidence upload steps when checkout succeeded and the run is still active. The index preserves the workflow step outcomes, available upload artifact IDs, individual command exit codes, reported phase statuses, and byte counts and SHA-256 hashes for the known evidence paths. These observations are separate. A failed step can have valid evidence, and an upload step can report success without returning an artifact ID. Later phases with no output are recorded as unobserved. [GitHub step outcomes](https://docs.github.com/en/actions/reference/workflows-and-actions/contexts#steps-context) [Pinned upload action](https://raw.githubusercontent.com/actions/upload-artifact/ea165f8d65b6e75b540449e92b4886f43607fa02/action.yml)
+
+Extract each downloaded bundle under a directory named for its artifact, such as `downloads/manila-placement-smoke-evidence`. Pass the index from the separate `manila-smoke-run-index` artifact and the parent of the extracted bundles. For a local runner tree, use `--runner-layout` to use the original directory names.
+
+```powershell
+python -m austins_algorithm smoke-run-index-verify run-index.json downloads
+python -m austins_algorithm smoke-run-index-verify run-index.json .build/local-run --runner-layout
+python -m austins_algorithm smoke-run-index .build/local-run .build/local-run-index.json
+```
+
+Verification checks the supplied files and rederives phase observations from their indexed exit and status files. Unprovided bundles and unreadable evidence produce partial verification. A missing expected file in a supplied bundle, a changed fingerprint, or a changed phase observation fails verification. Both partial and mismatched verification return exit code 1 and a JSON report. A verified index can describe a failed or incomplete smoke run because verification concerns the evidence that was recorded. The index covers the known workflow outputs and does not authenticate the supplied index, establish current GitHub artifact availability, or verify the simulation independently.
+
+### Compare two Manila smoke run indexes
+
+```powershell
+python -m austins_algorithm smoke-run-index-compare baseline/run-index.json baseline candidate/run-index.json candidate
+```
+
+Pass each index and the parent directory of its extracted evidence bundles. Use `--left-runner-layout` or `--right-runner-layout` on either side that uses the original runner directory names. The command verifies each side locally and reports changes in recorded step outcomes, upload metadata, and run identifiers. It compares phase exit codes and statuses where each side's evidence is available. A known transition from an observed result to an unrecorded phase appears separately from a phase whose evidence was withheld or unreadable.
+
+The report lists fingerprint changes separately from phase changes. Timing or local paths in a report can change its bytes without changing the replay outcome. The environment comparison uses the same bytes the verifier hashed. It checks each report's schema and pin results and reports conflicts between the index and environment run identifiers before comparing dependency and runner details.
+
+A fully comparable pair exits 0, including runs with failed replay phases. Partial comparisons return exit 1 with the independently verified observations. A file or phase verification mismatch returns exit 1 and withholds the comparison deltas. The report describes the supplied evidence and does not establish the cause of a replay change or authenticate the original run.
 
 ## Physical validation and cost
 

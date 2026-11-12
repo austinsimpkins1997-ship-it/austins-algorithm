@@ -38,3 +38,286 @@ jobs:
         run: python -m pip install ".[${{ matrix.extra }}]"
       - name: Run suite with selected framework
         run: python -B -m unittest discover -s tests -v
+
+  manila-smoke-regression:
+    name: Manila smoke regression
+    runs-on: windows-2025
+    timeout-minutes: 10
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        id: checkout_manila
+        with:
+          persist-credentials: false
+      - uses: astral-sh/setup-uv@c771a70e6277c0a99b617c7a806ffedaca235ff9 # v9.0.0
+        id: setup_uv_manila
+        with:
+          version: "0.13.0"
+          enable-cache: false
+      - name: Create the recorded Python environment
+        id: venv_manila
+        run: uv venv --python cpython-3.12.15-windows-x86_64-none --managed-python .build/sv
+      - name: Build the source distribution
+        id: build_manila
+        run: uv build --sdist --python .build/sv/Scripts/python.exe --out-dir .build/manila-sdist
+      - name: Install the packaged baselines
+        id: install_manila
+        run: |
+          $python = (Resolve-Path -LiteralPath .build/sv/Scripts/python.exe).Path
+          $archives = @(Get-ChildItem -LiteralPath .build/manila-sdist -File -Filter '*.tar.gz')
+          if ($archives.Count -ne 1) { throw 'Expected one source distribution.' }
+
+          $unpacked = Join-Path $env:RUNNER_TEMP 'manila-smoke-source'
+          & $python -I -B -m tarfile --filter data -e $archives[0].FullName $unpacked
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          $sources = @(Get-ChildItem -LiteralPath $unpacked -Directory)
+          if ($sources.Count -ne 1) { throw 'Expected one unpacked source directory.' }
+
+          $source = $sources[0].FullName
+          $requirements = Join-Path $source 'examples/smoke-regression/requirements.txt'
+          uv pip install --python $python "${source}[ibm]" -r $requirements
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          Add-Content -LiteralPath $env:GITHUB_ENV -Value "MANILA_SMOKE_SOURCE=$source" -Encoding utf8
+      - name: Capture the Manila smoke environment
+        id: capture_manila
+        run: |
+          $PSNativeCommandUseErrorActionPreference = $false
+          $python = (Resolve-Path -LiteralPath .build/sv/Scripts/python.exe).Path
+          $archives = @(Get-ChildItem -LiteralPath .build/manila-sdist -File -Filter '*.tar.gz')
+          if ($archives.Count -ne 1) { throw 'Expected one source distribution.' }
+          $fixture = Join-Path $env:MANILA_SMOKE_SOURCE 'examples/smoke-regression'
+          $capture = Join-Path $fixture 'capture_environment.py'
+          $requirements = Join-Path $fixture 'requirements.txt'
+          $evidence = Join-Path $env:RUNNER_TEMP 'manila-smoke-environment'
+          New-Item -ItemType Directory -Path $evidence | Out-Null
+          $stderr = Join-Path $evidence 'capture.stderr.txt'
+          $uvVersion = & uv --version 2> $stderr
+          if ($LASTEXITCODE -eq 0) {
+            & $python -I -B $capture --requirements $requirements --source-distribution $archives[0].FullName `
+              --uv-version ($uvVersion -join ' ') --powershell-version $PSVersionTable.PSVersion.ToString() `
+              --output (Join-Path $evidence 'environment.json') 2>> $stderr
+          }
+          $code = $LASTEXITCODE
+          Set-Content -LiteralPath (Join-Path $evidence 'capture.exit.txt') -Value $code
+          if ($code -ne 0) {
+            Get-Content -LiteralPath $stderr
+            throw "Manila smoke environment capture exited $code. See the environment evidence."
+          }
+      - name: Replay the packaged constraint and diffuser baselines
+        id: regression_manila
+        if: ${{ !cancelled() && steps.install_manila.outcome == 'success' }}
+        run: |
+          $python = (Resolve-Path -LiteralPath .build/sv/Scripts/python.exe).Path
+          $coverFixture = Join-Path $env:MANILA_SMOKE_SOURCE 'examples/smoke-regression'
+          $diffuserFixture = Join-Path $env:MANILA_SMOKE_SOURCE 'examples/diffuser-smoke-regression'
+          $replays = @(
+            @{
+              Name = 'phase-cover'
+              OutputName = 'manila-smoke-results'
+              Arguments = @('constraint-regression', (Join-Path $coverFixture 'manifest.json'))
+            }
+            @{
+              Name = 'diffuser'
+              OutputName = 'manila-diffuser-smoke-results'
+              Arguments = @('diffuser-regression', '--manifest', (Join-Path $diffuserFixture 'manifest.json'))
+            }
+            @{
+              Name = 'diffuser-native'
+              OutputName = 'manila-diffuser-native-smoke-results'
+              Arguments = @('diffuser-regression', '--manifest', (Join-Path $diffuserFixture 'manifest-native.json'))
+            }
+          )
+          Push-Location -LiteralPath $env:RUNNER_TEMP
+          try {
+            $results = $replays | ForEach-Object -Parallel {
+              $ErrorActionPreference = 'Stop'
+              $PSNativeCommandUseErrorActionPreference = $false
+              $replay = $_
+              $output = Join-Path $env:RUNNER_TEMP $replay.OutputName
+              $replayArguments = $replay.Arguments + @('--output-dir', $output)
+              try {
+                $lines = & $using:python -I -B -m austins_algorithm @replayArguments 2>&1
+                $exitCode = $LASTEXITCODE
+              } catch {
+                $lines = $_.ToString()
+                $exitCode = $null
+              }
+              [pscustomobject]@{ Name = $replay.Name; ExitCode = $exitCode; Lines = $lines; Output = $output }
+            } -ThrottleLimit 3
+            foreach ($result in $results) {
+              if ($null -ne $result.ExitCode) {
+                New-Item -ItemType Directory -Path $result.Output -Force | Out-Null
+                $exitFile = Join-Path $result.Output 'replay.exit.txt'
+                New-Item -ItemType File -Path $exitFile -Value $result.ExitCode.ToString() | Out-Null
+              }
+              Write-Output "Manila $($result.Name) replay"
+              Write-Output $result.Lines
+            }
+            if ($results.Count -ne $replays.Count) {
+              throw 'Missing a Manila smoke replay result.'
+            }
+            if ($results | Where-Object ExitCode -ne 0) {
+              $exits = ($results | ForEach-Object {
+                $code = if ($null -eq $_.ExitCode) { 'unobserved' } else { $_.ExitCode }
+                "$($_.Name) exit $code"
+              }) -join ', '
+              throw "Manila smoke regression failed ($exits)."
+            }
+          } finally {
+            Pop-Location
+          }
+      - name: Verify and replay the packaged placement baseline
+        id: placement_manila
+        if: ${{ !cancelled() && steps.install_manila.outcome == 'success' }}
+        run: |
+          $PSNativeCommandUseErrorActionPreference = $false
+          $python = (Resolve-Path -LiteralPath .build/sv/Scripts/python.exe).Path
+          $fixture = Join-Path $env:MANILA_SMOKE_SOURCE 'examples/placement-smoke-regression/baseline'
+          $evidence = Join-Path $env:RUNNER_TEMP 'manila-placement-smoke-results'
+          New-Item -ItemType Directory -Path $evidence | Out-Null
+
+          $checks = @(
+            @{
+              Name = 'verify'
+              Arguments = @('placement-receipt-verify', $fixture)
+              Status = 'PLACEMENT_RECEIPT_VERIFIED'
+              Expected = @{ placement_status = 'COMPLETED'; verified_exports = 4; completed_shots = 32 }
+            }
+            @{
+              Name = 'check-only'
+              Arguments = @('placement-receipt-replay', $fixture, '--check-only')
+              Status = 'PLACEMENT_REPLAY_IDENTITIES_VERIFIED'
+              Expected = @{ verified_exports = 4; replayed_trials = 0 }
+            }
+            @{
+              Name = 'replay'
+              Arguments = @('placement-receipt-replay', $fixture)
+              Status = 'PLACEMENT_REPLAY_MATCHED'
+              Expected = @{
+                verified_exports = 4; replayed_trials = 8; completed_replay_trials = 8
+                matched_histograms = 8; changed_histograms = 0; changed_cell_evaluations = 0
+                completed_model_pairs = 1; changed_model_decisions = 0
+              }
+            }
+          )
+          Push-Location -LiteralPath $env:RUNNER_TEMP
+          try {
+            foreach ($check in $checks) {
+              $name = $check.Name
+              $arguments = $check.Arguments
+              $stdout = Join-Path $evidence "$name.stdout.json"
+              $stderr = Join-Path $evidence "$name.stderr.txt"
+              & $python -I -B -m austins_algorithm @arguments > $stdout 2> $stderr
+              $code = $LASTEXITCODE
+              Set-Content -LiteralPath (Join-Path $evidence "$name.exit.txt") -Value $code
+              if ($code -ne 0) {
+                Get-Content -LiteralPath $stderr
+                throw "Manila placement $name exited $code. See the placement smoke evidence."
+              }
+              $result = Get-Content -LiteralPath $stdout -Raw | ConvertFrom-Json -AsHashtable
+              if ($result.status -isnot [string] -or $result.status -cne $check.Status) {
+                throw "Manila placement $name returned unexpected status $($result.status)."
+              }
+              $observed = if ($result.Contains('summary')) { $result.summary } else { $result }
+              foreach ($field in $check.Expected.Keys) {
+                $actualJson = ConvertTo-Json -InputObject $observed[$field] -Compress
+                $expectedJson = ConvertTo-Json -InputObject $check.Expected[$field] -Compress
+                if ($actualJson -cne $expectedJson) {
+                  throw "Manila placement $name disagrees on $field."
+                }
+              }
+              Write-Output "Manila placement $name $($result.status)"
+            }
+          } finally {
+            Pop-Location
+          }
+      - name: Save Manila smoke environment
+        id: upload_environment
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: manila-smoke-environment
+          path: ${{ runner.temp }}/manila-smoke-environment
+          if-no-files-found: warn
+          retention-days: 7
+      - name: Save Manila replay evidence
+        id: upload_phase_cover
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: manila-smoke-evidence
+          path: ${{ runner.temp }}/manila-smoke-results
+          if-no-files-found: warn
+          retention-days: 7
+      - name: Save Manila diffuser replay evidence
+        id: upload_diffuser
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: manila-diffuser-smoke-evidence
+          path: ${{ runner.temp }}/manila-diffuser-smoke-results
+          if-no-files-found: warn
+          retention-days: 7
+      - name: Save Manila native diffuser replay evidence
+        id: upload_diffuser_native
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: manila-diffuser-native-smoke-evidence
+          path: ${{ runner.temp }}/manila-diffuser-native-smoke-results
+          if-no-files-found: warn
+          retention-days: 7
+      - name: Save Manila placement replay evidence
+        id: upload_placement
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: manila-placement-smoke-evidence
+          path: ${{ runner.temp }}/manila-placement-smoke-results
+          if-no-files-found: warn
+          retention-days: 7
+      - name: Index Manila smoke evidence
+        id: index_manila
+        if: ${{ !cancelled() && steps.checkout_manila.outcome == 'success' }}
+        env:
+          MANILA_STEP_CHECKOUT: ${{ steps.checkout_manila.outcome }}
+          MANILA_STEP_SETUP_UV: ${{ steps.setup_uv_manila.outcome }}
+          MANILA_STEP_VENV: ${{ steps.venv_manila.outcome }}
+          MANILA_STEP_BUILD: ${{ steps.build_manila.outcome }}
+          MANILA_STEP_INSTALL: ${{ steps.install_manila.outcome }}
+          MANILA_STEP_CAPTURE: ${{ steps.capture_manila.outcome }}
+          MANILA_STEP_REGRESSION: ${{ steps.regression_manila.outcome }}
+          MANILA_STEP_PLACEMENT: ${{ steps.placement_manila.outcome }}
+          MANILA_UPLOAD_ENVIRONMENT: ${{ steps.upload_environment.outcome }}
+          MANILA_ARTIFACT_ENVIRONMENT: ${{ steps.upload_environment.outputs.artifact-id }}
+          MANILA_UPLOAD_PHASE_COVER: ${{ steps.upload_phase_cover.outcome }}
+          MANILA_ARTIFACT_PHASE_COVER: ${{ steps.upload_phase_cover.outputs.artifact-id }}
+          MANILA_UPLOAD_DIFFUSER: ${{ steps.upload_diffuser.outcome }}
+          MANILA_ARTIFACT_DIFFUSER: ${{ steps.upload_diffuser.outputs.artifact-id }}
+          MANILA_UPLOAD_DIFFUSER_NATIVE: ${{ steps.upload_diffuser_native.outcome }}
+          MANILA_ARTIFACT_DIFFUSER_NATIVE: ${{ steps.upload_diffuser_native.outputs.artifact-id }}
+          MANILA_UPLOAD_PLACEMENT: ${{ steps.upload_placement.outcome }}
+          MANILA_ARTIFACT_PLACEMENT: ${{ steps.upload_placement.outputs.artifact-id }}
+        run: |
+          $pinnedPython = '.build/sv/Scripts/python.exe'
+          $python = if ($env:MANILA_STEP_VENV -ceq 'success' -and (Test-Path -LiteralPath $pinnedPython -PathType Leaf)) {
+            (Resolve-Path -LiteralPath $pinnedPython).Path
+          } else {
+            Get-Command python -CommandType Application | Select-Object -First 1 -ExpandProperty Source
+          }
+          $source = (Resolve-Path -LiteralPath src).Path
+          $evidence = Join-Path $env:RUNNER_TEMP 'manila-smoke-run-index'
+          New-Item -ItemType Directory -Path $evidence | Out-Null
+          $index = Join-Path $evidence 'run-index.json'
+          $bootstrap = 'import sys; sys.path.insert(0, sys.argv.pop(1)); from austins_algorithm.__main__ import main; main()'
+          & $python -I -S -B -c $bootstrap $source smoke-run-index $env:RUNNER_TEMP $index
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+      - name: Save Manila smoke run index
+        if: ${{ !cancelled() && steps.index_manila.outcome == 'success' }}
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: manila-smoke-run-index
+          path: ${{ runner.temp }}/manila-smoke-run-index
+          if-no-files-found: error
+          retention-days: 7

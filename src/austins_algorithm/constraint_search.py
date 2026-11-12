@@ -13,7 +13,7 @@ from .constraints import BooleanConstraint
 from .core import _bounded_int, recommended_iterations
 from .grover_search import (
     DIFFUSER_METHODS, IDEAL_SAMPLERS, MAX_ORACLE_QUERIES, MAX_SEARCH_SHOTS,
-    _FixedRoundProbabilities, _LastAttempt, _supports_prepared_sampling,
+    _FixedRoundProbabilities, _LastAttempt, _supports_prepared_sampling, _validate_query_budget_policy,
     audit_phase_oracle, build_grover_search_circuit, run_grover_search,
 )
 
@@ -97,13 +97,15 @@ class PreparedConstraintLineSearch:
 def run_constraint_search(
     constraint: BooleanConstraint, *, strategy: str = "unknown", max_shots: int = 64,
     max_oracle_queries: int = 256, seed: int = 7, synthesis: str = "auto", diffuser: str = "standard",
-    classical_method: str = "scan", ideal_sampler: str = "statevector_sampler", _last_attempt: _LastAttempt | None = None,
+    classical_method: str = "scan", ideal_sampler: str = "statevector_sampler",
+    query_budget_policy: str = "stop", _last_attempt: _LastAttempt | None = None,
 ) -> dict[str, Any]:
     """Audit the small phase oracle, then run a bounded ideal simulator search."""
     if not isinstance(constraint, BooleanConstraint):
         raise TypeError("constraint must be a BooleanConstraint")
     if strategy not in {"known", "unknown"}:
         raise ValueError("strategy must be known or unknown")
+    _validate_query_budget_policy(query_budget_policy, known_count=strategy == "known")
     if diffuser not in DIFFUSER_METHODS:
         raise ValueError("diffuser must be standard or clean-ancilla")
     if ideal_sampler not in IDEAL_SAMPLERS:
@@ -131,7 +133,7 @@ def run_constraint_search(
             oracle, constraint.qubits, constraint.matches,
             marked_count=audit["marked_count"] if strategy == "known" else None,
             max_shots=max_shots, max_oracle_queries=max_oracle_queries, seed=seed, diffuser=diffuser,
-            ideal_sampler=ideal_sampler, _last_attempt=_last_attempt,
+            ideal_sampler=ideal_sampler, query_budget_policy=query_budget_policy, _last_attempt=_last_attempt,
         )
         sample_seconds = perf_counter() - search_started
     report = {
@@ -164,4 +166,6 @@ def run_constraint_search(
     }
     if ideal_sampler != "statevector_sampler":
         report["requested_search"]["ideal_sampler"] = ideal_sampler
+    if query_budget_policy != "stop":
+        report["requested_search"]["query_budget_policy"] = query_budget_policy
     return report

@@ -1,0 +1,72 @@
+{
+  "schema_version": 2,
+  "workflow": "DIFFUSER_WITNESS_REPLAY",
+  "formula": {
+    "schema_version": 1,
+    "qubits": 4,
+    "clauses": [
+      [
+        1,
+        2
+      ],
+      [
+        -1
+      ]
+    ]
+  },
+  "sampling": {
+    "model": "manila",
+    "placements": [
+      [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      [
+        4,
+        3,
+        2,
+        1,
+        0
+      ]
+    ],
+    "synthesis": "clause-flags",
+    "transpiler_seed": 7,
+    "prefer_native_qasm": true
+  },
+  "witness": {
+    "witness_probability": 0.05,
+    "witness_max_shots": 16,
+    "witness_seed_schedule": [
+      41,
+      43,
+      47,
+      53
+    ],
+    "witness_validation_power": 0.9,
+    "witness_stop_on_futility": false
+  },
+  "expected": {
+    "snapshot": {
+      "backend_name": "fake_manila",
+      "backend_version": "1.2.6",
+      "last_update_date": "2024-05-27T15:27:23-03:00",
+      "configuration_properties_sha256": "7fdd74675c88bd16fc078f286733ce7f75e4a3034149b2eb7b8516c2a25060ed"
+    },
+    "versions": {
+      "qiskit": "2.6.2",
+      "qiskit-aer": "0.18.2",
+      "qiskit-ibm-runtime": "0.51.0",
+      "scipy": "1.18.1",
+      "numpy": "2.5.4"
+    },
+    "circuits_sha256": "d6f4634a95f6a84430a20c0072b00230b4da37735a61056fde374e05de8d87ef",
+    "plan_sha256": "bcb64caeb5f9232f3868fff362bea035a8b2b04a15b580676168b18f61a597df",
+    "planned_batches": 16,
+    "planned_shots": 112,
+    "planned_nominal_two_qubit_gate_executions": 11088
+  },
+  "content_sha256": "abb5b7dbc1588d6d8d06ccb30f9ce0abea9c6fa374d2e03d465225acc846ae3e"
+}

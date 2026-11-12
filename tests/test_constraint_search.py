@@ -195,6 +195,28 @@ class ConstraintInputTests(unittest.TestCase):
         self.assertEqual(plan.assignments_checked, 6)
         self.assertEqual(plan.marked_count, 8)
 
+    def test_cli_compile_target_validation_precedes_formula_read(self):
+        from contextlib import redirect_stderr
+        from io import StringIO
+
+        from austins_algorithm.workflows_cli import main as workflow_main
+
+        for options, message in (
+            (["--compile-target", "line"], "--compile-target requires --compile"),
+            (["--compile-target", "jakarta"], "--compile-target requires --compile"),
+            (["--compile", "--compile-target", "jakarta", "--line-width", "7"], "--line-width"),
+        ):
+            with (
+                self.subTest(options=options),
+                patch("austins_algorithm.constraints.load_constraint") as load,
+                redirect_stderr(StringIO()) as stderr,
+                self.assertRaises(SystemExit) as error,
+            ):
+                workflow_main(["constraint", "unread.json", *options])
+            self.assertEqual(error.exception.code, 1)
+            self.assertIn(message, stderr.getvalue())
+            load.assert_not_called()
+
     def test_digest_is_stable_across_whitespace_and_key_order(self):
         first = b'{"schema_version":1,"qubits":2,"clauses":[[1,-2]]}'
         second = b'{ "clauses": [[1, -2]], "qubits": 2, "schema_version": 1 }'
@@ -231,15 +253,133 @@ class ConstraintOracleTests(unittest.TestCase):
     def test_empty_proof_and_sampling_exhaustion_are_distinct(self):
         with patch("austins_algorithm.constraint_search.run_grover_search") as sample:
             empty = run_constraint_search(BooleanConstraint(2, ((1,), (-1,))))
+            affordable_empty = run_constraint_search(
+                BooleanConstraint(2, ((1,), (-1,))), query_budget_policy="affordable",
+            )
         sample.assert_not_called()
         self.assertEqual(empty["status"], "PROVEN_EMPTY")
         self.assertEqual(empty["exhaustive_oracle_audit"]["states_checked"], 4)
         self.assertIsNone(empty["search"])
+        self.assertNotIn("query_budget_policy", empty["requested_search"])
+        self.assertEqual(affordable_empty["status"], "PROVEN_EMPTY")
+        self.assertIsNone(affordable_empty["search"])
+        self.assertEqual(affordable_empty["requested_search"]["query_budget_policy"], "affordable")
         exhausted = run_constraint_search(
             BooleanConstraint(3, ((1,), (2,), (3,))), strategy="known", max_oracle_queries=0,
         )
         self.assertEqual(exhausted["status"], "BUDGET_EXHAUSTED")
         self.assertEqual(exhausted["exhaustive_oracle_audit"]["marked_states"], ["111"])
+
+    def test_cli_search_and_constraint_forward_the_affordable_query_policy(self):
+        from contextlib import redirect_stdout
+        from io import StringIO
+        import json
+
+        from austins_algorithm.workflows_cli import main as workflow_main
+
+        options = [
+            "--strategy", "unknown", "--query-budget-policy", "affordable",
+            "--max-oracle-queries", "0", "--max-shots", "6", "--seed", "7",
+        ]
+        formula = PACKAGE_ROOT / "examples" / "field_sensor_kit.json"
+        for command in (["search"], ["constraint", str(formula)]):
+            with self.subTest(command=command[0]), redirect_stdout(StringIO()) as stdout:
+                workflow_main([*command, *options])
+                report = json.loads(stdout.getvalue())
+                search = report["search"] if command[0] == "constraint" else report
+                self.assertEqual(search["query_budget_policy"], "affordable")
+                self.assertEqual(search["oracle_queries"], 0)
+                self.assertTrue(search["attempts"])
+                self.assertTrue(all(attempt["rounds"] == 0 for attempt in search["attempts"]))
+                if command[0] == "constraint":
+                    self.assertEqual(report["requested_search"]["query_budget_policy"], "affordable")
+
+    @unittest.skipUnless(
+        QISKIT_AVAILABLE and hasattr(qasm3, "loads_experimental")
+        and find_spec("qiskit_qasm3_import") is not None and find_spec("qiskit_ibm_runtime") is not None,
+        "both OpenQASM importers and the IBM snapshot package are required",
+    )
+    def test_cli_compiles_field_kit_for_jakarta_without_snapshot_sampling(self):
+        import json
+        from contextlib import redirect_stdout
+        from hashlib import sha256
+        from importlib.metadata import version
+        from io import StringIO
+        from math import asin, fsum, sin, sqrt
+        from tempfile import TemporaryDirectory
+
+        from qiskit_ibm_runtime.fake_provider import FakeJakartaV2
+
+        from austins_algorithm.workflows_cli import main as workflow_main
+
+        formula = PACKAGE_ROOT / "examples" / "field_sensor_kit.json"
+        constraint = load_constraint(formula)
+        backend = FakeJakartaV2()
+        require_native = version("qiskit") == "2.6.2" and version("qiskit-ibm-runtime") == "0.51.0"
+        build = (PACKAGE_ROOT / ".build").resolve()
+        self.assertTrue(build.is_relative_to(PACKAGE_ROOT))
+        build.mkdir(exist_ok=True)
+        exports = []
+        with TemporaryDirectory(dir=build) as directory:
+            for importer, flags in (
+                ("qiskit.qasm3.loads", []),
+                ("qiskit.qasm3.loads_experimental", ["--native-qasm"]),
+            ):
+                output = Path(directory) / f"{importer}.qasm"
+                with (
+                    self.subTest(importer=importer),
+                    patch("austins_algorithm.ibm_models.run_constraint_snapshot") as sample_snapshot,
+                    redirect_stdout(StringIO()) as stdout,
+                ):
+                    workflow_main([
+                        "constraint", str(formula), "--strategy", "known", "--max-shots", "4",
+                        "--max-oracle-queries", "8", "--compile", "--compile-target", "jakarta",
+                        "--qasm-output", str(output), *flags,
+                    ])
+                    report = json.loads(stdout.getvalue())
+                    sample_snapshot.assert_not_called()
+                    self.assertNotIn("snapshot", report)
+                    self.assertEqual(report["status"], "FOUND")
+                    self.assertTrue(constraint.matches(report["search"]["candidate"]))
+                    compiled = report["compilation"]
+                    self.assertEqual(compiled["rounds"], 2)
+                    self.assertEqual(compiled["status"], "VERIFIED_IDEAL_MEASUREMENT_DISTRIBUTION")
+                    self.assertIs(compiled["provider_job_submitted"], False)
+                    self.assertIs(compiled["quantum_hardware_used"], False)
+                    self.assertEqual(compiled["target"]["name"], backend.name)
+                    self.assertEqual(compiled["target"]["qubits"], backend.num_qubits)
+                    snapshot = compiled["snapshot"]
+                    self.assertEqual(snapshot["model"], "jakarta")
+                    self.assertEqual(snapshot["backend_name"], backend.name)
+                    self.assertEqual(snapshot["backend_version"], backend.backend_version)
+                    self.assertEqual(snapshot["last_update_date"], backend.properties().last_update_date.isoformat())
+                    self.assertRegex(snapshot["configuration_properties_sha256"], r"^[0-9a-f]{64}$")
+                    qasm = output.read_bytes()
+                    identity = compiled["openqasm"]
+                    if flags:
+                        self.assertEqual(identity["preferred_importer"], importer)
+                    if not flags or require_native:
+                        self.assertEqual(identity["importer"], importer)
+                    else:
+                        self.assertIn(identity["importer"], (importer, "qiskit.qasm3.loads"))
+                    self.assertEqual(identity["bytes"], len(qasm))
+                    self.assertEqual(identity["sha256"], sha256(qasm).hexdigest())
+                    active = identity["export_wire_to_target_qubit"]
+                    classical = identity["classical_bit_to_target_qubit"]
+                    self.assertEqual(len(classical), constraint.qubits)
+                    self.assertGreater(len(active), len(classical))
+                    verification = compiled["verification"]
+                    self.assertLessEqual(verification["roundtrip_total_variation_distance"], verification["tolerance"])
+                    marked = report["exhaustive_oracle_audit"]["marked_count"]
+                    expected = sin((2 * compiled["rounds"] + 1) * asin(sqrt(marked / 2**constraint.qubits))) ** 2
+                    actual = fsum(
+                        probability for bits, probability in verification["roundtrip_probabilities"].items()
+                        if constraint.matches(bits)
+                    )
+                    self.assertAlmostEqual(actual, expected, places=9)
+                    exports.append((qasm, snapshot, classical))
+        self.assertEqual(len(exports), 2)
+        self.assertEqual(*exports)
 
     def test_cli_compile_and_snapshot_use_the_last_completed_sampler_circuit(self):
         from types import SimpleNamespace
@@ -276,6 +416,7 @@ class ConstraintOracleTests(unittest.TestCase):
             ):
                 report = _constraint(self._constraint_cli_args(
                     formula=PACKAGE_ROOT / "examples" / "field_sensor_kit.json", max_oracle_queries=budget,
+                    native_qasm=True, compile_target="line" if budget == 0 else None, line_width=7,
                 ))
             self.assertEqual(report["status"], status)
             self.assertEqual(report["oracle"]["synthesis_used"], "factorized")
@@ -288,9 +429,12 @@ class ConstraintOracleTests(unittest.TestCase):
             snapshot.assert_called_once()
             self.assertIs(compile_one.call_args.args[0], sampled[-1])
             self.assertIs(snapshot.call_args.args[0], sampled[-1])
+            self.assertTrue(compile_one.call_args.kwargs["prefer_native_qasm"])
+            self.assertTrue(snapshot.call_args.kwargs["prefer_native_qasm"])
             for result in (report["compilation"], report["snapshot"]):
                 self.assertEqual((result["attempt"], result["rounds"]), (len(rounds), rounds[-1]))
             compilation = report["compilation"]
+            self.assertNotIn("snapshot", compilation)
             if budget == 0:
                 self.assertEqual(compilation["attempt_build_seconds"], 0.0)
             self.assertEqual(
@@ -332,8 +476,10 @@ class ConstraintOracleTests(unittest.TestCase):
 
         options = {
             "formula": Path("formula.json"), "strategy": "unknown", "max_shots": 6,
-            "max_oracle_queries": 256, "seed": 2, "synthesis": "auto", "diffuser": "standard",
-            "classical_method": "scan", "compile": True, "line_width": None,
+            "max_oracle_queries": 256, "query_budget_policy": "stop", "seed": 2, "synthesis": "auto",
+            "diffuser": "standard",
+            "classical_method": "scan", "compile": True, "compile_target": None, "line_width": None,
+            "native_qasm": False,
             "ibm_model": "manila", "snapshot_shots": 16, "qasm_output": None, "ideal_sampler": "statevector_sampler",
         }
         return Namespace(**{**options, **overrides})

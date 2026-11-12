@@ -15,7 +15,9 @@ PACKAGE_ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(PACKAGE_ROOT / "src"))
 
 from austins_algorithm.compilation import compile_and_verify  # noqa: E402
-from austins_algorithm.constraint_cover_comparison import run_constraint_cover_snapshot  # noqa: E402
+from austins_algorithm.constraint_cover_comparison import (  # noqa: E402
+    PreparedConstraintCoverSnapshot, compare_constraint_phase_covers, run_constraint_cover_snapshot,
+)
 from austins_algorithm.constraints import BooleanConstraint  # noqa: E402
 
 
@@ -56,6 +58,8 @@ class ConstraintCoverSnapshotInputTests(unittest.TestCase):
             {"evaluation_seeds": (11, 17, 23, True)},
             {"evaluation_seeds": (11, 17, 23, 2**32)},
             {"simulation_method": "statevector"},
+            {"density_fusion": True},
+            {"simulation_method": "compact_density_matrix", "density_fusion": True},
         ):
             kwargs = {"model": "manila", "initial_layout": LAYOUT, **invalid}
             with (
@@ -69,6 +73,17 @@ class ConstraintCoverSnapshotInputTests(unittest.TestCase):
                 backends.assert_not_called()
                 compare.assert_not_called()
                 simulator.assert_not_called()
+
+    def test_fusion_preference_requires_a_boolean(self):
+        with (
+            patch(f"{MODULE}._snapshot_specs") as backends,
+            self.assertRaisesRegex(TypeError, "density_fusion must be a boolean"),
+        ):
+            run_constraint_cover_snapshot(
+                CONSTRAINT, model="manila", initial_layout=LAYOUT,
+                simulation_method="prepared_density_matrix", density_fusion=1,
+            )
+        backends.assert_not_called()
 
 
 @unittest.skipUnless(IBM_TOOLS, "optional IBM snapshot tools are unavailable")
@@ -155,6 +170,190 @@ class ConstraintCoverSnapshotTests(unittest.TestCase):
         self.assertAlmostEqual(difference["interval"][0], complement.low - direct.high)
         self.assertAlmostEqual(difference["interval"][1], complement.high - direct.low)
         json.dumps(report, allow_nan=False)
+
+    def test_prepared_plan_owns_compilation_and_repeats_simulator_setup(self):
+        layout = list(LAYOUT)
+        simulators = [object(), object()]
+        with (
+            patch(f"{MODULE}.compare_constraint_phase_covers", wraps=compare_constraint_phase_covers) as compile_covers,
+            patch(f"{MODULE}._snapshot_simulator", side_effect=simulators) as setup,
+            patch(f"{MODULE}._sample_snapshot", side_effect=lambda *args, **kwargs: _completed(kwargs["shots"], 2))
+            as sample,
+        ):
+            plan = PreparedConstraintCoverSnapshot(CONSTRAINT, model="manila", initial_layout=layout)
+            layout.reverse()
+            baseline = plan.compilation_report
+            plan.compilation_report["candidates"].clear()
+            expected_qasm = plan.openqasm
+            plan.openqasm.clear()
+            first = plan.run(shots=4, evaluation_seeds=SEEDS)
+            self.assertEqual(first["snapshot"]["compilation_source"], "PREPARED_PLAN")
+            first["candidates"]["direct"]["compilation"]["openqasm"].clear()
+
+            with self.assertRaisesRegex(ValueError, "distinct"):
+                plan.run(shots=4, evaluation_seeds=(11, 17, 23, 11))
+            self.assertEqual(setup.call_count, 1)
+            second_seeds = (101, 103, 107, 109)
+            second = plan.run(shots=8, evaluation_seeds=second_seeds)
+
+        compile_covers.assert_called_once()
+        self.assertEqual(compile_covers.call_args.kwargs["initial_layout"], LAYOUT)
+        self.assertEqual(setup.call_count, 2)
+        self.assertEqual(sample.call_count, 8)
+        for i, call in enumerate(sample.call_args_list):
+            self.assertIs(call.args[2], simulators[i // 4])
+        self.assertEqual(plan.openqasm, expected_qasm)
+        self.assertEqual(plan.compilation_report, baseline)
+        self.assertEqual(second["candidates"], baseline["candidates"])
+        self.assertEqual(second["snapshot"]["shots_per_batch"], 8)
+        self.assertEqual(second["snapshot"]["evaluation_seeds"], {
+            "direct": [101, 107], "complement": [103, 109],
+        })
+
+    def test_prepared_plan_propagates_sampling_timeout_and_rebuilds_on_next_request(self):
+        timeout = {
+            "status": "LOCAL_RESULT_WAIT_TIMED_OUT",
+            "local_job_cancelled": False,
+            "simulation": None,
+            "timing_seconds": {},
+        }
+        plan = PreparedConstraintCoverSnapshot(CONSTRAINT, model="manila", initial_layout=LAYOUT)
+        with (
+            patch(f"{MODULE}._snapshot_simulator") as setup,
+            patch(f"{MODULE}._sample_snapshot", side_effect=[timeout, *(_completed(4, 2) for _ in range(4))])
+            as sample,
+        ):
+            partial = plan.run(shots=4)
+            self.assertEqual(sample.call_count, 1)
+            self.assertEqual(partial["snapshot"]["status"], "PARTIAL")
+            self.assertTrue(partial["snapshot"]["local_cancellation_unconfirmed"])
+            complete = plan.run(shots=4, evaluation_seeds=SEEDS)
+        self.assertEqual(complete["snapshot"]["status"], "COMPLETED")
+        self.assertEqual(setup.call_count, 2)
+
+    def test_prepared_verifier_matches_the_original_formula_for_each_basis_key(self):
+        plan = PreparedConstraintCoverSnapshot(CONSTRAINT, model="manila", initial_layout=LAYOUT)
+        expected = {f"{index:02b}": CONSTRAINT.matches(f"{index:02b}") for index in range(4)}
+
+        def sample(*args, verifier, shots, **kwargs):
+            self.assertEqual({bits: verifier(bits) for bits in expected}, expected)
+            return _completed(shots, 2)
+
+        with (
+            patch.object(BooleanConstraint, "matches", side_effect=AssertionError("predicate re-evaluated")),
+            patch(f"{MODULE}._snapshot_simulator"),
+            patch(f"{MODULE}._sample_snapshot", side_effect=sample) as sampled,
+        ):
+            report = plan.run(shots=4)
+        self.assertEqual(report["snapshot"]["status"], "COMPLETED")
+        self.assertEqual(sampled.call_count, 4)
+
+    def test_sample_timeout_reports_submit_and_wait_without_counts(self):
+        from concurrent.futures import TimeoutError
+        from types import SimpleNamespace
+        from unittest.mock import Mock
+
+        from austins_algorithm.ibm_models import LOCAL_JOB_WAIT_SECONDS, _sample_snapshot
+
+        circuit = object()
+        compiled = SimpleNamespace(circuit=circuit, report={"openqasm": {"export_wire_to_target_qubit": [0]}})
+        simulator = Mock()
+        job = simulator.run.return_value
+        job.result.side_effect = TimeoutError
+        job.cancel.return_value = False
+        report = _sample_snapshot(
+            compiled, SimpleNamespace(name="local"), simulator,
+            method="density_matrix", shots=4, seed=17, verifier=CONSTRAINT.matches,
+        )
+        simulator.run.assert_called_once_with(circuit, shots=4, seed_simulator=17)
+        job.result.assert_called_once_with(timeout=LOCAL_JOB_WAIT_SECONDS)
+        job.cancel.assert_called_once_with()
+        self.assertEqual(report["status"], "LOCAL_RESULT_WAIT_TIMED_OUT")
+        self.assertIsNone(report["simulation"])
+        self.assertFalse(report["local_job_cancelled"])
+        timings = report["timing_seconds"]
+        self.assertEqual(set(timings), {"submit", "result_wait", "sample_wait"})
+        self.assertGreaterEqual(timings["sample_wait"], timings["submit"] + timings["result_wait"])
+
+    def test_density_cache_owns_replay_inputs_and_separates_fusion_settings(self):
+        from numpy import array_equal
+
+        from austins_algorithm.ibm_models import _prepare_density_snapshot
+
+        plan = PreparedConstraintCoverSnapshot(CONSTRAINT, model="manila", initial_layout=LAYOUT, cache_density=True)
+        requests = []
+
+        def sample(program, backend, simulator, *, shots, seed, method, verifier, sampling_circuit=None):
+            requests.append((sampling_circuit, simulator, shots, seed))
+            self.assertTrue(verifier("01"))
+            return _completed(shots, 2)
+
+        with (
+            patch(f"{MODULE}._prepare_density_snapshot", wraps=_prepare_density_snapshot) as prepare,
+            patch(f"{MODULE}._sample_snapshot", side_effect=sample),
+        ):
+            first = plan.run(shots=4, simulation_method="prepared_density_matrix", evaluation_seeds=SEEDS)
+            self.assertEqual(first["snapshot"]["density_cache"], {"status": "FILLED", "matrix_bytes": 512})
+            report = first["snapshot"]["state_preparation"]["direct"]
+            expected_wires = list(report["readout_noise_wires"])
+            report["readout_noise_wires"].clear()
+            first_circuit, first_simulator, *_ = requests[0]
+            matrix = first_circuit.data[0].operation.params[0].copy()
+            first_circuit.data[0].operation.params[0][:] = 0
+
+            second_seeds = (101, 103, 107, 109)
+            second = plan.run(shots=8, simulation_method="prepared_density_matrix", evaluation_seeds=second_seeds)
+            self.assertEqual(second["snapshot"]["density_cache"], {"status": "HIT", "matrix_bytes": 512})
+            preparation = second["snapshot"]["state_preparation"]["direct"]
+            self.assertEqual(preparation["readout_noise_wires"], expected_wires)
+            self.assertNotIn("wall_seconds", preparation)
+            replay, simulator, *_ = requests[4]
+            self.assertIsNot(replay, first_circuit)
+            self.assertIsNot(simulator, first_simulator)
+            self.assertTrue(array_equal(matrix, replay.data[0].operation.params[0]))
+            self.assertEqual([(row[2], row[3]) for row in requests[4:8]], [(8, s) for s in (101, 107, 103, 109)])
+            self.assertEqual(prepare.call_count, 2)
+
+            physical = plan.run(shots=4, simulation_method="density_matrix")
+            self.assertNotIn("density_cache", physical["snapshot"])
+            self.assertEqual(prepare.call_count, 2)
+            fused = plan.run(shots=4, simulation_method="prepared_density_matrix", density_fusion=True)
+            self.assertEqual(fused["snapshot"]["density_cache"]["status"], "FILLED")
+            reused = plan.run(shots=4, simulation_method="prepared_density_matrix")
+            self.assertEqual(reused["snapshot"]["density_cache"]["status"], "HIT")
+            self.assertEqual(prepare.call_count, 4)
+
+    def test_density_cache_retries_both_covers_after_an_incomplete_fill(self):
+        from austins_algorithm.ibm_models import _prepare_density_snapshot
+
+        plan = PreparedConstraintCoverSnapshot(CONSTRAINT, model="manila", initial_layout=LAYOUT, cache_density=True)
+        timed_out = False
+        seen = 0
+
+        def prepare_one(*args, **kwargs):
+            nonlocal seen, timed_out
+            seen += 1
+            if seen == 2:
+                timed_out = True
+                return None, {"status": "LOCAL_RESULT_WAIT_TIMED_OUT", "local_job_cancelled": False}
+            return _prepare_density_snapshot(*args, **kwargs)
+
+        with (
+            patch(f"{MODULE}._prepare_density_snapshot", side_effect=prepare_one),
+            patch(f"{MODULE}._sample_snapshot", return_value=_completed(4, 2)) as sample,
+        ):
+            first = plan.run(shots=4, simulation_method="prepared_density_matrix")
+            self.assertTrue(timed_out)
+            self.assertEqual(first["snapshot"]["density_cache"], {"status": "MISS", "matrix_bytes": 0})
+            self.assertEqual(first["snapshot"]["status"], "STATE_PREPARATION_INCOMPLETE")
+            self.assertTrue(first["snapshot"]["local_cancellation_unconfirmed"])
+            sample.assert_not_called()
+            second = plan.run(shots=4, simulation_method="prepared_density_matrix")
+            self.assertEqual(second["snapshot"]["density_cache"]["status"], "FILLED")
+            third = plan.run(shots=4, simulation_method="prepared_density_matrix")
+            self.assertEqual(third["snapshot"]["density_cache"]["status"], "HIT")
+            self.assertEqual(seen, 4)
+            self.assertEqual(sample.call_count, 8)
 
     def test_explicit_simulation_methods_reach_setup_sampling_and_report(self):
         for method in ("density_matrix", "matrix_product_state"):
@@ -357,6 +556,7 @@ class ConstraintCoverSnapshotTests(unittest.TestCase):
                             self.assertEqual(len(actual), 2 if stage == "snapshot" else 1)
 
     def test_prepared_density_preserves_measurement_order_and_unmeasured_work_wire(self):
+        import numpy as np
         from qiskit import QuantumCircuit
         from qiskit_aer import AerSimulator
         from qiskit_aer.noise import NoiseModel, ReadoutError, pauli_error
@@ -384,11 +584,32 @@ class ConstraintCoverSnapshotTests(unittest.TestCase):
              for item in replay.data[1:]],
             [(2, 1), (0, 0)],
         )
+        original_threshold = simulator.options.fusion_threshold
+        with patch.object(simulator, "run", wraps=simulator.run) as gate_run:
+            (fused_replay, fused_readout), fused = _prepare_density_snapshot(
+                circuit, simulator, "ordered-fusion-test", density_fusion=True,
+            )
+        gate_run.assert_called_once()
+        self.assertNotIn("measure", gate_run.call_args.args[0].count_ops())
+        self.assertEqual(gate_run.call_args.kwargs, {
+            "shots": 1, "seed_simulator": 0, "fusion_enable": True, "fusion_threshold": 5, "fusion_max_qubit": 2,
+        })
+        self.assertEqual(simulator.options.fusion_threshold, original_threshold)
+        self.assertEqual(fused_readout.options.fusion_threshold, readout.options.fusion_threshold)
+        self.assertEqual(fused_readout.options.noise_model.to_dict(), readout.options.noise_model.to_dict())
+        self.assertEqual(fused_replay.data[1:], replay.data[1:])
+        self.assertNotIn("fusion", preparation)
+        if "threshold" in fused.get("fusion", {}):
+            self.assertEqual(fused["fusion"]["threshold"], 5)
+        np.testing.assert_allclose(
+            fused_replay.data[0].operation.params[0], replay.data[0].operation.params[0], atol=1e-12, rtol=0,
+        )
         for seed in (43, 97):
             with self.subTest(seed=seed):
                 original = simulator.run(circuit, shots=64, seed_simulator=seed).result(timeout=30)
-                prepared = readout.run(replay, shots=64, seed_simulator=seed).result(timeout=30)
-                self.assertEqual(original.get_counts(), prepared.get_counts())
+                for candidate, sampler in ((replay, readout), (fused_replay, fused_readout)):
+                    prepared = sampler.run(candidate, shots=64, seed_simulator=seed).result(timeout=30)
+                    self.assertEqual(original.get_counts(), prepared.get_counts())
 
     def test_prepared_density_rejects_quantum_noise_on_measurement(self):
         from unittest.mock import Mock
@@ -432,10 +653,11 @@ class ConstraintCoverSnapshotTests(unittest.TestCase):
         ):
             result = run_constraint_cover_snapshot(
                 CONSTRAINT, model="manila", initial_layout=LAYOUT, simulation_method="prepared_density_matrix",
-                witness_budget=WitnessBudgetRequest(0.8),
+                density_fusion=True, witness_budget=WitnessBudgetRequest(0.8),
             )
         sampler.assert_not_called()
         simulator.run.assert_called_once()
+        self.assertEqual(simulator.run.call_args.kwargs["fusion_threshold"], 5)
         job.result.assert_called_once_with(timeout=LOCAL_JOB_WAIT_SECONDS)
         job.cancel.assert_called_once()
         snapshot = result.report["snapshot"]
@@ -443,6 +665,8 @@ class ConstraintCoverSnapshotTests(unittest.TestCase):
         self.assertTrue(snapshot["local_cancellation_unconfirmed"])
         self.assertEqual(set(snapshot["state_preparation"]), {"direct"})
         self.assertEqual(snapshot["state_preparation"]["direct"]["status"], "LOCAL_RESULT_WAIT_TIMED_OUT")
+        self.assertNotIn("fusion", snapshot["state_preparation"]["direct"])
+        self.assertEqual(snapshot["density_fusion_requested"]["fusion_threshold"], 5)
         witness = result.report["witness_budget"]
         self.assertEqual(witness["status"], "STATE_PREPARATION_INCOMPLETE")
         self.assertTrue(witness["local_cancellation_unconfirmed"])

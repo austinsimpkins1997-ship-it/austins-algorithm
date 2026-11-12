@@ -1,0 +1,12 @@
+{
+  "schema_version": 1,
+  "max_total_sampling_shots": 112,
+  "cases": [
+    {
+      "id": "manila-diffusers",
+      "baseline": "baseline",
+      "max_sampling_shots": 112,
+      "timeout_seconds": 60
+    }
+  ]
+}

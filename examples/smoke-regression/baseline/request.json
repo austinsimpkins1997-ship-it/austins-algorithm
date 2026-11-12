@@ -1,0 +1,86 @@
+{
+  "schema_version": 1,
+  "formula": {
+    "schema_version": 1,
+    "qubits": 2,
+    "clauses": [
+      [
+        1,
+        2
+      ],
+      [
+        -1,
+        -2
+      ]
+    ]
+  },
+  "formula_sha256": "415cc5e54ef4726930df895e48c990b2495310ff4a5e2ee55d67da151912517f",
+  "snapshot": {
+    "backend_name": "fake_manila",
+    "backend_version": "1.2.6",
+    "last_update_date": "2024-05-27T15:27:23-03:00",
+    "configuration_properties_sha256": "7fdd74675c88bd16fc078f286733ce7f75e4a3034149b2eb7b8516c2a25060ed"
+  },
+  "sampling": {
+    "model": "manila",
+    "initial_layout": [
+      0,
+      1
+    ],
+    "rounds": 2,
+    "seed": 7,
+    "max_active_qubits": 2,
+    "shots": 32,
+    "evaluation_seeds": [
+      11,
+      17,
+      23,
+      31
+    ],
+    "simulation_method": "prepared_density_matrix",
+    "prefer_native_qasm": false,
+    "density_fusion": false
+  },
+  "witness": {
+    "target_probability": 0.8,
+    "max_shots": 16,
+    "validation_seeds": [
+      41,
+      43
+    ],
+    "stop_on_futility": false,
+    "tolerated_misses": 0
+  },
+  "exports": {
+    "direct": {
+      "sha256": "f90ab0d3959c93d1fd087e0a21108cf907821e65152cf06aa95941867c20fc3a",
+      "initial_logical_to_target_qubit": [
+        0,
+        1
+      ],
+      "export_wire_to_target_qubit": [
+        0,
+        1
+      ],
+      "classical_bit_to_target_qubit": [
+        0,
+        1
+      ]
+    },
+    "complement": {
+      "sha256": "f2a437f20aef953228420d3229c5c1b835d9b0aa8952ee779a77f62a0456dddf",
+      "initial_logical_to_target_qubit": [
+        0,
+        1
+      ],
+      "export_wire_to_target_qubit": [
+        0,
+        1
+      ],
+      "classical_bit_to_target_qubit": [
+        0,
+        1
+      ]
+    }
+  }
+}

@@ -51,9 +51,11 @@ def _layout_pair(placements: Sequence[Sequence[int]]) -> tuple[tuple[int, ...], 
 
 def _compile_fixed_cell(
     circuit: QuantumCircuit, *, backend: FakeBackendV2, layout: Sequence[int], seed: int,
-    constraint: BooleanConstraint, marked_count: int, rounds: int,
+    constraint: BooleanConstraint, marked_count: int, rounds: int, prefer_native_qasm: bool = False,
 ) -> tuple[CompiledProgram, dict[str, Any]]:
-    program = compile_and_verify(circuit, backend=backend, seed=seed, initial_layout=layout)
+    program = compile_and_verify(
+        circuit, backend=backend, seed=seed, initial_layout=layout, prefer_native_qasm=prefer_native_qasm,
+    )
     probabilities = program.report["verification"]["roundtrip_probabilities"]
     observed = fsum(p for bits, p in probabilities.items() if constraint.matches(bits))
     expected = theoretical_success_probability(constraint.qubits, marked_count, rounds)

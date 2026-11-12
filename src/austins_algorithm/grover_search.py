@@ -40,6 +40,8 @@ MAX_RECTANGULAR_AUDIT_WORK = 1 << 26
 ORACLE_AUDIT_TOLERANCE = 1e-9
 DIFFUSER_METHODS = ("standard", "clean-ancilla")
 IDEAL_SAMPLERS = ("statevector_sampler", "prepared_statevector", "prepared_probabilities")
+QUERY_BUDGET_POLICIES = ("stop", "affordable")
+_AFFORDABLE_ROUND_SEED_MASK = 0xC3C3C3C3
 
 
 @dataclass
@@ -521,6 +523,77 @@ def audit_phase_oracle(
     return {"states_checked": 1 << search_qubits, "marked_count": len(marked), "marked_states": marked}
 
 
+def _validate_query_budget_policy(policy: str, *, known_count: bool) -> None:
+    if policy not in QUERY_BUDGET_POLICIES:
+        raise ValueError(f"query budget policy must be one of {', '.join(QUERY_BUDGET_POLICIES)}")
+    if policy == "affordable" and known_count:
+        raise ValueError("affordable query budget policy requires unknown-count search")
+
+
+def _unknown_round_choices(search_qubits: int, max_rounds_per_shot: int) -> Iterator[int]:
+    """Yield the number of nominal round choices at each unknown-count attempt."""
+    window = 1.0
+    limit = min(math.sqrt(1 << search_qubits), max_rounds_per_shot + 1)
+    while True:
+        yield math.ceil(window)
+        window = min(window * 1.2, limit)
+
+
+def _run_search_attempts(
+    search_qubits: int, verifier: Callable[[str], bool], measure: Callable[[int, int], str], *,
+    fixed_rounds: int | None, max_shots: int, max_oracle_queries: int, max_rounds_per_shot: int,
+    seed: int, query_budget_policy: str, after_attempt: Callable[[], None] | None = None,
+) -> dict[str, Any]:
+    """Run one bounded adaptive schedule against a single-shot measurement source."""
+    schedule_random = random.Random(seed)
+    sample_random = random.Random(seed ^ 0xA5A5A5A5)
+    affordable_random = random.Random(seed ^ _AFFORDABLE_ROUND_SEED_MASK) if query_budget_policy == "affordable" else None
+    round_choices = _unknown_round_choices(search_qubits, max_rounds_per_shot)
+    counts: Counter[str] = Counter()
+    attempts = []
+    round_adjustments = []
+    oracle_queries = 0
+    candidate = None
+    exhaustion_reason = "SHOT_BUDGET"
+    for attempt in range(1, max_shots + 1):
+        rounds = fixed_rounds if fixed_rounds is not None else schedule_random.randrange(next(round_choices))
+        remaining = max_oracle_queries - oracle_queries
+        if rounds > remaining:
+            if affordable_random is None:
+                exhaustion_reason = "ORACLE_QUERY_BUDGET"
+                break
+            drawn = rounds
+            rounds = affordable_random.randrange(remaining + 1)
+            round_adjustments.append({
+                "attempt": attempt, "drawn_rounds": drawn, "executed_rounds": rounds, "remaining_queries": remaining,
+            })
+
+        bits = measure(rounds, sample_random.getrandbits(32))
+        if len(bits) != search_qubits or any(bit not in "01" for bit in bits):
+            raise RuntimeError("sampler returned an invalid search bitstring")
+        oracle_queries += rounds
+        counts[bits] += 1
+        verified = _verify(verifier, bits)
+        attempts.append({"rounds": rounds, "sample": bits, "verified": verified})
+        if after_attempt is not None:
+            after_attempt()
+        if verified:
+            candidate = bits
+            exhaustion_reason = None
+            break
+
+    trace = {
+        "status": "FOUND" if candidate is not None else "BUDGET_EXHAUSTED",
+        "candidate": candidate, "exhaustion_reason": exhaustion_reason,
+        "shots_used": len(attempts), "oracle_queries": oracle_queries, "verifier_calls": len(attempts),
+        "counts": dict(sorted(counts.items())), "attempts": attempts,
+    }
+    if affordable_random is not None:
+        trace["query_budget_policy"] = query_budget_policy
+        trace["round_adjustments"] = round_adjustments
+    return trace
+
+
 def run_grover_search(
     phase_oracle: QuantumCircuit,
     search_qubits: int,
@@ -533,6 +606,7 @@ def run_grover_search(
     seed: int = 20261109,
     diffuser: str = "standard",
     ideal_sampler: str = "statevector_sampler",
+    query_budget_policy: str = "stop",
     _last_attempt: _LastAttempt | None = None,
     _fixed_probabilities: _FixedRoundProbabilities | None = None,
 ) -> dict[str, Any]:
@@ -540,6 +614,8 @@ def run_grover_search(
 
     A supplied marked_count schedules rounds near the first Grover peak.
     Omitting it uses a bounded Boyer–Brassard–Høyer–Tapp-style schedule.
+    The affordable query budget policy can redraw an unaffordable round count
+    within the remaining allowance using a separate seeded random stream.
     Each attempt samples once and verifies the result. The optional prepared
     samplers reuse a deterministic ideal state or its measurement probabilities.
     Every attempt gets its own sampler seed. The budget counts logical
@@ -549,6 +625,7 @@ def run_grover_search(
     reference on a small instance. The diffuser options use the same
     clean-workspace contract as build_grover_search_circuit.
     """
+    _validate_query_budget_policy(query_budget_policy, known_count=marked_count is not None)
     _validate_phase_oracle(phase_oracle, search_qubits)
     if not callable(verifier):
         raise TypeError("verifier must be callable")
@@ -580,21 +657,12 @@ def run_grover_search(
     oracle = phase_oracle.copy() if shared is None else phase_oracle
     prepare_samples = False if ideal_sampler == "statevector_sampler" else None
     measured_qubits = list(range(search_qubits))
-    schedule_random = random.Random(seed)
-    sample_random = random.Random(seed ^ 0xA5A5A5A5)
-    window = 1.0
-    window_limit = min(math.sqrt(1 << search_qubits), max_rounds_per_shot + 1)
-    counts: Counter[str] = Counter()
-    attempts = []
     circuits: OrderedDict[int, tuple[QuantumCircuit, Statevector | NDArray | None]] = OrderedDict()
-    oracle_queries = 0
-    candidate = None
-    exhaustion_reason = "SHOT_BUDGET"
-    for _ in range(max_shots):
-        rounds = fixed_rounds if fixed_rounds is not None else schedule_random.randrange(math.ceil(window))
-        if oracle_queries + rounds > max_oracle_queries:
-            exhaustion_reason = "ORACLE_QUERY_BUDGET"
-            break
+    measured_circuit = None
+    measured_build_seconds = 0.0
+
+    def measure(rounds: int, sample_seed: int) -> str:
+        nonlocal prepare_samples, measured_circuit, measured_build_seconds
         cached = circuits.get(rounds)
         build_seconds = 0.0
         if cached is None:
@@ -620,7 +688,6 @@ def run_grover_search(
             circuit, prepared = cached
             circuits.move_to_end(rounds)
 
-        sample_seed = sample_random.getrandbits(32)
         if prepared is None:
             sampler = StatevectorSampler(seed=sample_seed)
             result = sampler.run([circuit], shots=1).result()[0].data.answer.get_counts()
@@ -633,21 +700,20 @@ def run_grover_search(
         else:
             prepared.seed(sample_seed)
             bits = str(prepared.sample_memory(shots=1, qargs=measured_qubits)[0])
-        if len(bits) != search_qubits or any(bit not in "01" for bit in bits):
-            raise RuntimeError("sampler returned an invalid search bitstring")
-        oracle_queries += rounds
-        counts[bits] += 1
-        verified = _verify(verifier, bits)
-        attempts.append({"rounds": rounds, "sample": bits, "verified": verified})
-        if _last_attempt is not None:
-            _last_attempt.circuit = circuit
-            _last_attempt.build_seconds = build_seconds
-        if verified:
-            candidate = bits
-            exhaustion_reason = None
-            break
-        window = min(window * 1.2, window_limit)
+        measured_circuit, measured_build_seconds = circuit, build_seconds
+        return bits
 
+    def record_attempt() -> None:
+        _last_attempt.circuit = measured_circuit
+        _last_attempt.build_seconds = measured_build_seconds
+
+    trace = _run_search_attempts(
+        search_qubits, verifier, measure, fixed_rounds=fixed_rounds,
+        max_shots=max_shots, max_oracle_queries=max_oracle_queries, max_rounds_per_shot=max_rounds_per_shot,
+        seed=seed, query_budget_policy=query_budget_policy,
+        after_attempt=record_attempt if _last_attempt is not None else None,
+    )
+    attempts = trace["attempts"]
     used_sampler = ideal_sampler if prepare_samples and attempts else "statevector_sampler"
     simulators = {
         "statevector_sampler": "Qiskit StatevectorSampler (ideal)",
@@ -655,32 +721,35 @@ def run_grover_search(
         "prepared_probabilities": "Qiskit Statevector + NumPy (prepared probabilities)",
     }
     report = {
-        "status": "FOUND" if candidate is not None else "BUDGET_EXHAUSTED",
+        "status": trace["status"],
         "execution_mode": "SIMULATOR",
         "simulator": simulators[used_sampler],
         "diffuser": diffuser,
         "strategy": "KNOWN_MARKED_COUNT" if marked_count is not None else "BBHT_BOUNDED",
-        "candidate": candidate,
-        "exhaustion_reason": exhaustion_reason,
+        "candidate": trace["candidate"],
+        "exhaustion_reason": trace["exhaustion_reason"],
         "search_qubits": search_qubits,
         "work_qubits": oracle.num_qubits - search_qubits,
         "basis_order": " ".join(f"q{i}" for i in reversed(range(search_qubits))),
         "marked_count": marked_count,
         "scheduled_rounds": fixed_rounds,
-        "shots_used": len(attempts),
-        "oracle_queries": oracle_queries,
-        "verifier_calls": len(attempts),
+        "shots_used": trace["shots_used"],
+        "oracle_queries": trace["oracle_queries"],
+        "verifier_calls": trace["verifier_calls"],
         "max_shots": max_shots,
         "max_oracle_queries": max_oracle_queries,
         "max_rounds_per_shot": max_rounds_per_shot,
         "seed": seed,
-        "counts": dict(sorted(counts.items())),
+        "counts": trace["counts"],
         "attempts": attempts,
         "quantum_hardware_used": False,
         "provider_job_submitted": False,
     }
     if ideal_sampler != "statevector_sampler":
         report["ideal_sampler"] = {"requested": ideal_sampler, "used": used_sampler if attempts else None}
+    if "round_adjustments" in trace:
+        report["query_budget_policy"] = trace["query_budget_policy"]
+        report["round_adjustments"] = trace["round_adjustments"]
     return report
 
 

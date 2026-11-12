@@ -20,12 +20,63 @@ from austins_algorithm.compilation import compile_and_verify, line_target  # noq
 from austins_algorithm.qiskit_adapter import build_austin_circuit  # noqa: E402
 
 
+@unittest.skipUnless(QISKIT_AVAILABLE, "optional Qiskit tools are unavailable")
+class RoundtripDistributionTests(unittest.TestCase):
+    def test_roundtrip_checks_width_and_work_before_statevector(self):
+        from austins_algorithm.compilation import _roundtrip_distribution
+
+        too_many_gates = QuantumCircuit(1, 1)
+        for _ in range(6):
+            too_many_gates.x(0)
+        too_many_gates.measure(0, 0)
+        for circuit, error, message in (
+            (object(), RuntimeError, "did not return"),
+            (QuantumCircuit(17, 1), RuntimeError, "changed the declared wires"),
+            (QuantumCircuit(1, 2), RuntimeError, "changed the declared wires"),
+            (too_many_gates, ValueError, "statevector verification work limit"),
+        ):
+            with (
+                self.subTest(circuit=circuit, message=message),
+                patch("austins_algorithm.compilation._distribution") as distribution,
+                patch("austins_algorithm.compilation.MAX_EXACT_WORK", 8),
+                self.assertRaisesRegex(error, message),
+            ):
+                _roundtrip_distribution(circuit, qubits=1, clbits=1, measured=[0])
+            distribution.assert_not_called()
+
+    def test_roundtrip_returns_distribution_in_verified_terminal_order(self):
+        from austins_algorithm.compilation import _roundtrip_distribution
+
+        circuit = QuantumCircuit(2, 2)
+        circuit.x(0)
+        circuit.measure(0, 1)
+        circuit.measure(1, 0)
+        probabilities = _roundtrip_distribution(circuit, qubits=2, clbits=2, measured=(1, 0))
+        self.assertEqual(probabilities, {"10": 1.0})
+        with self.assertRaisesRegex(RuntimeError, "changed the declared wires or measurement mapping"):
+            _roundtrip_distribution(circuit, qubits=2, clbits=2, measured=[0, 1])
+
+
 @unittest.skipUnless(
     QISKIT_AVAILABLE
     and (hasattr(qasm3, "loads_experimental") or find_spec("qiskit_qasm3_import") is not None),
     "optional Qiskit OpenQASM tools are unavailable",
 )
 class CompilationTests(unittest.TestCase):
+    def test_compiler_times_transpile_and_openqasm_phases_separately(self):
+        clock = [100.0, 102.0, 105.0, 110.0, 112.0, 120.0, 121.0, 124.0]
+        with patch("austins_algorithm.compilation.perf_counter", side_effect=clock):
+            program = compile_and_verify(build_austin_circuit(), target=line_target(3))
+        self.assertEqual(program.timing_seconds, {
+            "compile_export_verify": 24.0,
+            "transpile": 3.0,
+            "openqasm_export": 2.0,
+            "openqasm_import": 8.0,
+            "openqasm_verify": 1.0,
+        })
+        self.assertNotIn("timing_seconds", program.report)
+        self.assertNotIn("timing_seconds", program.report["openqasm"])
+
     def test_line_target_export_preserves_austin_probabilities(self):
         program = compile_and_verify(build_austin_circuit(), target=line_target(3))
         report = program.report
@@ -153,30 +204,59 @@ class CompilationTests(unittest.TestCase):
             compile_and_verify(circuit, target=line_target(1), prefer_native_qasm=True)
         standard.assert_not_called()
 
-    def test_reimported_width_and_work_are_checked_before_statevector(self):
+    def test_stock_distribution_matches_qiskit_with_ordered_wires_and_disjoint_gates(self):
+        from qiskit.quantum_info import Statevector
+
         from austins_algorithm.compilation import _distribution
 
-        circuit = QuantumCircuit(1, 1)
-        circuit.measure(0, 0)
-        wrong_width = QuantumCircuit(17, 1)
-        too_many_gates = QuantumCircuit(1, 1)
-        for _ in range(6):
-            too_many_gates.x(0)
-        too_many_gates.measure(0, 0)
-        for returned, error, message in (
-            (object(), RuntimeError, "did not return"),
-            (wrong_width, RuntimeError, "changed the declared wires"),
-            (too_many_gates, ValueError, "statevector verification work limit"),
+        circuit = QuantumCircuit(5, 2, global_phase=0.37)
+        for step in range(20):
+            circuit.rz((step - 8) / 17, 3)
+            circuit.sx(3)
+            circuit.cx(3, 1)
+            circuit.cz(1, 4)
+            circuit.x(4)
+        circuit.measure(3, 1)
+        circuit.barrier()
+        circuit.sx(1)
+        circuit.measure(1, 0)
+        with patch("austins_algorithm.compilation._stock_statevector", return_value=None):
+            expected = _distribution(circuit)
+        self.assertEqual(expected[1], [1, 3])
+        with patch.object(Statevector, "from_instruction", side_effect=AssertionError("stock path expected")):
+            self.assertEqual(_distribution(circuit), expected)
+
+    def test_stock_distribution_defers_custom_and_instance_gate_semantics(self):
+        from qiskit.circuit.library import CXGate, RZGate, XGate
+        from qiskit.quantum_info import Statevector
+
+        from austins_algorithm.compilation import _distribution, _stock_statevector
+
+        stock_prefix = [(XGate(), (1,))] * 64
+        custom = QuantumCircuit(1, name="rz")
+        custom.sx(0)
+        overridden = RZGate(0.2)
+        overridden.to_matrix = XGate().to_matrix
+        custom_broadcast = RZGate(0.2)
+        custom_broadcast.broadcast_arguments = lambda qargs, cargs: iter(())
+        for operation, wires in (
+            (custom.to_gate(), (1,)),
+            (CXGate(ctrl_state=0), (0, 1)),
+            (overridden, (1,)),
+            (custom_broadcast, (1,)),
         ):
-            with (
-                self.subTest(message=message),
-                patch("austins_algorithm.compilation._import_openqasm", return_value=(returned, "test")),
-                patch("austins_algorithm.compilation._distribution", wraps=_distribution) as distribution,
-                patch("austins_algorithm.compilation.MAX_EXACT_WORK", 8),
-                self.assertRaisesRegex(error, message),
-            ):
-                compile_and_verify(circuit, target=line_target(1))
-            self.assertEqual(distribution.call_count, 2)
+            with self.subTest(operation=operation):
+                self.assertIsNone(_stock_statevector(2, 0.0, [*stock_prefix, (operation, wires)]))
+
+        circuit = QuantumCircuit(2, 1)
+        for operation, wires in [*stock_prefix, (custom.to_gate(), (1,))]:
+            circuit.append(operation, wires)
+        circuit.measure(1, 0)
+        with patch.object(Statevector, "from_instruction", wraps=Statevector.from_instruction) as simulate:
+            probabilities, measured = _distribution(circuit)
+        simulate.assert_called_once()
+        self.assertEqual(measured, [1])
+        self.assertAlmostEqual(probabilities["1"], 0.5)
 
     def test_nonfinite_and_unnormalized_probabilities_fail_verification(self):
         from qiskit.quantum_info import Statevector

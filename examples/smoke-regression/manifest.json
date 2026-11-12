@@ -1,0 +1,12 @@
+{
+  "schema_version": 1,
+  "max_total_sampling_shots": 160,
+  "cases": [
+    {
+      "id": "manila-xor",
+      "baseline": "baseline",
+      "max_sampling_shots": 160,
+      "timeout_seconds": 60
+    }
+  ]
+}

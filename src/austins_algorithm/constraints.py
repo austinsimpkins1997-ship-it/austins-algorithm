@@ -48,17 +48,21 @@ class BooleanConstraint:
     def digest(self) -> str:
         """Hash the versioned formula, independent of JSON whitespace."""
         canonical = json.dumps(
-            {"schema_version": 1, "qubits": self.qubits, "clauses": self.clauses},
+            _constraint_document(self),
             sort_keys=True, separators=(",", ":"),
         )
         return hashlib.sha256(canonical.encode("utf-8")).hexdigest()
 
 
-def _unique_object(pairs: list[tuple]) -> dict:
+def _constraint_document(constraint: BooleanConstraint) -> dict:
+    return {"schema_version": 1, "qubits": constraint.qubits, "clauses": constraint.clauses}
+
+
+def _unique_object(pairs: list[tuple], label: str = "constraint") -> dict:
     result = {}
     for key, value in pairs:
         if key in result:
-            raise ValueError(f"duplicate constraint JSON key: {key}")
+            raise ValueError(f"duplicate {label} JSON key: {key}")
         result[key] = value
     return result
 
@@ -73,6 +77,10 @@ def load_constraint(path: str | Path) -> BooleanConstraint:
         document = json.loads(raw.decode("utf-8-sig"), object_pairs_hook=_unique_object)
     except (UnicodeDecodeError, json.JSONDecodeError, RecursionError) as exc:
         raise ValueError(f"invalid constraint JSON: {exc}") from exc
+    return _constraint_from_document(document)
+
+
+def _constraint_from_document(document: object) -> BooleanConstraint:
     if not isinstance(document, dict) or set(document) != {"schema_version", "qubits", "clauses"}:
         raise ValueError("constraint JSON requires exactly schema_version, qubits and clauses")
     if type(document["schema_version"]) is not int or document["schema_version"] != 1:

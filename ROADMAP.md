@@ -76,8 +76,194 @@
 
 41. **Direct dense views for contiguous wires.** Naturally ordered spans multiply through views of the existing buffers. The field sensor audit avoided its 256 KiB packing allocation and fell from 42.02 to 37.60 ms in the ChronoRealm comparison. See [contiguous operands](CONSTRAINT_WORKFLOW.md#direct-multiplication-for-contiguous-operands).
 
+42. **Workflow reprofile and native constraint export.** Warm stage timings identify the telemetry audit, sensor export verification, and Torino density preparation as the largest costs in their respective workflows. The new `constraint --native-qasm` preference reduced the measured telemetry Torino compile and verify time from 594 to 238 ms with matching evidence. See [workflow profile](CONSTRAINT_WORKFLOW.md#workflow-profile-after-the-audit-changes).
+
+43. **Opt-in prepared density fusion.** Aer gate-only fusion reduced the warm Torino preparation median from 0.983 to 0.530 s. The largest saved matrix difference was `1.67e-16`, and all 228 seeded count maps matched. See [density fusion](CONSTRAINT_WORKFLOW.md#opt-in-aer-fusion-for-prepared-density).
+
+44. **Reproducible density fusion comparison.** The packaged benchmark checks raw matrices and seeded reports on the Jakarta interlock and the Torino sensor kit. Jakarta's warm preparation median moved from 0.248 to 0.227 s, with all 148 archived count maps and both witness decisions preserved. See [the paired benchmark](CONSTRAINT_WORKFLOW.md#opt-in-aer-fusion-for-prepared-density).
+
+45. **Bounded stock-gate ideal verification.** The separate original, compiled, and reimported checks use a local matrix path for eligible small stock-gate circuits. In paired offline runs, the complete workflow fell from 0.922 to 0.800 s on Jakarta and 2.200 to 2.006 s on Torino with identical verified evidence. See [stock-gate verification](CONSTRAINT_WORKFLOW.md#faster-ideal-verification-for-stock-gates).
+
+46. **Prepared offline snapshot compilation.** A caller-owned plan reuses the audited programs for repeated requests on one fixed snapshot and layout. In the ChronoRealm comparison, setup-inclusive reuse led in all four pairs by request two on both snapshots, with identical paired reports and exports. See [snapshot compilation reuse](CONSTRAINT_WORKFLOW.md#reuse-a-verified-snapshot-compilation).
+
+47. **Plan-owned density reuse.** Prepared snapshot plans can retain both validated pre-readout matrices per fusion setting and reconstruct fresh readout samplers. ChronoRealm second-request medians fell from 0.685 to 0.206 s on Jakarta and 1.020 to 0.340 s on Torino, with exact report and export parity. See [density reuse](CONSTRAINT_WORKFLOW.md#reuse-pre-readout-density-across-requests).
+
+48. **Profiled holdout verification.** Snapshot batches expose separate submission, wait, count formatting, and verification timings. A prepared plan's exhaustive classical lookup and validated count snapshot lowered measured holdout count verification to about 5 ms on both protocols, with exact seeded result parity. See [holdout verification](CONSTRAINT_WORKFLOW.md#profile-and-reduce-holdout-verification-work).
+
+49. **Fixed-schedule holdout futility.** An opt-in stop reports every unsubmitted seed and the best attainable bound once the prespecified target is unreachable. Archived Jakarta and Torino replays skipped 39, 24, and 32 jobs across three schedules while preserving every executed result. See [holdout futility](CONSTRAINT_WORKFLOW.md#stop-a-holdout-whose-target-is-unreachable).
+
+50. **Pre-run witness schedule sizing.** The CLI and Python planner compute the minimum per-cover batches and interleaved seed count for a target and miss allowance. Replays crossed the 95% target at the calculated 72- and 110-batch boundaries. See [schedule sizing](CONSTRAINT_WORKFLOW.md#size-a-holdout-before-sampling).
+
+51. **Proposed seed schedule checks.** `witness-schedule` shares runtime seed validation and reports the sizing result for a supplied ordered list. The accepted Jakarta and Torino lists replayed with exact archived evidence. See [seed preflight](CONSTRAINT_WORKFLOW.md#check-a-proposed-seed-list-before-sampling).
+
+52. **Saved offline witness replay.** Versioned requests embed the checked formula and seed lists, pin the snapshot content and compiled wire maps, and replay through the existing simulator workflow. Jakarta and Torino reproduced the explicit commands and archived evidence. See [saved replay](CONSTRAINT_WORKFLOW.md#save-and-run-a-checked-offline-replay).
+
+53. **Inspection-only offline replay.** A saved request can be checked against the installed snapshot and compiled exports before any Aer job. The report includes the compiled sampling limits and the hypothetical seed assessment. See [replay inspection](CONSTRAINT_WORKFLOW.md#inspect-a-saved-replay-without-sampling).
+
+54. **Exact-byte replay receipts.** An optional bundle records the consumed request, observed report, selected OpenQASM, and software versions. Both offline IBM snapshot replays verified with the Python standard library alone. See [replay receipts](CONSTRAINT_WORKFLOW.md#save-and-verify-a-replay-receipt).
+
+55. **Offline replay receipt comparison.** The CLI locates the first changed field in each verified JSON section, checks the selected OpenQASM and recorded software versions, and skips measured report durations. Independent Jakarta and Torino replays matched across drives by model, and a changed Jakarta seed was traced through the request and observed report. See [receipt comparison](CONSTRAINT_WORKFLOW.md#compare-two-verified-replay-receipts).
+
+56. **Bounded offline regression suites.** Named baseline receipts can be replayed in sequential workers with case and suite shot limits and per-worker timeouts. Jakarta and Torino matched their baselines. The aggregate-limit and timeout runs exercised the stop and continuation paths. See [offline regression suites](CONSTRAINT_WORKFLOW.md#rerun-a-named-set-of-offline-baselines).
+
+57. **Packaged offline smoke baseline.** The source fixture runs a verified two-bit XOR replay against FakeManila under a 160-shot ceiling and records its exact requirements. Scoped checkout attributes preserve the bytes covered by the receipt. See [Manila smoke baseline](CONSTRAINT_WORKFLOW.md#run-the-packaged-manila-smoke-baseline).
+
+58. **Automated packaged Manila smoke regression.** A Windows test job builds the source archive, installs its pinned smoke environment, and replays the packaged baseline. The regression exit status gates the job and replay evidence is available as a workflow artifact. See [the Manila smoke baseline](CONSTRAINT_WORKFLOW.md#run-the-packaged-manila-smoke-baseline).
+
+59. **Bounded diffuser seed schedules.** The comparison accepts up to 16 alternating evaluation seeds and keeps its original four-seed entry point. Doubling the batches per variant narrowed all eight simultaneous Jakarta and Torino hit-rate intervals by 26.8–32.0%. All eight intervals included zero. See [the longer seed schedule results](CONSTRAINT_WORKFLOW.md#longer-fixed-seed-schedules).
+
+60. **Prepared diffuser density reuse.** An opt-in simulator mode prepares each compiled variant once. Both copies matched physical-index density matrices, readout channels, and classical output probabilities for all 16 tested Jakarta and Torino variants. Torino wall time fell from 61.7–65.2 s to about 8.2 s in the paired runs. See [prepared diffuser states](CONSTRAINT_WORKFLOW.md#reuse-prepared-diffuser-states).
+
+61. **Modeled diffuser probabilities.** The offline comparison can report the full bit-ordered distribution, verified hit probability, and clean-minus-standard difference with zero measurement batches. Both copies checked all 1,024 Jakarta and Torino outcome probabilities against the physical-index density reference. See [modeled diffuser hit probabilities](CONSTRAINT_WORKFLOW.md#calculate-modeled-diffuser-hit-probabilities).
+
+62. **Modeled diffuser witness budgets.** The offline comparison sizes the smallest fixed batch for a caller's modeled witness target and reports nominal two-qubit gate executions. At 95%, both copies verified 6–18 required shots and 22.5–35.2% lower nominal gate totals for clean-ancilla across eight paired cases. See [modeled witness budgeting](CONSTRAINT_WORKFLOW.md#plan-witness-shots-from-a-modeled-diffuser-rate).
+
+63. **Modeled diffuser witness validation.** Fixed fresh seed schedules sample each feasible plan on its prepared circuit and report one-sided simultaneous witness bounds. Both copies reproduced the 1,600-batch Jakarta and Torino run. Two variants supported the 95% target. See [witness validation](CONSTRAINT_WORKFLOW.md#validate-modeled-witness-budgets-on-fresh-seeds).
+
+64. **Diffuser holdout preflight.** The witness schedule command sizes or checks an alternating seed list for the eight-variant family, reports its cap and shortfall, and runs without the quantum SDK. Both copies confirmed the 99-batch zero-miss boundary and the 128-batch cap failure with one tolerated miss. See [diffuser holdout preflight](CONSTRAINT_WORKFLOW.md#check-a-diffuser-holdout-before-sampling).
+
+65. **Diffuser holdout futility.** An opt-in stop records the best attainable bound and exact unsubmitted seeds per variant. Both copies reproduced the Jakarta and Torino schedules with 994 fewer batches, preserving every executed outcome and both supported targets. See [diffuser holdout futility](CONSTRAINT_WORKFLOW.md#stop-a-diffuser-holdout-whose-target-is-unreachable).
+
+66. **Diffuser validation power.** An optional planner estimates the chance that a fixed schedule supports the target under a supplied batch success probability. It checks eligible sizes for the best probability or smallest schedule meeting requested power. Both copies verified six reference grids and 16 archived per-variant forecasts. See [validation power](CONSTRAINT_WORKFLOW.md#estimate-diffuser-validation-power-before-sampling).
+
+67. **Modeled diffuser holdout preview.** Plan-only sweeps report per-circuit confidence power and prospective workload using the same compiled circuits and modeled batch rates as validation. Both copies matched all 16 default forecasts and four archived workloads with zero measurement jobs. See [holdout preview](CONSTRAINT_WORKFLOW.md#preview-modeled-diffuser-holdout-costs-and-power).
+
+68. **Power-targeted diffuser shot budgets.** Preview and validation can size the smallest capped batch for both the witness target and a requested holdout power. Both copies matched independent minima and actual local workloads on Jakarta and Torino, including power failures at a 20-shot cap. See [power-targeted shot budgets](CONSTRAINT_WORKFLOW.md#size-witness-shots-for-a-validation-power-target).
+
+69. **Joint diffuser schedule and shot search.** A planning sweep compares eligible batch counts and power-targeted shot minima, then selects the lowest shot and nominal gate costs across full-coverage schedules. Both copies verified all 30 eligible sizes on Jakarta and Torino and replayed the 99-batch minima. See [schedule cost search](CONSTRAINT_WORKFLOW.md#compare-diffuser-holdout-schedules-before-assigning-seeds).
+
+70. **Checked diffuser holdout replay.** Save a fully feasible selected schedule with explicit seed bindings, snapshot metadata, circuit identity, and workload. Replay recomputes the checks before measurement. Both copies reproduced the 1,584 Jakarta and Torino seeded outcomes and rejected altered requests before sampling. See [diffuser holdout replay](CONSTRAINT_WORKFLOW.md#save-and-verify-a-diffuser-holdout-request).
+
+71. **Diffuser execution receipts.** Checked replays can save exact request and report bytes. The offline verifier checks the bindings and derives observed workload from the batch records, including futility and timeout accounting. Both copies verified the two 792-batch IBM snapshot receipts and rejected a rehashed workload disagreement. See [diffuser execution receipts](CONSTRAINT_WORKFLOW.md#record-and-verify-a-diffuser-execution-receipt).
+
+72. **Diffuser receipt comparison.** The offline comparator aligns physical circuit variants and seeds, shows workload deltas, and distinguishes exact count changes from differences in execution conditions. Both copies matched the 792 completed batches per snapshot and checked added seeds, changed budgets, reordered layouts, and partial execution states. See [diffuser receipt comparison](CONSTRAINT_WORKFLOW.md#compare-diffuser-receipts-by-circuit-and-seed).
+
+73. **Bounded diffuser replay regression.** One local command verifies and pins a baseline receipt, enforces a full-plan shot limit, runs a timed worker, and compares verified outcomes. Both copies matched the Jakarta and Torino baselines at their exact limits and verified rejection, timeout, and difference paths. See [bounded diffuser regression](CONSTRAINT_WORKFLOW.md#run-a-diffuser-regression-within-a-declared-limit).
+
+74. **Diffuser regression suites.** A manifest names multiple local baselines and declares per-case and combined shot limits. Both copies matched the Jakarta and Torino suite at 37,620 shots and rejected lower limits before launching any worker. See [diffuser regression suites](CONSTRAINT_WORKFLOW.md#run-named-diffuser-regressions-from-a-manifest).
+
+75. **Packaged Manila diffuser smoke baseline.** A five-wire fixture covers all eight diffuser variants in 16 batches and 112 shots. Both copies verified the receipt, reproduced the baseline from checkout, and replayed the packaged fixture using an installed wheel. See [Manila diffuser smoke](CONSTRAINT_WORKFLOW.md#run-the-packaged-manila-diffuser-smoke-baseline).
+
+76. **Combined Manila Windows smoke workflow.** One packaged installation runs both regressions and configures separate evidence uploads. Both copies passed the exact local command blocks and verified that either cap failure still allows the other replay to finish. See [Windows smoke workflow](CONSTRAINT_WORKFLOW.md#run-the-manila-smoke-regressions-in-the-windows-workflow).
+
+77. **Concurrent Manila smoke replays.** Local profiling identified replay time as the largest part of the three workflow command blocks. Concurrent CLI trials cut median replay wall time by 32–37% across the two copies. Both copies verified the exact updated PowerShell workflow, including a one-shot reduction of each cap in turn. See [local replay timings](CONSTRAINT_WORKFLOW.md#local-replay-timings).
+
+78. **Optional native OpenQASM importer for diffuser replays.** Diffuser comparisons can prefer the native importer and save that choice in a schema 2 request. Both copies reproduced the original schema 1 fixture and verified a new native Manila receipt with all 16 seeded histograms and 112 shots. See [native diffuser import](CONSTRAINT_WORKFLOW.md#prefer-native-openqasm-import-for-a-diffuser-holdout).
+
+79. **Packaged native Manila Windows smoke baseline.** The Windows job replays the phase-cover, original diffuser, and native diffuser receipts from one installed source distribution. Both copies matched all three and checked each one-shot cap failure with the other two replays completing. See [Windows smoke verification](CONSTRAINT_WORKFLOW.md#run-the-manila-smoke-regressions-in-the-windows-workflow).
+
+80. **Diffuser compilation timing diagnostics.** Sampled comparisons, check-only runs, and validation receipts report separate transpilation, export, import, and verification times. Both copies reproduced the two Manila request schemas byte for byte and matched their replay fingerprints and seeded histograms. See [diffuser compilation timings](CONSTRAINT_WORKFLOW.md#inspect-diffuser-compilation-timings).
+
+81. **Offline diffuser timing comparison.** An opt-in receipt comparison aligns recorded compiler times by physical layout, round count, and diffuser, with importer conditions and missing observations visible. Both copies verified the timed and archived Manila receipts without the quantum SDK. See [compare recorded compilation timings](CONSTRAINT_WORKFLOW.md#compare-recorded-diffuser-compilation-timings).
+
+82. **Matched diffuser compiler benchmark.** An installed command benchmarks checked requests in fresh processes with alternating order, bounded time, and verified compiler timings. Both copies verified four Manila pairs and independently recomputed the timing summaries. See [benchmark matched requests](CONSTRAINT_WORKFLOW.md#benchmark-matched-diffuser-requests).
+
+83. **Offline diffuser benchmark verification.** An installed command verifies saved benchmark requests, trial order and reports, and recomputes paired timing statistics. New runs bind report and log bytes with SHA-256, and both copies verified completed and timed-out bundles under both schemas. See [verify saved benchmark evidence](CONSTRAINT_WORKFLOW.md#verify-saved-diffuser-benchmark-evidence).
+
+84. **Cross-run diffuser benchmark comparison.** An installed command verifies both saved benchmarks and reports their sample sizes, timing spread, median differences, and recorded workload, importer, and environment changes. Both copies verified complete, reversed-arm, and incomplete comparisons. See [compare saved benchmarks](CONSTRAINT_WORKFLOW.md#compare-saved-diffuser-benchmarks).
+
+85. **Three-snapshot diffuser compiler benchmark.** A reproducible example runs matched OpenQASM importer requests on Manila, Jakarta, and Torino and records compiled sizes and verified timing summaries. Both copies verified all three snapshots with two pairs each. See [benchmark importers across IBM snapshots](CONSTRAINT_WORKFLOW.md#benchmark-diffuser-importers-across-ibm-snapshots).
+
+86. **Importer-only benchmark on fixed OpenQASM.** A two-stage example captures verified diffuser exports and times both direct parsers on identical inputs. Both copies checked all three IBM snapshots, verified 192 imports in total, and rejected an edited export before parsing. See [benchmark importers on fixed exports](CONSTRAINT_WORKFLOW.md#benchmark-openqasm-importers-on-fixed-exports).
+
+87. **Compile and export against a named IBM snapshot.** The built-in and declarative CLI compile paths can target bundled Manila, Jakarta, or Torino without a separate noisy simulation. Both copies checked matching standard and native exports for four circuits, including work-qubit cases, and verified the custom-gate fallback. See [compile for an offline IBM snapshot](CONSTRAINT_WORKFLOW.md#compile-for-an-offline-ibm-snapshot).
+
+88. **Native import for offline IBM comparisons.** All four snapshot modes gained an option for Qiskit's native parser. The initial verification included the automatic layout compiles. The IBM install extra includes the standard importer. Both copies verified the same 52 seeded histograms per importer, with matching circuit hashes, measurement maps, and selection decisions across all three snapshots. See [matched importer verification](IBM_MODEL_RESEARCH.md#choose-an-openqasm-importer-for-offline-comparisons).
+
+89. **Faster starting layout selection.** Round sweeps and placement checks discover layouts through the same seeded transpilation while keeping the verified fixed-layout compiles for sampling. Both copies profiled all three snapshots and matched saved circuit and seeded sampling evidence with both parsers. See [layout selection profile](IBM_MODEL_RESEARCH.md#select-the-starting-layout-without-an-export-round-trip).
+
+90. **Reuse the calibrated simulator across oracle variants.** The modulo-4 comparison builds one full simulator per snapshot and halts after an unconfirmed cancellation. Both copies matched seeded results and measured lower local comparison times across all three models. The placement profile also recorded where noise projection changes exact seeded results. See [simulator reuse and verification](IBM_MODEL_RESEARCH.md#reuse-the-calibrated-simulator-between-oracle-variants).
+
+91. **Reusable placement checks.** A Python plan retains verified placements and circuits while each request builds fresh simulators and returns detached evidence. Both copies matched seeded outcomes under both parsers and measured lower two-request totals with the standard parser. Unconfirmed cancellation stops the request and invalidates the plan. See [reusable placement checks](IBM_MODEL_RESEARCH.md#reuse-verified-circuits-across-placement-checks).
+
+92. **Offline placement receipts.** A new receipt preserves calibration, exact OpenQASM, seed results, and placement decisions. Both copies verified all three snapshots with site packages disabled and rejected altered selections even with updated manifest checksums. See [save and verify a placement receipt](IBM_MODEL_RESEARCH.md#save-and-verify-a-placement-receipt).
+
+93. **Compare verified placement receipts.** The offline command aligns cells and seeds and reports observed histogram and decision changes alongside differences in calibration, physical circuits, shot budgets, and software. Both copies verified complete, changed-condition, and timeout cases. See [compare two placement receipts](IBM_MODEL_RESEARCH.md#compare-two-placement-receipts).
+
+94. **Replay verified placement receipts.** The local command rebuilds all recorded circuit identities before sampling, then checks seeded histograms and placement decisions. It supports check-only preflight and measured trials from partial references. See [replay a placement receipt](IBM_MODEL_RESEARCH.md#replay-a-placement-receipt).
+
+95. **Packaged Manila placement smoke replay.** The source distribution carries a 32-shot sealed baseline. The Windows smoke job verifies its receipt, rebuilds all four circuit identities, and requires eight exact histogram matches with separate phase evidence. See [packaged placement smoke check](IBM_MODEL_RESEARCH.md#packaged-manila-placement-smoke-check).
+
+96. **Manila smoke environment evidence.** Capture the installed versions, pin comparisons, exact input fingerprints, and available runner context before replay. The environment artifact and exit diagnostics are separate from the four replay lanes. See [Manila smoke environment evidence](IBM_MODEL_RESEARCH.md#manila-smoke-environment-evidence).
+
+97. **Offline smoke environment comparison.** Compare valid saved reports and isolate dependency, pin, input, and runner changes from capture identity. See [compare saved smoke environments](IBM_MODEL_RESEARCH.md#compare-saved-smoke-environments).
+
+98. **Verifiable Manila smoke run index.** Link environment and replay bundles with observed step, upload, and command outcomes. Verify the recorded file evidence after downloading or relocating the bundles. See [verify a Manila smoke run index](IBM_MODEL_RESEARCH.md#verify-a-manila-smoke-run-index).
+
+99. **Offline Manila smoke run comparison.** Verify each index against local evidence and compare phase outcomes, file fingerprints, and bound environment records. See [compare two Manila smoke run indexes](IBM_MODEL_RESEARCH.md#compare-two-manila-smoke-run-indexes).
+
+100. **Unknown-count search benchmark.** Compare exact classical witnesses, bounded ideal searches, and the empty-proof path on fixed six-bit formulas. The report checks every sample and separates deterministic evidence from local timings. See [unknown-count search across solution densities](CONSTRAINT_WORKFLOW.md#benchmark-unknown-count-search-across-solution-densities).
+
+101. **Affordable-round continuation.** An opt-in policy redraws unaffordable rounds within the remaining allowance. A matched seed panel reports rescued witnesses, additional work, and preserved default traces. The adjusted attempt was verified on the local Manila snapshot. See [continue with affordable rounds](CONSTRAINT_WORKFLOW.md#continue-with-affordable-rounds).
+
+102. **Ideal unknown-count budget planner.** Forecast first-witness probability, budget stops, and expected logical work for both policies without an SDK. Compare the model with the fixed panel and verify it against exact small enumerations. See [model the unknown-count budgets](CONSTRAINT_WORKFLOW.md#model-the-unknown-count-budgets-before-sampling).
+
+103. **Unknown-count budget selection.** Evaluate explicit shot and query caps under both policies and all declared solution counts. Report feasible expected-work tradeoffs and the best attainable probability when the grid misses the target. See [select budgets for a modeled witness target](CONSTRAINT_WORKFLOW.md#select-budgets-for-a-modeled-witness-target).
+
+104. **Selected-budget holdout benchmark.** Run preselected plans on disjoint seed blocks and audited threshold oracles. Record trial outcomes, modeled expectations, and finite-sample intervals at both declared and held-out counts. See [validate selected budgets on fresh seeds and counts](CONSTRAINT_WORKFLOW.md#validate-selected-budgets-on-fresh-seeds-and-counts).
+
+105. **Adaptive selected-budget snapshot comparison.** Compile and audit each possible round circuit once. Compare complete ideal and calibrated-noise searches with matched seeds, independent stopping, and separate compilation, sampling, and logical work evidence. See [compare complete searches under IBM snapshot noise](CONSTRAINT_WORKFLOW.md#compare-complete-searches-under-ibm-snapshot-noise).
+
+106. **Snapshot-aware budget selection.** Reuse verified saved round profiles without an SDK. Rank budgets by worst-case expected shots, queries, or nominal compiled two-qubit gates, and replay the selected plans on held-out cases. See [select budgets from saved snapshot distributions](CONSTRAINT_WORKFLOW.md#select-budgets-from-saved-snapshot-distributions).
+
+107. **Bounded snapshot round profile reuse.** Share completed round probabilities and compile evidence across matching requests. Verify circuit, layout, and calibration invalidation and reproduce the archived Jakarta and Manila panels with warm profiles. See [reuse verified snapshot round profiles](CONSTRAINT_WORKFLOW.md#reuse-verified-snapshot-round-profiles).
+
+108. **Portable snapshot profile bundles.** Export the retained round and seed evidence, verify the bundle on its own or against the full panel, and reproduce offline budget selection and holdout replay. See [export and verify a portable snapshot profile](CONSTRAINT_WORKFLOW.md#export-and-verify-a-portable-snapshot-profile).
+
+109. **Matched snapshot profile comparison.** Compare the same grid across two verified bundles, rank plans that meet the target on both, and replay their recommendations on matched cases. Report calibration, layout, circuit, and distribution differences alongside the decision. See [compare snapshot profiles on a common grid](CONSTRAINT_WORKFLOW.md#compare-snapshot-profiles-on-a-common-grid).
+
+110. **Joint snapshot layout and budget planning.** Capture fixed-layout profiles on one named snapshot, rank layout-budget pairs against declared cases, and replay frozen budgets across matched held-out profiles. See [plan a starting layout and search budget together](CONSTRAINT_WORKFLOW.md#plan-a-starting-layout-and-search-budget-together).
+
+111. **Round-probability sensitivity.** Rank layout-budget pairs under bounded round hit probabilities, report nominal and endpoint forecasts, and replay frozen selections on the saved distributions. See [check layout and budget sensitivity](CONSTRAINT_WORKFLOW.md#check-layout-and-budget-sensitivity-to-round-probabilities).
+
+112. **Radius sweep and fixed-plan tolerance.** Compare robust recommendations across a bounded radius grid and bracket the probability tolerance of each fixed plan. See [compare several radii](CONSTRAINT_WORKFLOW.md#compare-several-radii-and-find-each-fixed-plans-tolerance).
+
+113. **Dated calibration comparison.** Simulate a single verified circuit per round against two SHA-256-pinned archives of the same IBM device. Report target support, probabilities, readout channels, and signed differences. See [compare two dated IBM snapshots](CONSTRAINT_WORKFLOW.md#compare-two-dated-ibm-snapshots-on-the-same-circuits).
+
+114. **Shared budgets across dated calibrations.** Rank fixed caps by success and worst expected work over the two archived models. See [plan fixed search budgets across the two dates](CONSTRAINT_WORKFLOW.md#plan-fixed-search-budgets-across-the-two-dates).
+
+115. **Matched replay across dated calibrations.** Replay unique frozen recommendations on both archived models and a distinct-candidate classical reference under matched seed blocks. See [replay selected budgets with matched seeds](CONSTRAINT_WORKFLOW.md#replay-selected-budgets-with-matched-seeds).
+
+116. **Multi-layout calibration study.** Capture only the rounds reachable under the budget grid and plan or replay completed layouts in one command. Verified on the original two-bit constraint and the four-bit diffuser smoke constraint. See [capture and plan a multi-layout study](CONSTRAINT_WORKFLOW.md#capture-and-plan-a-multi-layout-study-in-one-command).
+
+117. **Shared calibration study preparation.** Verify and decode the pinned archive pair and audit the oracle once per study, then preflight every layout before compilation. See [capture and plan a multi-layout study](CONSTRAINT_WORKFLOW.md#capture-and-plan-a-multi-layout-study-in-one-command).
+
+118. **Shared static calibration noise channels.** Derive channels once per dated target and matching active-wire union within a study, then build each layout's models with read-only gate channels and independent readout buffers. See [capture and plan a multi-layout study](CONSTRAINT_WORKFLOW.md#capture-and-plan-a-multi-layout-study-in-one-command).
+
+119. **Subset projection for static calibration noise.** Project channels from a covering union on the same dated target, preserving directed physical gate arguments and the compact target's calibration checks. See [capture and plan a multi-layout study](CONSTRAINT_WORKFLOW.md#capture-and-plan-a-multi-layout-study-in-one-command).
+
+120. **Verified compiled-round reuse across dated studies.** Reuse an exact compiled round across direct comparisons and studies in the same Python process. Verify both archive pins and rerun both density lanes on every request. See [reuse compiled rounds across dated studies](CONSTRAINT_WORKFLOW.md#reuse-compiled-rounds-across-dated-studies).
+
+121. **Portable compiled rounds for dated studies.** Save completed physical circuits to a pinned local bundle, recheck their verification evidence in a separate process, and rerun both noise simulations. Extend a saved study to new round ranges while preserving the original bundle. See [carry compiled rounds into a separate process](CONSTRAINT_WORKFLOW.md#carry-compiled-rounds-into-a-separate-process).
+
+122. **Portable compilation coverage preflight.** Inspect a pinned bundle without the SDK and check which keys cover the exact requested layout and round grid before running a dated study. See [check bundle coverage before a study](CONSTRAINT_WORKFLOW.md#check-bundle-coverage-before-a-study).
+
+123. **Compare coverage across pinned compilation bundles.** Prepare the requested grid once, rank candidates by matched round cells, and retain ties and software incompatibilities in the report. See [compare bundle coverage for one study](CONSTRAINT_WORKFLOW.md#compare-bundle-coverage-for-one-study).
+
+124. **Compose complementary compilation bundles.** Copy exact saved circuit rows into a new pinned bundle without the SDK. Deduplicate identical rows and report conflicting evidence before publication. See [compose complementary compilation bundles](CONSTRAINT_WORKFLOW.md#compose-complementary-compilation-bundles).
+
+125. **Verify overlapping saved physical circuits.** Check QPY-only conflicts against one pinned request, compare decoded physical evidence, and retain the selected source's exact row. See [verify differing QPY rows before composition](CONSTRAINT_WORKFLOW.md#verify-differing-qpy-rows-before-composition).
+
+126. **Verify portable overlap receipts.** Check pinned source and output bytes without the SDK, then optionally replay the recorded physical checks against the exact study request. See [verify or replay an overlap receipt](CONSTRAINT_WORKFLOW.md#verify-or-replay-an-overlap-receipt).
+
+127. **Share preparation across receipt replay and study.** Run receipt verification and the dated study together, reusing the pinned preparation and verified winning programs while retaining both reports. See [replay a receipt and run the study together](CONSTRAINT_WORKFLOW.md#replay-a-receipt-and-run-the-study-together).
+
+128. **Verify and profile the receipt-backed workflow on Manila.** Match eight programs across the 2021 and 2024 archives, check their modeled distributions against full-wire Aer, and measure fresh compilation and paired replay-and-study stages. See [profile a receipt-backed study on archived Manila](CONSTRAINT_WORKFLOW.md#profile-a-receipt-backed-study-on-archived-manila).
+
+129. **Native OpenQASM for dated calibration.** Prefer the experimental importer through comparison, study, bundle coverage, and receipt replay. The pinned Manila and Jakarta studies preserve exact physical, probability, and budget evidence. See [prefer native OpenQASM for a dated calibration study](CONSTRAINT_WORKFLOW.md#prefer-native-openqasm-for-a-dated-calibration-study).
+
+130. **Batch dated calibration density preparation.** Group up to three consecutive rounds on the same compact simulator and validate each Aer result before publishing a layout. Manila and Jakarta used eight jobs for 16 circuits with matching density and probability evidence. See [batch density preparation for dated calibration](CONSTRAINT_WORKFLOW.md#batch-density-preparation-for-dated-calibration).
+
+131. **Profile wider dated density workers and prune unused gate noise.** Time worker assembly, serialization, controller execution, and formatting on six- and seven-wire Jakarta circuits. The dated path keeps only applicable stock gate channels where the compact simulation can prove their scope. See [profile density workers on wider Jakarta circuits](CONSTRAINT_WORKFLOW.md#profile-density-workers-on-wider-jakarta-circuits).
+
+132. **Capture opt-in dated density fusion and audit budget decisions.** Record Aer fusion settings and observations by round and date. Compare matched, pinned captures using an explicit tolerance and keep the budget plan and seeded replay tied to the default reference. See [capture density fusion and check it against a pinned reference](CONSTRAINT_WORKFLOW.md#capture-density-fusion-and-check-it-against-a-pinned-reference).
+
+133. **Run both dated density policies in a single study.** Reuse verified circuits and dated compact simulators, preserve the default plan through candidate failures, and audit matched results against an explicit tolerance. See [run both density policies in one study](CONSTRAINT_WORKFLOW.md#run-both-density-policies-in-one-study).
+
+134. **Verify a saved paired study offline.** Bind both capture sets to the constraint and round request, verify coverage, and recompute the default plan, seeded replay, and complete fusion diagnostic. See [verify a saved paired calibration study offline](CONSTRAINT_WORKFLOW.md#verify-a-saved-paired-calibration-study-offline).
+
 ## Remaining evidence
 
-- Gather more precise matched evidence on noisy hit rates if a diffuser default change is proposed.
+- Measure simulator retention and peak memory in wider, multi-layout paired studies. Check whether earlier release of completed layout setup reduces memory while preserving capture order and exact reports.
 - Run one authorized physical experiment with a named backend, record its actual job and measured results, and compare its hit rate and full cost with the local references.
-- Reprofile the complete fresh and prepared workflows after the audit changes. Compare oracle synthesis, audit, compilation, and local model preparation before choosing the next bottleneck.
+- Verify the Manila smoke job on a hosted Windows runner when the workflow reaches GitHub.

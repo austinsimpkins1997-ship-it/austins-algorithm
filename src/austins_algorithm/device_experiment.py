@@ -64,23 +64,30 @@ def summarize_search_counts(
         raise TypeError("verifier must be callable")
     if not isinstance(counts, Mapping):
         raise ValueError("counts must map bitstrings to positive integers")
+    validated_counts = {}
     for bits, count in counts.items():
-        if not isinstance(bits, str) or len(bits) != width or any(bit not in "01" for bit in bits):
+        if (
+            not isinstance(bits, str)
+            or len(bits) != width
+            or (bits.strip("01") if type(bits) is str else any(bit not in "01" for bit in bits))
+        ):
             raise ValueError(f"measurement must be a {width}-bit MSB-first binary string")
         _bounded_int("count", count, 1, requested_shots)
-    completed_shots = sum(counts.values())
+        validated_counts[bits] = count
+    completed_shots = sum(validated_counts.values())
     if not 1 <= completed_shots <= requested_shots:
         raise ValueError("completed shots must be positive and no greater than requested shots")
+    ordered_bits = sorted(validated_counts)
     verified_candidates = []
-    for bits in sorted(counts):
+    for bits in ordered_bits:
         accepted = verifier(bits)
         if not isinstance(accepted, bool):
             raise TypeError("verifier must return a bool")
         if accepted:
             verified_candidates.append(bits)
-    verified_shots = sum(counts[bits] for bits in verified_candidates)
+    verified_shots = sum(validated_counts[bits] for bits in verified_candidates)
     return {
-        "counts": dict(sorted(counts.items())),
+        "counts": {bits: validated_counts[bits] for bits in ordered_bits},
         "requested_shots": requested_shots,
         "completed_shots": completed_shots,
         "verified_shots": verified_shots,

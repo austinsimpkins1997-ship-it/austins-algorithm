@@ -2,7 +2,7 @@ import math
 import sys
 import unittest
 from pathlib import Path
-from types import SimpleNamespace
+from types import MappingProxyType, SimpleNamespace
 from unittest.mock import patch
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
@@ -20,6 +20,7 @@ from austins_algorithm.device_experiment import (
     austin_classical_baseline,
     run_austin_device_comparison,
     summarize_austin_counts,
+    summarize_search_counts,
 )
 
 
@@ -45,6 +46,44 @@ class DeviceInputsTests(unittest.TestCase):
         for counts in ({"001": 5}, {"1": 2}, {"001": True}, {"011": -1}, {}):
             with self.subTest(counts=counts), self.assertRaises(ValueError):
                 summarize_austin_counts(counts, requested_shots=4)
+
+    def test_count_verification_orders_candidates_and_detaches_validated_counts(self):
+        original = {"101": 2, "010": 1, "011": 3}
+        counts = MappingProxyType(original)
+        seen = []
+
+        def verify(bits):
+            seen.append(bits)
+            original["011"] = -1
+            return bits != "010"
+
+        report = summarize_search_counts(counts, requested_shots=8, width=3, verifier=verify)
+        self.assertEqual(seen, ["010", "011", "101"])
+        self.assertEqual(list(report["counts"].items()), [("010", 1), ("011", 3), ("101", 2)])
+        self.assertEqual(report["verified_candidates"], ["011", "101"])
+        self.assertEqual(report["verified_shots"], 5)
+        self.assertEqual(report["verified_hit_rate"], 5 / 6)
+
+    def test_invalid_count_maps_fail_before_verifier_calls(self):
+        class NonbinaryIterator(str):
+            def __iter__(self):
+                return iter("0x1")
+
+        cases = (
+            ({"011": 2, "0x1": 1}, "measurement"),
+            ({"011": 2, 123: 1}, "measurement"),
+            ({NonbinaryIterator("011"): 2}, "measurement"),
+            ({"011": 2, "101": True}, "count"),
+            ({"011": 2, "101": 2}, "completed shots"),
+        )
+        for counts, message in cases:
+            with (
+                self.subTest(counts=counts),
+                patch.object(device_experiment, "austin_predicate") as verify,
+                self.assertRaisesRegex(ValueError, message),
+            ):
+                summarize_search_counts(counts, requested_shots=3, width=3, verifier=verify)
+            verify.assert_not_called()
 
     def test_direct_classical_solution_matches_all_eight_inputs(self):
         result = austin_classical_baseline()

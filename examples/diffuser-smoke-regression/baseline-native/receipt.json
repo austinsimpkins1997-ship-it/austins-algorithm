@@ -1,0 +1,24 @@
+{
+  "schema_version": 1,
+  "software_versions": {
+    "python": "3.12.15",
+    "austins_algorithm": "0.1.0",
+    "qiskit": "2.6.2",
+    "qiskit-aer": "0.18.2",
+    "qiskit-ibm-runtime": "0.51.0",
+    "qiskit-qasm3-import": "0.6.0",
+    "numpy": "2.5.4",
+    "scipy": "1.18.1"
+  },
+  "artifacts": {
+    "request.json": {
+      "bytes": 1573,
+      "sha256": "6d27398094662f16e60ea6457b380d9bdadedfecedb5ed583fbeaac5efe8d12b"
+    },
+    "report.json": {
+      "bytes": 88520,
+      "sha256": "feff2309c7c4abbe74c4dc62838cfa5a62af547a7c34ae095491a9064fa25cc5"
+    },
+    "selected.qasm": null
+  }
+}

@@ -841,6 +841,56 @@ class GroverSearchTests(unittest.TestCase):
         self.assertIsNone(query_limit["candidate"])
         self.assertEqual(query_limit["oracle_queries"], 0)
 
+    def test_affordable_query_policy_uses_zero_rounds_through_the_shot_cap(self):
+        report = run_grover_search(
+            QuantumCircuit(4), 4, lambda _: False, max_shots=6, max_oracle_queries=0, seed=7,
+            query_budget_policy="affordable",
+        )
+        self.assertEqual(report["query_budget_policy"], "affordable")
+        self.assertEqual(report["status"], "BUDGET_EXHAUSTED")
+        self.assertEqual(report["exhaustion_reason"], "SHOT_BUDGET")
+        self.assertEqual(report["shots_used"], 6)
+        self.assertEqual(report["verifier_calls"], 6)
+        self.assertEqual(report["oracle_queries"], 0)
+        self.assertEqual([attempt["rounds"] for attempt in report["attempts"]], [0] * 6)
+        self.assertTrue(report["round_adjustments"])
+        for adjustment in report["round_adjustments"]:
+            self.assertGreater(adjustment["drawn_rounds"], 0)
+            self.assertEqual(adjustment["executed_rounds"], 0)
+            self.assertEqual(adjustment["remaining_queries"], 0)
+            self.assertEqual(report["attempts"][adjustment["attempt"] - 1]["rounds"], 0)
+
+    def test_affordable_redraw_uses_positive_residual_and_preserves_seeded_prefix(self):
+        oracle = QuantumCircuit(4)
+        limits = {"max_shots": 8, "max_oracle_queries": 2, "max_rounds_per_shot": 2, "seed": 7}
+
+        def reject(_bits):
+            return False
+
+        baseline = run_grover_search(oracle, 4, reject, **limits)
+        self.assertEqual(baseline, run_grover_search(oracle, 4, reject, query_budget_policy="stop", **limits))
+        self.assertNotIn("query_budget_policy", baseline)
+        self.assertNotIn("round_adjustments", baseline)
+        self.assertEqual(baseline["exhaustion_reason"], "ORACLE_QUERY_BUDGET")
+        self.assertEqual(baseline["oracle_queries"], 1)
+        self.assertEqual(baseline["shots_used"], 5)
+
+        continued = run_grover_search(oracle, 4, reject, query_budget_policy="affordable", **limits)
+        self.assertEqual(continued["attempts"][:baseline["shots_used"]], baseline["attempts"])
+        self.assertEqual(continued["round_adjustments"][0], {
+            "attempt": 6, "drawn_rounds": 2, "executed_rounds": 1, "remaining_queries": 1,
+        })
+        self.assertEqual(continued["attempts"][5]["rounds"], 1)
+        self.assertEqual(continued["oracle_queries"], 2)
+        self.assertEqual(continued["shots_used"], 8)
+        self.assertEqual(continued["exhaustion_reason"], "SHOT_BUDGET")
+
+    def test_affordable_query_policy_requires_unknown_count(self):
+        with self.assertRaisesRegex(ValueError, "affordable query budget policy requires unknown-count search"):
+            run_grover_search(
+                QuantumCircuit(4), 4, lambda _: False, marked_count=1, query_budget_policy="affordable",
+            )
+
     def test_search_checks_the_verifier_even_when_oracle_marks_other_states(self):
         report = run_grover_search(
             build_austin_phase_oracle(), 3, lambda bits: bits == "111", marked_count=2,
