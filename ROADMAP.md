@@ -280,8 +280,10 @@
 
 143. **Keep controlled worker tests portable.** Scope the benchmark subprocess replacement to its own module, preserve independent host-metadata calls and exercise that separation explicitly on Windows and Linux. Inspect all run #9 matrix failures and retain the pre-fix reproduction. See [saved benchmark verification](CONSTRAINT_WORKFLOW.md#verify-saved-checkpoint-benchmark-records).
 
+144. **Minimum-cost search and desktop Workbench.** Add bounded integer objectives, an independent exact minimum, budgeted Grover simulation, and an audited reversible cost-threshold circuit. Deliver a native Windows executable with interactive stage inspection, saved projects, generated replay code, and full export. See [the Workbench guide](WORKBENCH.md).
+
 ## Remaining evidence
 
 - Extend regression coverage to additional supported simulator/OS combinations when a named environment is available. Keep checkpoint records and package artifacts bound to their exact revisions; local checks do not replace hosted verification or physical-device evidence.
 - Run one authorized physical experiment with a named backend, record its actual job and measured results, and compare its hit rate and full cost with the local references.
-- Keep hosted verification tied to its exact committed revision. [Run #8](https://github.com/austinsimpkins1997-ship-it/austins-algorithm/actions/runs/43249759269) passed its ten jobs. [Run #9](https://github.com/austinsimpkins1997-ship-it/austins-algorithm/actions/runs/43286454985) for `10533c88b96ddca98045904095a5d0203900ac9c` passed Manila and failed the nine Ubuntu matrix jobs through the shared test mock. The #143 local repair passes both maintained copies and WSL checks; hosted verification after the next authorized push remains pending.
+- Keep hosted verification tied to the committed revision. [Run #10](https://github.com/austinsimpkins1997-ship-it/austins-algorithm/actions/runs/43300577324) passed all ten jobs for the #143 CI repair at `33eab1190c31188c322951a78cc6b7f4e620c0fa`. Desktop #144 adds local Windows executable evidence. A managed organizational deployment requires its own signing, distribution, and accessibility validation.

@@ -1,0 +1,22 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:chronorealm:future-reader:capabilities:1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema", "controller", "austin", "bib", "live"],
+  "properties": {
+    "schema": {"const": "future-reader.capabilities/1"},
+    "controller": {
+      "type": "object",
+      "required": ["backend", "mode", "model", "model_digest", "operations", "external_effects"],
+      "properties": {
+        "backend": {"const": "python-sqlite"}, "mode": {"const": "SIMULATION"},
+        "model": {"type": "string"}, "model_digest": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "operations": {"const": ["PINPOINT", "TRAVEL", "REVERSE", "CERTIFY"]}, "external_effects": {"const": false}
+      }
+    },
+    "austin": {"type": "object", "required": ["backend", "mode", "scope", "optional", "compile", "hardware"]},
+    "bib": {"type": "object", "required": ["backend", "mode", "producer", "operations"]},
+    "live": {"type": "object", "required": ["status", "reason", "fallback"], "properties": {"status": {"const": "UNAVAILABLE"}}}
+  }
+}

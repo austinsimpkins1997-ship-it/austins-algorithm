@@ -1,0 +1,17 @@
+[build-system]
+requires = ["setuptools>=77"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "chronorealm-future-reader"
+version = "0.1.1"
+description = "Evidence-scoped temporal reader and local oracle practice controller"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = []
+
+[project.scripts]
+future-reader = "future_reader.cli:main"
+
+[tool.setuptools]
+packages = ["future_reader"]

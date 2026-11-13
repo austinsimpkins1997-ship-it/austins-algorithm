@@ -45,8 +45,14 @@ all = ["qiskit>=2.0,<3", "qiskit-qasm3-import>=0.6,<1", "cirq-core>=1.6,<2", "ma
 [project.scripts]
 austins-algorithm = "austins_algorithm.__main__:main"
 
+[project.gui-scripts]
+austins-algorithm-workbench = "austins_algorithm.desktop:main"
+
 [tool.setuptools]
 package-dir = {"" = "src"}
 
 [tool.setuptools.packages.find]
 where = ["src"]
+
+[tool.setuptools.package-data]
+austins_algorithm = ["workbench_assets/*", "workbench_assets/icons/*", "workbench_assets/licenses/*"]

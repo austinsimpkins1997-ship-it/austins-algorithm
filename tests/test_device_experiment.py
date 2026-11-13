@@ -1,9 +1,12 @@
+import json
 import math
 import sys
 import unittest
+from contextlib import redirect_stderr, redirect_stdout
+from io import StringIO
 from pathlib import Path
 from types import MappingProxyType, SimpleNamespace
-from unittest.mock import patch
+from unittest.mock import Mock, patch
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 try:
@@ -35,6 +38,24 @@ class DeviceInputsTests(unittest.TestCase):
         with patch.object(device_experiment, "_load_ibm_runtime") as load, self.assertRaises(ValueError):
             run_austin_device_comparison(shots=4097, hardware=hardware)
         load.assert_not_called()
+        with patch.object(device_experiment, "_load_ibm_runtime") as load, self.assertRaises(ValueError):
+            run_austin_device_comparison(qpu_preflight_only=True)
+        load.assert_not_called()
+
+    def test_preflight_cli_requires_explicit_target_fields(self):
+        from austins_algorithm.workflows_cli import main
+
+        for extra, message in (([], "requires --backend"), (["--ibm-model", "manila"], "cannot be combined")):
+            with (
+                self.subTest(extra=extra),
+                patch.object(device_experiment, "run_austin_device_comparison") as run,
+                redirect_stderr(StringIO()) as errors,
+                self.assertRaises(SystemExit) as exit_info,
+            ):
+                main(["compare", "--qpu-preflight", *extra])
+            self.assertEqual(exit_info.exception.code, 1)
+            self.assertIn(message, errors.getvalue())
+            run.assert_not_called()
 
     def test_count_verification_uses_observed_shots(self):
         result = summarize_austin_counts({"011": 2, "001": 1}, requested_shots=4)
@@ -122,6 +143,10 @@ class HardwareBoundaryTests(unittest.TestCase):
             is_mock = False
             simulator = False
             local = False
+            operational = True
+
+            def status(self):
+                return SimpleNamespace(operational=self.operational)
 
         self.backend_type = Backend
         self.backend = Backend()
@@ -130,6 +155,9 @@ class HardwareBoundaryTests(unittest.TestCase):
         self.result_error = None
         self.submit_error = None
         self.bad_budget = False
+        self.account_missing = False
+        self.account_file_present = True
+        self.compile_error = False
 
     def _fake_runtime(self):
         test = self
@@ -163,6 +191,8 @@ class HardwareBoundaryTests(unittest.TestCase):
 
             def __init__(self, **kwargs):
                 test.calls["service"] = kwargs
+                if test.account_missing:
+                    raise AccountError("account details")
 
             def backend(self, name, *, instance):
                 test.calls["backend"] = (name, instance)
@@ -177,6 +207,7 @@ class HardwareBoundaryTests(unittest.TestCase):
 
             def run(self, circuits, *, shots, dry_run):
                 test.calls["submit"] = (len(circuits), shots, dry_run)
+                test.calls["submitted_circuit"] = circuits[0]
                 if test.submit_error:
                     raise test.submit_error
                 return Job()
@@ -193,30 +224,42 @@ class HardwareBoundaryTests(unittest.TestCase):
         class StateError(Exception):
             pass
 
-        return Service, self.backend_type, Sampler, WaitError, LimitError, JobError, StateError
+        class AccountError(Exception):
+            pass
 
-    def _run(self):
+        return Service, self.backend_type, Sampler, WaitError, LimitError, JobError, StateError, AccountError
+
+    def _run(self, *, preflight_only=False):
         fake = self._fake_runtime()
 
         def compile_for_device(circuit, **kwargs):
-            self.calls["transpile"] = (circuit.num_qubits, kwargs)
-            return circuit
+            self.calls["compile"] = (circuit.num_qubits, kwargs)
+            if self.compile_error:
+                raise ValueError("provider details")
+            self.calls["checked_circuit"] = circuit.copy()
+            return SimpleNamespace(circuit=self.calls["checked_circuit"], timing_seconds={"transpile": 0.0},
+                                   report={"status": "VERIFIED_IDEAL_MEASUREMENT_DISTRIBUTION"})
 
         with (
             patch.object(device_experiment, "_load_ibm_runtime", return_value=fake),
-            patch("qiskit.transpile", side_effect=compile_for_device),
+            patch.object(device_experiment, "_ibm_account_file",
+                         return_value=Mock(is_file=Mock(return_value=self.account_file_present))),
+            patch.object(device_experiment, "compile_and_verify", side_effect=compile_for_device),
         ):
-            return run_austin_device_comparison(shots=4, hardware=self.hardware)["hardware"]
+            return run_austin_device_comparison(
+                shots=4, hardware=self.hardware, qpu_preflight_only=preflight_only,
+            )["hardware"]
 
     def test_one_bounded_submission_reports_measured_partial_results(self):
         result = self._run()
         self.assertEqual(self.calls["service"]["name"], "saved-account")
         self.assertEqual(self.calls["backend"], ("ibm_example", "instance"))
-        self.assertEqual(self.calls["transpile"], (
-            3, {"backend": self.backend, "optimization_level": 1, "seed_transpiler": 7}
+        self.assertEqual(self.calls["compile"], (
+            3, {"backend": self.backend, "optimization_level": 1, "seed": 7}
         ))
         self.assertEqual(self.calls["sampler"][1]["max_execution_time"], 30)
         self.assertEqual(self.calls["submit"], (1, 4, False))
+        self.assertIs(self.calls["submitted_circuit"], self.calls["checked_circuit"])
         self.assertEqual(self.calls["timeout"], 5)
         self.assertEqual(result["status"], "PARTIAL_RESULTS")
         self.assertEqual(result["actual_backend"], "ibm_example")
@@ -236,6 +279,60 @@ class HardwareBoundaryTests(unittest.TestCase):
         self.backend.simulator = False
         self.bad_budget = True
         self.assertEqual(self._run()["status"], "QPU_BUDGET_NOT_CONFIGURED")
+        self.assertNotIn("submit", self.calls)
+
+    def test_preflight_verifies_target_then_returns_before_sampler(self):
+        result = self._run(preflight_only=True)
+        self.assertEqual(result["status"], "TARGET_COMPILED_AND_VERIFIED")
+        self.assertEqual(result["verified_target"], "ibm_example")
+        self.assertEqual(result["compilation"]["status"], "VERIFIED_IDEAL_MEASUREMENT_DISTRIBUTION")
+        self.assertFalse(result["provider_job_submitted"])
+        self.assertFalse(result["quantum_hardware_used"])
+        self.assertNotIn("sampler", self.calls)
+        self.assertNotIn("submit", self.calls)
+
+    def test_missing_account_and_nonoperational_target_fail_before_compilation(self):
+        self.account_file_present = False
+        self.assertEqual(self._run(preflight_only=True)["status"], "IBM_SAVED_PROFILE_UNAVAILABLE")
+        self.assertNotIn("service", self.calls)
+        self.account_file_present = True
+        self.account_missing = True
+        result = self._run(preflight_only=True)
+        self.assertEqual(result["status"], "IBM_SAVED_PROFILE_UNAVAILABLE")
+        self.assertNotIn("account details", str(result))
+        self.assertNotIn("backend", self.calls)
+        self.account_missing = False
+        self.backend.operational = False
+        result = self._run()
+        self.assertEqual(result["status"], "BACKEND_NOT_OPERATIONAL")
+        self.assertNotIn("compile", self.calls)
+        self.assertNotIn("submit", self.calls)
+
+    def test_failed_circuit_verification_holds_submission(self):
+        self.compile_error = True
+        result = self._run()
+        self.assertEqual(result["status"], "PROVIDER_STAGE_FAILED")
+        self.assertEqual(result["failed_stage"], "compile_and_verify")
+        self.assertFalse(result["provider_job_submitted"])
+        self.assertNotIn("provider details", str(result))
+        self.assertNotIn("sampler", self.calls)
+        self.assertNotIn("submit", self.calls)
+
+    def test_cli_reports_missing_profile_with_error_exit(self):
+        from austins_algorithm.workflows_cli import main
+
+        self.account_missing = True
+        command = ["compare", "--qpu-preflight", "--shots", "4", "--backend", "ibm_example", "--account",
+                   "saved-account", "--instance", "instance", "--max-execution-seconds", "30"]
+        with (
+            patch.object(device_experiment, "_load_ibm_runtime", return_value=self._fake_runtime()),
+            patch.object(device_experiment, "_ibm_account_file", return_value=Mock(is_file=Mock(return_value=True))),
+            redirect_stdout(StringIO()) as output,
+            self.assertRaises(SystemExit) as exit_info,
+        ):
+            main(command)
+        self.assertEqual(exit_info.exception.code, 1)
+        self.assertEqual(json.loads(output.getvalue())["hardware"]["status"], "IBM_SAVED_PROFILE_UNAVAILABLE")
         self.assertNotIn("submit", self.calls)
 
     def test_wait_timeout_preserves_id_and_unknown_execution(self):

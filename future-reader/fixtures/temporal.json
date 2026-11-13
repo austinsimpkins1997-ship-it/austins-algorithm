@@ -1,0 +1,576 @@
+{
+  "schema_version": 1,
+  "actor": "reader",
+  "timeline": {
+    "schema_version": 1,
+    "frame": "fixture-utc",
+    "claims": [
+      {
+        "id": "sensor-v1",
+        "topic": "sensor",
+        "title": "Calibration record was unavailable",
+        "kind": "REPORTED_OBSERVATION",
+        "value": {
+          "status": "UNKNOWN",
+          "basis": "The operator had only the status report."
+        },
+        "source": {
+          "title": "Future Reader public training fixture",
+          "actor": "Demo simulator",
+          "version": "1"
+        },
+        "times": {
+          "event": {
+            "from": "2026-11-13T10:00:00Z",
+            "to": "2026-11-13T10:00:00Z",
+            "clock": "fixture-utc"
+          },
+          "recorded": {
+            "from": "2026-11-13T10:15:00Z",
+            "to": "2026-11-13T10:15:00Z",
+            "clock": "fixture-utc"
+          },
+          "available": {
+            "from": "2026-11-13T10:15:00Z",
+            "to": "2026-11-13T10:15:00Z",
+            "clock": "fixture-utc"
+          },
+          "valid": null
+        },
+        "audience": [
+          "*"
+        ],
+        "domain": "Operational simulation",
+        "scope": "Training board",
+        "frame": "fixture-utc",
+        "units": "elapsed seconds",
+        "dependencies": [],
+        "next_check": "Find the calibration receipt."
+      },
+      {
+        "id": "sensor-v2",
+        "topic": "sensor",
+        "title": "Calibration receipt arrived",
+        "kind": "OBSERVATION",
+        "value": {
+          "status": "KNOWN",
+          "value": "Demo calibration accepted at 10:24 UTC."
+        },
+        "source": {
+          "title": "Future Reader public training fixture",
+          "actor": "Demo simulator",
+          "version": "1"
+        },
+        "times": {
+          "event": {
+            "from": "2026-11-13T10:24:00Z",
+            "to": "2026-11-13T10:24:00Z",
+            "clock": "fixture-utc"
+          },
+          "recorded": {
+            "from": "2026-11-13T10:25:00Z",
+            "to": "2026-11-13T10:25:00Z",
+            "clock": "fixture-utc"
+          },
+          "available": {
+            "from": "2026-11-13T10:25:00Z",
+            "to": "2026-11-13T10:25:00Z",
+            "clock": "fixture-utc"
+          },
+          "valid": null
+        },
+        "audience": [
+          "*"
+        ],
+        "domain": "Operational simulation",
+        "scope": "Training board",
+        "frame": "fixture-utc",
+        "units": "elapsed seconds",
+        "dependencies": [],
+        "next_check": "Check calibration expiry before a new run.",
+        "parent": "sensor-v1"
+      },
+      {
+        "id": "conditional-route",
+        "topic": "route",
+        "title": "Path B can remain feasible",
+        "kind": "FORECAST",
+        "value": {
+          "status": "ESTIMATE",
+          "value": "A bounded path remains if the check arrives by its cutoff.",
+          "basis": "Simulated deadline and deterministic stage bounds."
+        },
+        "source": {
+          "title": "Future Reader public training fixture",
+          "actor": "Demo simulator",
+          "version": "1"
+        },
+        "times": {
+          "event": null,
+          "recorded": {
+            "from": "2026-11-13T10:26:00Z",
+            "to": "2026-11-13T10:26:00Z",
+            "clock": "fixture-utc"
+          },
+          "available": {
+            "from": "2026-11-13T10:26:00Z",
+            "to": "2026-11-13T10:26:00Z",
+            "clock": "fixture-utc"
+          },
+          "valid": null
+        },
+        "audience": [
+          "*"
+        ],
+        "domain": "Operational simulation",
+        "scope": "Training board",
+        "frame": "fixture-utc",
+        "units": "elapsed seconds",
+        "dependencies": [
+          "sensor-v2"
+        ],
+        "next_check": "Compare check arrival to the latest safe start."
+      },
+      {
+        "id": "archive-fragment",
+        "topic": "fragment",
+        "title": "Recovered route note lacks its clock anchor",
+        "kind": "REPORTED_OBSERVATION",
+        "value": {
+          "status": "UNKNOWN",
+          "basis": "The fragment has no reliable acquisition time."
+        },
+        "source": {
+          "title": "Future Reader public training fixture",
+          "actor": "Demo simulator",
+          "version": "1"
+        },
+        "times": {
+          "event": null,
+          "recorded": null,
+          "available": null,
+          "valid": null
+        },
+        "audience": [
+          "*"
+        ],
+        "domain": "Operational simulation",
+        "scope": "Training board",
+        "frame": "fixture-utc",
+        "units": "elapsed seconds",
+        "dependencies": [],
+        "next_check": "Locate an independently dated companion record."
+      }
+    ],
+    "order": [
+      {
+        "from": "sensor-v1",
+        "to": "sensor-v2",
+        "relation": "temporal",
+        "evidence": "sensor-v2"
+      }
+    ]
+  },
+  "views": {
+    "at_event": {
+      "mode": "at_event",
+      "label": "At the event",
+      "as_of": "2026-11-13T12:00:00Z",
+      "frame": "fixture-utc",
+      "summary": "1 eligible claim records. Review evidence classes and unresolved values before acting.",
+      "claims": [
+        {
+          "id": "sensor-v1",
+          "topic": "sensor",
+          "title": "Calibration record was unavailable",
+          "kind": "REPORTED_OBSERVATION",
+          "value": {
+            "status": "UNKNOWN",
+            "basis": "The operator had only the status report."
+          },
+          "source": {
+            "title": "Future Reader public training fixture",
+            "actor": "Demo simulator",
+            "version": "1"
+          },
+          "times": {
+            "event": {
+              "from": "2026-11-13T10:00:00Z",
+              "to": "2026-11-13T10:00:00Z",
+              "clock": "fixture-utc"
+            },
+            "recorded": {
+              "from": "2026-11-13T10:15:00Z",
+              "to": "2026-11-13T10:15:00Z",
+              "clock": "fixture-utc"
+            },
+            "available": {
+              "from": "2026-11-13T10:15:00Z",
+              "to": "2026-11-13T10:15:00Z",
+              "clock": "fixture-utc"
+            },
+            "valid": null
+          },
+          "domain": "Operational simulation",
+          "scope": "Training board",
+          "frame": "fixture-utc",
+          "units": "elapsed seconds",
+          "dependencies": [],
+          "next_check": "Find the calibration receipt."
+        }
+      ],
+      "conflicts": [],
+      "order": []
+    },
+    "as_known_then": {
+      "mode": "as_known_then",
+      "label": "As known then",
+      "as_of": "2026-11-13T10:15:00Z",
+      "frame": "fixture-utc",
+      "summary": "1 eligible claim records. Review evidence classes and unresolved values before acting.",
+      "claims": [
+        {
+          "id": "sensor-v1",
+          "topic": "sensor",
+          "title": "Calibration record was unavailable",
+          "kind": "REPORTED_OBSERVATION",
+          "value": {
+            "status": "UNKNOWN",
+            "basis": "The operator had only the status report."
+          },
+          "source": {
+            "title": "Future Reader public training fixture",
+            "actor": "Demo simulator",
+            "version": "1"
+          },
+          "times": {
+            "event": {
+              "from": "2026-11-13T10:00:00Z",
+              "to": "2026-11-13T10:00:00Z",
+              "clock": "fixture-utc"
+            },
+            "recorded": {
+              "from": "2026-11-13T10:15:00Z",
+              "to": "2026-11-13T10:15:00Z",
+              "clock": "fixture-utc"
+            },
+            "available": {
+              "from": "2026-11-13T10:15:00Z",
+              "to": "2026-11-13T10:15:00Z",
+              "clock": "fixture-utc"
+            },
+            "valid": null
+          },
+          "domain": "Operational simulation",
+          "scope": "Training board",
+          "frame": "fixture-utc",
+          "units": "elapsed seconds",
+          "dependencies": [],
+          "next_check": "Find the calibration receipt."
+        }
+      ],
+      "conflicts": [],
+      "order": []
+    },
+    "as_understood_now": {
+      "mode": "as_understood_now",
+      "label": "As understood now",
+      "as_of": "2026-11-13T12:00:00Z",
+      "frame": "fixture-utc",
+      "summary": "2 eligible claim records. Review evidence classes and unresolved values before acting.",
+      "claims": [
+        {
+          "id": "sensor-v2",
+          "topic": "sensor",
+          "title": "Calibration receipt arrived",
+          "kind": "OBSERVATION",
+          "value": {
+            "status": "KNOWN",
+            "value": "Demo calibration accepted at 10:24 UTC."
+          },
+          "source": {
+            "title": "Future Reader public training fixture",
+            "actor": "Demo simulator",
+            "version": "1"
+          },
+          "times": {
+            "event": {
+              "from": "2026-11-13T10:24:00Z",
+              "to": "2026-11-13T10:24:00Z",
+              "clock": "fixture-utc"
+            },
+            "recorded": {
+              "from": "2026-11-13T10:25:00Z",
+              "to": "2026-11-13T10:25:00Z",
+              "clock": "fixture-utc"
+            },
+            "available": {
+              "from": "2026-11-13T10:25:00Z",
+              "to": "2026-11-13T10:25:00Z",
+              "clock": "fixture-utc"
+            },
+            "valid": null
+          },
+          "domain": "Operational simulation",
+          "scope": "Training board",
+          "frame": "fixture-utc",
+          "units": "elapsed seconds",
+          "dependencies": [],
+          "next_check": "Check calibration expiry before a new run.",
+          "parent": "sensor-v1"
+        },
+        {
+          "id": "conditional-route",
+          "topic": "route",
+          "title": "Path B can remain feasible",
+          "kind": "FORECAST",
+          "value": {
+            "status": "ESTIMATE",
+            "value": "A bounded path remains if the check arrives by its cutoff.",
+            "basis": "Simulated deadline and deterministic stage bounds."
+          },
+          "source": {
+            "title": "Future Reader public training fixture",
+            "actor": "Demo simulator",
+            "version": "1"
+          },
+          "times": {
+            "event": null,
+            "recorded": {
+              "from": "2026-11-13T10:26:00Z",
+              "to": "2026-11-13T10:26:00Z",
+              "clock": "fixture-utc"
+            },
+            "available": {
+              "from": "2026-11-13T10:26:00Z",
+              "to": "2026-11-13T10:26:00Z",
+              "clock": "fixture-utc"
+            },
+            "valid": null
+          },
+          "domain": "Operational simulation",
+          "scope": "Training board",
+          "frame": "fixture-utc",
+          "units": "elapsed seconds",
+          "dependencies": [
+            "sensor-v2"
+          ],
+          "next_check": "Compare check arrival to the latest safe start."
+        }
+      ],
+      "conflicts": [],
+      "order": []
+    },
+    "possible_future": {
+      "mode": "possible_future",
+      "label": "From a possible future",
+      "as_of": "2026-11-13T12:00:00Z",
+      "frame": "fixture-utc",
+      "summary": "1 eligible claim records. Review evidence classes and unresolved values before acting.",
+      "claims": [
+        {
+          "id": "conditional-route",
+          "topic": "route",
+          "title": "Path B can remain feasible",
+          "kind": "FORECAST",
+          "value": {
+            "status": "ESTIMATE",
+            "value": "A bounded path remains if the check arrives by its cutoff.",
+            "basis": "Simulated deadline and deterministic stage bounds."
+          },
+          "source": {
+            "title": "Future Reader public training fixture",
+            "actor": "Demo simulator",
+            "version": "1"
+          },
+          "times": {
+            "event": null,
+            "recorded": {
+              "from": "2026-11-13T10:26:00Z",
+              "to": "2026-11-13T10:26:00Z",
+              "clock": "fixture-utc"
+            },
+            "available": {
+              "from": "2026-11-13T10:26:00Z",
+              "to": "2026-11-13T10:26:00Z",
+              "clock": "fixture-utc"
+            },
+            "valid": null
+          },
+          "domain": "Operational simulation",
+          "scope": "Training board",
+          "frame": "fixture-utc",
+          "units": "elapsed seconds",
+          "dependencies": [
+            "sensor-v2"
+          ],
+          "next_check": "Compare check arrival to the latest safe start."
+        }
+      ],
+      "conflicts": [],
+      "order": []
+    },
+    "reconstruction": {
+      "mode": "reconstruction",
+      "label": "Beyond the surviving timeline",
+      "as_of": "2026-11-13T12:00:00Z",
+      "frame": "fixture-utc",
+      "summary": "4 eligible claim records. Review evidence classes and unresolved values before acting.",
+      "claims": [
+        {
+          "id": "sensor-v1",
+          "topic": "sensor",
+          "title": "Calibration record was unavailable",
+          "kind": "REPORTED_OBSERVATION",
+          "value": {
+            "status": "UNKNOWN",
+            "basis": "The operator had only the status report."
+          },
+          "source": {
+            "title": "Future Reader public training fixture",
+            "actor": "Demo simulator",
+            "version": "1"
+          },
+          "times": {
+            "event": {
+              "from": "2026-11-13T10:00:00Z",
+              "to": "2026-11-13T10:00:00Z",
+              "clock": "fixture-utc"
+            },
+            "recorded": {
+              "from": "2026-11-13T10:15:00Z",
+              "to": "2026-11-13T10:15:00Z",
+              "clock": "fixture-utc"
+            },
+            "available": {
+              "from": "2026-11-13T10:15:00Z",
+              "to": "2026-11-13T10:15:00Z",
+              "clock": "fixture-utc"
+            },
+            "valid": null
+          },
+          "domain": "Operational simulation",
+          "scope": "Training board",
+          "frame": "fixture-utc",
+          "units": "elapsed seconds",
+          "dependencies": [],
+          "next_check": "Find the calibration receipt."
+        },
+        {
+          "id": "sensor-v2",
+          "topic": "sensor",
+          "title": "Calibration receipt arrived",
+          "kind": "OBSERVATION",
+          "value": {
+            "status": "KNOWN",
+            "value": "Demo calibration accepted at 10:24 UTC."
+          },
+          "source": {
+            "title": "Future Reader public training fixture",
+            "actor": "Demo simulator",
+            "version": "1"
+          },
+          "times": {
+            "event": {
+              "from": "2026-11-13T10:24:00Z",
+              "to": "2026-11-13T10:24:00Z",
+              "clock": "fixture-utc"
+            },
+            "recorded": {
+              "from": "2026-11-13T10:25:00Z",
+              "to": "2026-11-13T10:25:00Z",
+              "clock": "fixture-utc"
+            },
+            "available": {
+              "from": "2026-11-13T10:25:00Z",
+              "to": "2026-11-13T10:25:00Z",
+              "clock": "fixture-utc"
+            },
+            "valid": null
+          },
+          "domain": "Operational simulation",
+          "scope": "Training board",
+          "frame": "fixture-utc",
+          "units": "elapsed seconds",
+          "dependencies": [],
+          "next_check": "Check calibration expiry before a new run.",
+          "parent": "sensor-v1"
+        },
+        {
+          "id": "conditional-route",
+          "topic": "route",
+          "title": "Path B can remain feasible",
+          "kind": "FORECAST",
+          "value": {
+            "status": "ESTIMATE",
+            "value": "A bounded path remains if the check arrives by its cutoff.",
+            "basis": "Simulated deadline and deterministic stage bounds."
+          },
+          "source": {
+            "title": "Future Reader public training fixture",
+            "actor": "Demo simulator",
+            "version": "1"
+          },
+          "times": {
+            "event": null,
+            "recorded": {
+              "from": "2026-11-13T10:26:00Z",
+              "to": "2026-11-13T10:26:00Z",
+              "clock": "fixture-utc"
+            },
+            "available": {
+              "from": "2026-11-13T10:26:00Z",
+              "to": "2026-11-13T10:26:00Z",
+              "clock": "fixture-utc"
+            },
+            "valid": null
+          },
+          "domain": "Operational simulation",
+          "scope": "Training board",
+          "frame": "fixture-utc",
+          "units": "elapsed seconds",
+          "dependencies": [
+            "sensor-v2"
+          ],
+          "next_check": "Compare check arrival to the latest safe start."
+        },
+        {
+          "id": "archive-fragment",
+          "topic": "fragment",
+          "title": "Recovered route note lacks its clock anchor",
+          "kind": "REPORTED_OBSERVATION",
+          "value": {
+            "status": "UNKNOWN",
+            "basis": "The fragment has no reliable acquisition time."
+          },
+          "source": {
+            "title": "Future Reader public training fixture",
+            "actor": "Demo simulator",
+            "version": "1"
+          },
+          "times": {
+            "event": null,
+            "recorded": null,
+            "available": null,
+            "valid": null
+          },
+          "domain": "Operational simulation",
+          "scope": "Training board",
+          "frame": "fixture-utc",
+          "units": "elapsed seconds",
+          "dependencies": [],
+          "next_check": "Locate an independently dated companion record."
+        }
+      ],
+      "conflicts": [],
+      "order": [
+        {
+          "from": "sensor-v1",
+          "to": "sensor-v2",
+          "relation": "temporal",
+          "evidence": "sensor-v2"
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,199 @@
+TIMELESS ARCHITECT MASTER PROMPT
+The Future Reader · Austin’s Algorithm · Beyond Infinity’s Bounds
+Crucial Timing · Opportunity State Vectors · Chance and Probability
+Revision, Extension, GitHub Distribution, and Standalone HTML Companion
+
+MISSION AND BOUNDARY
+
+Build The Future Reader as a durable way to reconstruct knowledge, decisions, and open questions across years, centuries, millennia, and gaps in recorded chronology. Treat omniscience reading as the ability to inspect the record from many authorized perspectives with explicit evidence limits. Future perspectives are conditional scenarios. Carry forward the smallest reproducible result, the conditions that justify it, and the next observation that could change it.
+
+Extend Austin’s Algorithm so it can pinpoint crucial timing moments, identify windows of opportunity, and explain how chance, uncertainty, action, and delay affect the outcomes available in each supported domain. Make the system answer four practical questions. What is possible now? When does that change? How much confidence do we have? What is the smallest useful action or measurement before the window changes?
+
+Develop this as a side project. Read and follow applicable AGENTS.md and agent.md. Locate the authoritative Austin’s Algorithm and Beyond Infinity’s Bounds contracts and prior Future Reader requirements. Map entry points, state transitions, APIs, records, storage, migrations, tests, GUI, and backends. Create a separate authorized checkout, worktree, package, or adapter boundary. Integrate with the main app through documented extension points and verify the binding in an isolated integration environment. Apply repository writes, merges, release publication, deployment, paid execution, and external communications only within explicit authorization. Preserve repository and package visibility. Keep See Beyond separate from ChronoRealm.
+
+Map every requirement to an implementation path and verification check. Baseline existing behavior, permissions, legacy records, and performance. Use small, reversible assumptions when needed and mark their scope. When canonical access is missing, implement and verify independent pieces and identify the exact integration dependency. Verify normal app, API, CLI, and browser entry points wherever they apply.
+
+1. THE READER ACROSS TIME
+
+Provide views for the event, as known at a historical cutoff, as understood now, possible futures, and reconstruction beyond the recorded timeline. Preserve event time, recorded time, evidence availability, claim-validity interval, original timestamp, clock source, reference frame, clock disagreement, uncertainty, and causal order. Support partial order, unknown dates, disputes, and access-specific knowledge cutoffs. Evidence that arrived later must be excluded from historical decisions. Keep historical reads reproducible for the applicable permissions.
+
+Use versioned records with stable identity, claim type, scope, definitions, author or instrument, source evidence, provenance, inputs, units, method, equations, software and model versions, calibration, conditions, uncertainty, constraints, acceptance criteria, competing explanations, dependencies, corrections, consequences, unresolved obligations, and the smallest useful next check with cost and required precision.
+
+Distinguish direct observation, reported observation, calculation, simulation, hypothesis, forecast, and verified fulfillment. Preserve original terminology, mappings, information lost in translation, and source representations where authorized. Test round trips and block translations that would violate material invariants. When later evidence changes what a moment appears to mean, retain both the original decision context and the later interpretation.
+
+2. PINPOINT CRUCIAL TIMING MOMENTS
+
+Define a moment as crucial when crossing it changes which actions are feasible, which outcomes remain reachable, what evidence can be obtained, or whether recovery is still possible. Require a named change, its consequence, its evidence, and the uncertainty around its timing. Rank moments by their effect on the stated objective and hard constraints.
+
+Detect changes from deadlines, prerequisite arrivals, threshold crossings, state transitions, resource or permission changes, evidence expiration, synchronization changes, and the earliest or latest safe time to start, commit, stop, or recover. Support periodic windows, windows triggered by events or state, competing or overlapping windows, interruptions, and windows with an unknown opening or closing. Model how each candidate action could open, extend, shorten, or consume a window.
+
+For each timing estimate, record the clock, frame, granularity, and source of uncertainty. Separate a timestamp observed directly, a deadline specified by policy, a boundary computed from a model, and an inferred boundary. Return a point only at the resolution the evidence supports. Return a range, competing ranges, or an unresolved boundary when appropriate. Where timing is relative, preserve event order or elapsed time and the anchor needed to interpret it. Never convert a coarse estimate into a precise countdown by formatting alone.
+
+Compute distinct times for opening, latest start, commitment, last reversible action, closure, and verification where relevant. Account for sensing, synchronization, planning, approval, queueing, execution, and verification delays. For a hard deadline, use a justified bound or explicitly chosen risk tolerance. Include a recovery margin when policy or the operation requires it. If an action is theoretically available but cannot finish in time under its constraints, show the missed margin and any feasible fallback.
+
+3. DEFINE WINDOW-OF-OPPORTUNITY STATE VECTORS
+
+Use a typed, versioned representation of the state needed to make a timing decision. Reuse authoritative fields where available. Give every vector a stable identity and link it to the relevant record, transition, and causal dependencies.
+
+Include, where applicable:
+
+- Scope, domain, entity, objective, candidate action, outcome definition, and time horizon.
+- Observation time, evidence cutoff, freshness, clock source, reference frame, units, and sequence.
+- Current window state, opening and closing conditions, earliest start, latest viable start, commitment point, last reversible point, and time remaining as a value or range.
+- Prerequisites, dependencies, hard constraints, permissions, available resources, and competing uses of the same resources.
+- Estimated action duration and the latency budget for sensing, approval, execution, verification, and recovery.
+- Conditional outcome probabilities or supported bounds, assumptions, model version, uncertainty, calibration evidence, and dependencies among outcomes.
+- Expected benefits and costs where measurable, irreversible effects, downside, opportunity cost, feasible alternatives, and fallback conditions.
+- The observation or threshold most likely to change the decision, its expected arrival time, and whether it can arrive before the opportunity closes.
+- Provenance, actual outcome when available, reason for each state transition, and the last verified checkpoint.
+
+Support states such as unresolved, upcoming, open, narrowing, committed, closed, missed, invalidated, and fulfilled. Derive valid transitions from the current domain contract. Define any reopening rule explicitly. Preserve unknown values and differentiate unknown, inapplicable, estimated, and verified fields. Window state and fulfillment state are separate. An open window establishes eligibility to consider an action. Fulfillment requires evidence that acceptance criteria were met.
+
+Treat the vector as a decision record. Permit numeric vectorization for a specific model when its coordinate definitions and information loss are documented. Preserve units, meaning, evidence, and access scope across representations. Keep original domain semantics available for reconstruction.
+
+4. ALIGN CHANCE WITH PROBABILITY ACROSS DOMAINS
+
+Represent chance as the possibility of outcomes under stated conditions. Quantify it when evidence and a defensible probability model support quantification. Define every probability by outcome, action, conditions, reference population or model, and time horizon. Distinguish baseline probability, probability conditional on taking an action, probability of completing within the window, and probability of the desired outcome after timely completion. Estimate joint or conditional probabilities where needed. Multiply marginal probabilities only when the required independence assumptions are justified.
+
+Distinguish inherent variability, measurement error, model uncertainty, incomplete knowledge, and sensitivity to changing conditions. Attach the basis for every estimate, such as an analytic model, empirical frequency, calibrated forecast, simulation, expert judgment, or declared prior. Report sample size, selection effects, correlation, and calibration where relevant. Use intervals, scenarios, or qualitative uncertainty when precision is unsupported. Preserve the difference between a simulation frequency and an observed frequency. For quantum domains, use the applicable quantum measurement model and preserve the meaning of the measurement basis and outcomes. Software alternatives, statistical mixtures, and physical quantum states require their own semantics.
+
+Update estimates when fresh evidence arrives. Preserve prior estimates, evidence cutoff, model version, and what changed. Use held-out cases, rolling-origin validation, or equivalent time-aware evaluation. Track calibration and decision quality where outcomes are observable. Detect distribution drift, selection bias, data leakage, repeated looks at the same evidence, and censored windows whose outcomes cannot be observed. In replay, score a decision using what was available at the time. Preserve the observed outcome separately.
+
+Compare act now, wait for evidence, prepare a reversible step, choose a different path, and let the opportunity pass where each is feasible. Estimate benefits, costs, risks, and opportunity costs with explicit assumptions. Use expected value when probabilities and consequences support it. Use ranges, sensitivity analysis, or robust choices when estimates are weak. Enforce hard constraints regardless of estimated benefit. Identify the threshold at which the recommendation changes. Keep low-probability, high-consequence cases visible when their consequences materially affect the decision.
+
+Apply a shared interface across domains and verify each domain’s own rules for timing, probability, causality, and acceptance. Cover examples such as software recovery deadlines, research measurement windows, engineering or logistics handoffs, and quantum circuit measurement or coherence constraints where supported. A domain adapter must declare which fields it can compute, validate, or leave unresolved. Verify at least two substantially different domains through the same contract. Label simulated and hardware-verified capabilities explicitly.
+
+5. REVISIONS, ENHANCEMENTS, AND EXTENSIONS
+
+Support propose → preview diff and impact → verify → approve → apply → audit → monitor → correct or roll back. Give each revision an identity, parent, author, reason, evidence, timestamps, contract and schema versions, status, affected dependencies, benchmark impact, migration plan, and reversal conditions.
+
+Append corrections and retain historical views. Find affected conclusions, invalidate only affected cached results, and replay or flag dependent decisions. When a revised deadline, clock, probability model, or prerequisite changes a timing recommendation, show which windows moved and which decisions depended on the old boundary. Preserve approvals, scope, and applicable retention. Detect concurrent edits and stale revisions. Provide conflict previews with explicit resolution. Stage migrations with checkpoints, validate representative legacy data, and test interruption, rollback, and forward recovery for irreversible changes.
+
+Allow domain and backend extensions through a versioned capability contract. Require conformance fixtures and declare compatibility, assumptions, side effects, resources, access, and known losses. Add a module when it improves an identified workflow or closes a coverage gap. Mark speculative features as experiments. Establish success criteria before enhancements, compare against the baseline, preserve verified cases, and record the conditions that would reopen the older path. Keep a small reconstruction format as the platform grows.
+
+6. BEYOND INFINITY’S BOUNDS
+
+Bind the normal lifecycle:
+
+Observe → resolve context → reuse or generate possibilities → evaluate timing, evidence, and feasibility → preview → authorize → execute → verify → record → continue or recover.
+
+Use durable resumable frontiers with bounded slices, fairness for eligible branches under stated conditions, precise exhaustion of finite scopes, stable identity, evidence, lineage, versioned checkpoints, budget controls, idempotent effects, and conflict-safe resume. Defer ranking separately from definitive pruning. Merge only under documented domain equivalence, including meaningful differences in timing, available evidence, and consequences.
+
+A budget pause retains eligible work and records when its window or evidence may expire. On resume, recheck the clock, changed assumptions, permissions, backend, and state before acting. Treat stale candidates as needing re-evaluation. Reopen a branch when evidence or conditions change. Preserve possibility, feasibility, and fulfillment as distinct states. Express absolute guarantees as enforceable scoped invariants with stated preconditions and failure behavior.
+
+7. REAL-TIME STATE, TIME FAILURE, AND RECOVERY
+
+Support explicit state kinds for software candidates, simulations, and physical quantum observations. Show evidence and freshness. A uniquely supported observation can pinpoint a software state. Otherwise retain multiple plausible states. For quantum estimates report preparations, measurement basis, shots, noise, uncertainty, and adapter latency. A single measurement cannot reconstruct an arbitrary unknown qubit.
+
+Record event and arrival time, clock source, monotonic elapsed time, synchronization, sequence, calibration, transport path, and uncertainty. Recognize stale, conflicting, and out-of-order observations. Before failover, distinguish clock faults, transport delay, path geometry, lost workers, stalled transitions, expired opportunities, and missing evidence. Explain what independent observation could resolve the ambiguity.
+
+Treat telemetry teleportation as checkpoint-based execution transfer. Verify ownership, checkpoint integrity, permissions, versions, external effect records, and whether the action window remains viable. Fence the old writer, replay eligible events, reconcile side effects, and verify continuity. Report recovery time and uncommitted loss. If the original action can no longer safely execute, retain its state and preview the available fallback. Keep any authorized physical quantum teleportation experiment separate from core failover. Qubit transfer uses entanglement and classical communication under its own constraints.
+
+8. ORACLES THAT PREVIEW CONSEQUENCES
+
+Use one per-turn oracle contract for validation, simulation, planning, recovery, reversible transitions, and authorized custom oracles. Derive eligibility from the current transition, data, backend, and permissions.
+
+Preview the exact action, state vector, parameters, versions, dependencies, permissions, expected outcome or range, uncertainty, cost, side effects, reversibility, and timing validity. Previews must be side-effect-free. Revalidate at execution. Refresh stale previews when evidence, permissions, timing, or other material conditions change. Compare observed results with the preview and preserve divergences.
+
+Reversible oracle:
+
+- Inspect a prior state using the evidence and permissions applicable at the selected cutoff.
+- Preview a new branch, verified inverse, checkpoint restore, replay, or compensation where available.
+- Show which downstream decisions relied on the prior state and which external consequences persist.
+- Recalculate opportunity windows using the current clock and dependencies. A restored record can preserve a prior opportunity for inspection. Re-execution requires current eligibility.
+- Respect limits from measurement, reset, noise, and discarded information in quantum circuits.
+
+Future oracle:
+
+- Translate problems into objectives, hard constraints, acceptance conditions, and budgets.
+- Compare feasible paths and circuits. Show when to act, when waiting is valuable, and when waiting consumes the remaining margin.
+- Show what changes the recommendation, including clock uncertainty, completion-time uncertainty, probability thresholds, and the next decisive evidence.
+- When competing explanations predict the same observation, choose the smallest independent measurement that could distinguish them. Preview required precision, time to obtain the measurement, and how outcomes would affect the decision.
+- Report the best candidate evaluated within scope and budget. Claim global optimality only when established.
+- Compile circuits against target qubit count, connectivity, gate set, measurement, reset, and classical control. Compare with classical baselines and report compiled depth, resources, and observed outcomes.
+
+9. APP AND STANDALONE HTML
+
+Update Austin’s Algorithm’s actual GUI through the authorized integration path. Open on the conclusion, evidence, unresolved points, and next useful action. Add an opportunity view that shows the current window, evidence freshness, opening and closing conditions, time required to act, timing uncertainty, and what happens if the user waits. Show a specific countdown only when the underlying time estimate supports it. Give the user access to the full state vector, assumptions, probabilities, revisions, and competing scenarios.
+
+Generate dropdown options from current transition rules, timing, permissions, and backend capabilities. Include every eligible choice and Custom when its action schema supports it. Explain relevant unavailable choices when the user has permission to see them. Validate types, required fields, units, ranges, and permissions at preview and execution. Make historical, proposed, simulated, and observed states readable. Support responsive layouts, keyboard operation, screen readers, visible focus, and accessible status changes. Enforce read, preview, execute, restore, oracle editing, administration, and export permissions in the runtime and its adapters.
+
+Ship and update the separate single-file Future Reader HTML companion with embedded CSS, JavaScript, and the full master prompt. Open directly from disk on a regular PC. Core views, prompt copy/export, reading and revisions, oracle previews, opportunity calculations, local checkpoints, and the classical reference case must work offline. Use browser-native APIs and local JSON import/export. Keep imported content inert and treat browser storage as user-local convenience. Support restore on reload and explicit portable backups.
+
+Verify schema, migration, validation, and matching outputs against the canonical runtime through shared fixtures or shared browser-compatible modules. Document the browser capability boundary. Offer authorized full-runtime operations through a versioned, authenticated adapter when available, including private package retrieval, native tools, and quantum providers. Return an actionable capability status when unavailable. Keep credentials in the authorized runtime or trusted CLI. Static HTML can calculate, inspect, and export locally. Package installation, private authentication, CI, deployment, and hardware execution require an authorized runtime. Preserve offline import as the fallback and label simulated behavior explicitly.
+
+10. GITHUB ACCESSIBILITY, INTEGRATION, AND UPDATING
+
+Distinguish the source repository, GitHub Releases, and GitHub Packages. Use a documented source commit, version tag, release notes, and downloadable HTML and evidence/manifest assets. Use GitHub Packages with a registry suited to the ecosystem. Document package coordinates, registry, visibility, permissions, installation commands, offline mirror/import, supported OS/browser/backend combinations, and upgrade and rollback paths. Verify current registry and authentication behavior against official GitHub documentation. Test anonymous access where permitted and private paths with authorized credentials. Keep secrets out of HTML, browser storage, exports, logs, and package contents. Verify rights and licenses for distributable source and evidence.
+
+Use a versioned release manifest with artifact ID, version, source commit, size, SHA-256, compatibility, release channel, migration requirements, and rollback constraints. Verify provenance against a trusted expected manifest, digest, or signature. A digest supplied by the same manifest verifies consistency with that declaration. Publisher identity requires an independent trust basis.
+
+Pin dependencies and workflow actions appropriately. Scope credentials to read, build, or publish according to the task. Verify package access separately from repository access. Publish immutable versioned artifacts where supported and retain release history. Provide changelog, checksum verification, reproducible build instructions, and compatibility checks. Prefer GitHub Releases for browser downloads.
+
+Keep browser remote discovery read-only. Preview version, changes, compatibility, digest and trust status, migration impact, and rollback before local application. Stage and verify updates before committing. Retain a known-good prior release and compatible data. Handle offline access, staleness, digest mismatch, permission failure, rate limits, incompatible schemas, downgrades, and interrupted installation. Require explicit authorization for background updates and remote mutations.
+
+11. OCCAM’S RAZOR, LATENCY, AND PORTABILITY
+
+Use the smallest common path that preserves the decision:
+
+Resolve context → reuse a verified result or calculate directly → check the timing margin and whether the evidence distinguishes the alternatives → return the conclusion or the next useful check.
+
+Measure time to first useful result, p50/p95, preview latency, throughput, CPU, memory, cost, observation lag, recovery time, and work per verified result on representative cold, warm, resumed, legacy, and branching cases. Measure decision quality, missed windows, incorrect alerts, and stale recommendations alongside speed. State which part of the system each benchmark covers.
+
+Remove duplicate work and conversions first. Evaluate definitive cheap constraints early. Solve directly where preconditions hold and keep a slower reference for verification and fallback. Schedule reevaluation at meaningful changes such as prerequisite arrival, boundary crossing, evidence expiration, or model revision. Choose polling only where the source requires it and tune its cadence to the decision window. Reuse results only under matching inputs, context, rules, versions, and access. Invalidate affected dependencies selectively. Generate lazily and checkpoint bounded work. Escalate computation when its expected decision benefit justifies its cost and can arrive before the window closes. Stop when the missing evidence is the limiting factor.
+
+Keep a usable CPU and offline path. Support bounded computation or explicitly labeled approximations on regular PCs. Maintain a dated compatibility matrix for legacy systems, current hardware, simulators, and announced or upcoming quantum targets. Verify available capabilities against official specifications. Use documented contracts and conformance fixtures for hardware awaiting access. Mark capabilities as planned, simulator-verified, or hardware-verified. Preserve useful roles for legacy hardware and test old readers, records, checkpoints, and callers.
+
+Across years, retain the smallest verified execution path. Across decades, make dependencies discoverable as instruments and systems change. Across centuries, preserve original definitions and decision context. Across millennia, assume the original runtime is gone. Export a human-readable specification, versioned JSON, source evidence where authorized, worked examples, units, integrity checks, and continuation instructions. Reconstruct the essential result and timing decision in a clean environment without the original app.
+
+12. CERN VERIFICATION FIXTURE
+
+Preserve the evidence classes and caveats below. Verify source references before incorporating published facts.
+
+- CERN announced the shutdown schedule in 2024. Final beams circulated June 27, 2026. Long Shutdown 3 began June 29, 2026. Beams are planned for June 2030. Preserve announcement, event, and plan dates.
+- CMS 99.6% referred to photon sample purity. The 1968 Fermilab design report used 99.6% of c for injected protons. The original source of the modern photon-speed claim remains unverified.
+- The 1964 CERN gamma-ray result was 299,770 ± 40 km/s over 31.450 ± 0.0015 m with air, beryllium, and Mylar reported. Keep distinct from modern LHC conditions. CERN’s 1977 muon storage ring tested time dilation. OPERA’s early arrival was traced to timing equipment and the dedicated follow-up was consistent with zero. Glasgow and Heriot-Watt measured structured-light axial group delay.
+- BIPM Rapid UTC analysis covered 59 labs, June 8–July 12, 2026. Median daily offset changes for June 27–30 were −0.1, +0.1, and −0.3 ns. Swiss-to-overseas comparisons showed no abrupt shift at daily resolution. Circular T was a five-day cross-check. BIPM fractional estimates of the TAI scale interval relative to SI were (−0.30 ± 0.09) × 10^-15 and (−0.09 ± 0.12) × 10^-15 for May 29–June 28 and June 28–July 28. Preserve the limits for short, local, and common-mode effects. Clock differences alone do not resolve photon speed.
+- LHC model inputs were a 14.3 m dipole, 2,803.95 m radius, and 44.04 × 34.28 mm opening. About 26.7 km is the ring circumference. The model ends at first wall hit. Gaps of 0–2 m, sampled launch angles, and offsets were assumptions. Distinguish vacuum flight-time reference from actual sector pressure and temperature during operation or shutdown.
+- The 100,000 cases used 100 batches of 1,000, stratified by emission position and horizontal angle. Hit counts were 22,253 emitting bend, 6,603 straight gap, and 71,144 next bend. Median 11.42 m yields 38.091 ns at c and 38.244 ns at hypothetical 0.996c. Extra delay is about 153 ps, with 142–169 ps for the middle 90%. An extra 4.6 cm at c gives the same median reading. These are simulation outputs.
+- The direct solver and 45-step bisection reference agreed on classifications with less than 0.4 pm maximum numerical path difference. The trajectory-only median benchmark across 11 runs was 66.7 ms to 3.06 ms, about 22× on that environment. Rebenchmark and distinguish numerical agreement from physical model error.
+- In 10,000 synthetic trials per scenario at 5, 10, and 20 m with 3 ps random uncertainty per averaged baseline, a fixed electronics offset was distinguishable from distance-dependent delay. A proportional path error and 0.996c both produced about 13.4 ps/m. A 1 cm path error adds about 33 ps. The smallest decisive next check is independent optical path measurement plus calibrated flight times. State uncertainty and outcome thresholds. Use section-specific geometry and a justified emission model for extensions. Add wall interactions when the observable needs them. Use independent clocks and appropriate sampling for a clock-rate test.
+
+Extend the fixture to exercise opportunity states. Model a hypothetical measurement window in which a surveyed path, synchronized timing, and a calibrated detector must all be available together. Derive the latest viable start from setup and verification duration. Simulate evidence arriving before and after that point. Show how the recommendation changes when path uncertainty consumes the timing margin, a calibration expires, or the detector becomes unavailable. Keep these window inputs hypothetical unless supported by measured or published records. Verify that the same modeled arrival time can arise from competing causes and that the oracle asks for the measurement that separates them.
+
+Reference starting points:
+https://home.cern/updated-schedule-cerns-accelerators/
+https://webtai.bipm.org/ftp/pub/tai/Rapid-UTC/utcr/
+https://webtai.bipm.org/ftp/pub/tai/Circular-T/cirt/
+https://cds.cern.ch/record/1609530/files/CR2013_276.pdf
+https://lss.fnal.gov/archive/design/fermilab-design-1968-01.pdf
+https://doi.org/10.1016/0031-9163(64)91095-9
+https://doi.org/10.1038/268301a0
+https://doi.org/10.1007/JHEP10(2012)093
+https://doi.org/10.1126/science.aaa3035
+https://cds.cern.ch/record/1129806/files/jinst8_08_s08001.pdf
+https://docs.github.com/en/packages/learn-github-packages/about-permissions-for-github-packages
+https://docs.github.com/en/rest/releases/releases
+
+13. IMPLEMENTATION, VERIFICATION, AND HANDOFF
+
+Work in stages. Establish baseline and contracts. Implement reader records and temporal views. Add crucial moments, opportunity vectors, and chance/probability adapters. Bind the frontier, state tracking, and recovery. Wire both oracles. Update the GUI and offline HTML. Implement versioning and GitHub distribution workflows. Benchmark, verify, and reconstruct the record from portable exports.
+
+Run existing regression checks and focused tests for:
+
+- Historical cutoffs, delayed evidence, permission-specific views, and revision propagation.
+- Window opening, overlap, closure, expiry, missed opportunities, uncertain boundaries, and safe reopening.
+- Clock skew, delayed telemetry, changes to the latest viable start, and an apparently open window with insufficient time to complete.
+- Correlated outcomes, sparse evidence, model drift, changed priors, and decisions that flip near a threshold.
+- Recovery when the original window expired, interruptions during commitment, duplicate effects, concurrent resume, and corrupted checkpoints.
+- Finite exhaustion, open continuation, fairness, stale previews, access control, migrations, and Custom validation.
+- Backend and package compatibility, integrity, private and public access where authorized, and portable reconstruction.
+- The CERN case and a substantially different supported domain, including whether the timing and probability logic transfers while preserving each domain’s meaning.
+
+Demonstrate a historical read, a revision diff, a crucial timing moment, and a window with a traceable state vector. Compare acting now, waiting for evidence, and using a reversible preparation step. Show the uncertainty or probability threshold that changes the recommendation. Choose an oracle from the context-sensitive dropdown, preview and confirm an action, verify its outcome, and demonstrate a Custom choice. Trigger a controlled failure, restore a checkpoint, recheck the window, and resume or show the feasible fallback. Preview a prior-state branch or compensation. Export and import local records, preview a release update, and demonstrate a rollback. Exercise legacy compatibility where applicable. Verify actual runtime integration separately from browser-only fixtures.
+
+Deliver source, standalone HTML with the complete prompt embedded, manifest and schema, launch and verification commands, integration map, changelog, compatibility matrix, migration and rollback details, and measured results. Mark every requirement verified, provisional, or blocked with evidence, scope, and next step. Distinguish design, simulation, local execution, hardware verification, and deployed behavior.
+
+Leave each reader a handoff:
+
+“Here is what I inherited. Here is what I could reproduce. Here is what the evidence could resolve. Here is the window in which the answer can still change. Here is the smallest check that could take you further.”

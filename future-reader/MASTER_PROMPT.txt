@@ -1,0 +1,313 @@
+TIMELESS ARCHITECT MASTER PROMPT
+
+THE FUTURE READER AND ORACLE CONTROLLER
+Austin’s Algorithm · Beyond Infinity’s Bounds · Absolute Geometry and Sequencing
+Crucial Timing · Opportunity Windows · Chance and Probability
+Structural Integrity · Deep-Time Reconstruction · Optimization
+Real-Time Game GUI · Universal Adapters · Offline HTML · GitHub
+
+MISSION
+
+Build The Future Reader and its Oracle Controller into a working, verifiable side project for Austin’s Algorithm. The system must locate what can be known, find a valid path, reverse or recover eligible work, and certify exactly what the evidence supports. It must preserve enough context for a future reader to understand, reproduce, challenge, and continue the work after losing the original app, hardware, terminology, or chronology.
+
+Optimize the entire system from observation through execution, recovery, archiving, and reconstruction. Test structural integrity under ordinary use and adversarial conditions. Find the best design for each declared set of requirements. Claim an absolute optimum only when the search space, objective, constraints, and evidence establish it. When tradeoffs remain, show the viable designs and the threshold at which the choice changes.
+
+Leave no room for hidden guessing. State every assumption that could change a decision. Distinguish a known value, an estimate, an unknown, an inapplicable field, and a contradiction. When evidence cannot distinguish two explanations, preserve both and identify the smallest independent check that could resolve them in time to matter.
+
+Apply Occam’s razor throughout. Start with the smallest implementation that preserves correctness, meaning, uncertainty, permissions, and recoverability. Add a component only when a measured or demonstrated improvement justifies its cost. Keep a slower reference path where it is needed to verify a shortcut or handle cases outside its scope.
+
+1. WORK IN THE AUTHORIZED SIDE PROJECT
+
+Read and follow applicable AGENTS.md and agent.md. Locate the canonical Austin’s Algorithm runtime, existing app, Future Reader companion, Beyond Infinity’s Bounds specification, domain models, tests, storage, recovery procedures, and backend interfaces. Inspect the actual entry points and the oldest supported records before changing behavior. Map every requirement to its code path, user workflow, and verification method.
+
+Develop in an authorized isolated checkout, worktree, package, or adapter boundary. Use documented integration points and prove the binding in an isolated integration environment. Keep See Beyond separate from ChronoRealm. Preserve repository and package visibility. Apply repository writes, merges, publication, deployment, paid execution, and external communications only within explicit authorization.
+
+If a canonical dependency is inaccessible, complete the independently testable work. Identify the missing interface, fixture, permission, or environment needed for the remaining integration. Distinguish local execution, integration testing, simulation, hardware verification, and deployed behavior.
+
+2. BUILD THE FUTURE READER ACROSS TIME
+
+Treat omniscience reading as the ability to inspect the available record from many authorized perspectives, with the limits of each perspective visible.
+
+Provide these views on the same record:
+
+- At the event. Show what happened or was observed, by whom or by which instrument, where, in which frame, and under what conditions.
+- As known then. Reconstruct the evidence and actions available to the selected decision-maker at the chosen cutoff. Exclude later evidence and evidence unavailable to that actor at the time.
+- As understood now. Show what still holds, which evidence changed the conclusion, and which dependent decisions need review.
+- From a possible future. Compare conditional paths, timing windows, uncertain outcomes, and the observations that would change the recommendation.
+- Beyond the surviving timeline. Reconstruct what can be established from fragments, conflicting accounts, changed units, missing chronology, and unfinished searches.
+
+Keep event time, recording time, evidence availability, and claim validity distinct. Preserve the original timestamp, clock source, frame, sequence, uncertainty, and access scope. Support uncertain dates, ranges, partial ordering, disputed order, and unknown values.
+
+Give each important claim a versioned record containing:
+
+- Identity, claim type, domain, location or state scope, terminology, and units.
+- Source, author or instrument, provenance, observations, calibration, method, model version, and input conditions.
+- Bounds, uncertainty, assumptions, competing explanations, and acceptance criteria.
+- Causal dependencies, consequences, decisions that used it, corrections, and open obligations.
+- The smallest independent check that could change the answer, its required precision, and its timing window.
+- The data and instructions needed to reproduce or challenge the claim, with any unavailable evidence identified.
+
+Keep observation, reported observation, inference, calculation, simulation, forecast, hypothesis, and verified fulfillment distinguishable. Append revisions with lineage and preserve historically valid views. Enforce authorization across queries, caches, replay, checkpoints, and exports.
+
+3. IMPLEMENT ABSOLUTE GEOMETRY AND ABSOLUTE SEQUENCING
+
+Define absolute geometry as the system’s contract for locating state within an explicitly declared domain and reference frame. A state may be described by coordinates, intervals, graph relationships, predicates, constraints, or a combination. Use the simplest representation that preserves the domain’s meaning.
+
+Every adapter must define state identity and equivalence, coordinates or predicates, frames and units, precision, valid states, valid transitions, path or reachability rules, costs, durations, uncertainty, and invariants. Include a metric only when it has a defensible interpretation.
+
+Represent established order as a partial order. Distinguish temporal precedence, causal dependency, and geometric adjacency. Every consequential edge must carry its meaning and evidence. Detect cycles where the relation requires acyclicity. Preserve incomparable or conflicting states when the evidence leaves their order unresolved.
+
+Preserve dimensionless or topological relationships when they suffice. Carry distance, duration, scale, calibration, and frame whenever the decision depends on them. Verify unit conversions and frame transformations. Track lossy mappings and reject any conversion that breaks a hard invariant. Keep enough of the source representation to reconstruct the original claim where authorized.
+
+Certify each property separately. Correctness, termination, reachability, reversibility, timing, optimality, and output quality require different evidence. A certificate must identify the property, domain and model versions, admissible inputs, assumptions, proof or test method, dependencies, and invalidation conditions. Treat a perfect algorithm as one that meets its declared specification within the proven scope.
+
+4. BUILD THE ORACLE CONTROLLER
+
+Implement four primary operations through the same controller contract and expose them in the GUI, API, CLI, and offline companion wherever the required capabilities exist.
+
+PINPOINT
+
+Locate the current state, target, evidence boundary, or crucial timing moment. Return an exact state only when the evidence and representation establish uniqueness at the stated precision. Otherwise return the compatible state set, its bounds, its freshness, and the smallest check that could narrow it.
+
+TRAVEL
+
+Plan a valid path from the current state to an eligible target. Preview consequential steps, hard constraints, prerequisites, timing, cost, uncertainty, side effects, and exit options. Support navigation through historical records, step-through simulation, and authorized live execution. Distinguish these modes in the record and interface.
+
+REVERSE
+
+Preview a verified inverse, restore, replay, branch, or compensating action. Show what can be recovered, which dependent work is affected, and which consequences persist. Preserve the original history. Recheck live resources, windows, and permissions before re-execution. Test round trips where an inverse is claimed. For information-losing operations, use an eligible checkpoint or compensation and report any remaining loss.
+
+CERTIFY
+
+Evaluate the exact claim, its acceptance conditions, and the evidence. Produce a portable result another implementation can verify. Show what is proved, conditionally established, empirically supported, or unresolved. Refresh or invalidate certification when material assumptions, data, versions, dependencies, or authority change.
+
+For every operation, record request, preview, authorization, execution, observation, verification, and outcome. Bind the preview to the state, inputs, actor permissions, dependencies, backend, model and oracle versions, and expiry. Preview without committing effects. Revalidate at execution and invalidate stale previews. Compare the observed result with the preview and preserve divergences and recovery decisions.
+
+Use a shared per-turn oracle contract. The reversible oracle handles prior states, replay, inverses, restore, and compensation. The future oracle compares feasible paths and circuits, identifies where the recommendation changes, and chooses the next independent observation by its ability to change the decision before commitment.
+
+5. PINPOINT CRUCIAL MOMENTS AND WINDOWS OF OPPORTUNITY
+
+A moment is crucial when crossing it changes which actions are feasible, which outcomes remain reachable, which evidence can still be obtained, or whether recovery remains possible.
+
+Detect openings, deadlines, prerequisite arrivals, threshold crossings, evidence expiry, calibration loss, permission or resource changes, last viable starts, commitment points, last reversible actions, and verification deadlines. Support recurring, overlapping, interrupted, contingent, and uncertain windows. Record whether a boundary is specified, measured, calculated, or inferred. Match displayed precision to the evidence.
+
+Represent the window in a typed, versioned opportunity state vector. Include the objective, candidate action, state and transition, clock and frame, timestamps and freshness, opening and closure conditions, hard constraints, available resources, competing resource use, critical-path stages, uncertainty, outcome and probability definitions, fallback, verification criteria, and last checkpoint.
+
+Support unresolved, upcoming, open, narrowing, committed, closed, missed, invalidated, and fulfilled where the domain needs them. Define valid transitions and reopening rules. Keep fulfillment tied to evidence. A restored historical record preserves its earlier window for inspection. A current action requires a currently viable window.
+
+For a hard deadline with a justified upper bound:
+
+Latest feasible start = deadline − remaining critical-path bound.
+Latest safe start = latest feasible start − required safety margin.
+
+Include sensing, synchronization, planning, approval, queueing, execution, verification, and recovery wherever each must finish by the deadline. Account for parallel stages along the critical path. State whether equality qualifies. Report the zero-margin boundary, clock uncertainty, and remaining fallback time. For stochastic durations, use the joint duration model to estimate on-time completion.
+
+For each proposed check, show when it must return to leave enough time to interpret the result, change course, and use a fallback. If it cannot return in time, compare reversible preparation, a viable fallback, and letting the opportunity close.
+
+6. MODEL CHANCE, PROBABILITY, AND CONSEQUENCE
+
+Define each probability by its outcome, candidate action, evidence, reference population or model, and horizon. Distinguish baseline probability, success conditional on acting, on-time completion, and success conditional on timely completion. Account for dependence between outcomes and durations. Multiply marginal probabilities only when the independence assumptions are justified.
+
+Separate inherent variation, measurement error, model uncertainty, incomplete knowledge, and environmental drift. Retain priors, sample sizes, selection effects, correlations, calibration, version history, and observed outcomes. Use ranges or qualitative uncertainty when a precise estimate lacks support. Keep simulated frequencies distinct from field observations.
+
+Enforce deterministic hard constraints before ranking. Preserve low-probability, high-consequence states and their evidence. Compress or defer low-consequence work only within a declared tolerance validated by replay. Retain the conditions under which compressed alternatives must be reopened.
+
+Compare acting now, waiting for evidence, preparing reversibly, choosing a fallback, and allowing closure. Use expected value where probabilities and consequences are defensible. Use scenario analysis, sensitivity analysis, or robust selection where uncertainty dominates. Show the threshold at which the recommended action changes.
+
+Validate using held-out scenarios, time-aware replay, and observed outcomes where available. Check for leakage, correlated trials, repeated looks, distribution drift, rare-event undercoverage, censoring, and biased samples.
+
+7. BIND BEYOND INFINITY’S BOUNDS AND RECOVERY
+
+Wire the normal lifecycle:
+
+Observe → resolve context → pinpoint → generate or reuse possibilities → evaluate timing and evidence → preview → authorize → execute → verify → record → continue, reverse, or recover.
+
+Represent an open-ended search as a durable frontier with bounded execution slices and a resumable checkpoint. Provide progress to eligible branches under stated scheduling conditions. Report exhaustion for finite scopes only when all eligible work is accounted for. Preserve the reason for every consequential merge, deferral, or prune. Collapse to one conclusion only when the evidence and constraints establish uniqueness. Preserve incompatible explanations when current observations leave them equivalent.
+
+Keep possibility, feasibility, and fulfillment distinct. A search pause must retain eligible work and record which assumptions or windows may expire. Revalidate the current context on resume. Handle retries, interruption, partial writes, incompatible checkpoints, and concurrent workers without duplicating committed effects.
+
+Track live software candidates, quantum simulations, and physical quantum observations through distinct state types. Record freshness, evidence, preparation and measurement basis where relevant, shots, noise, uncertainty, and adapter latency. A single measurement cannot reconstruct an arbitrary unknown qubit state.
+
+Record event and arrival time, clock source, monotonic elapsed time, sequence, calibration, transport path, and synchronization uncertainty. Distinguish a delayed observation, invalid calibration, missing worker, stalled transition, missed deadline, and expired opportunity. Require evidence for a recovery trigger.
+
+Implement telemetry teleportation as checkpoint-based transfer of execution. Verify ownership, permissions, checkpoint integrity, versions, current window, and external effects. Fence stale writers before a replacement can commit. Replay eligible events, reconcile side effects, and verify continuity. Automatic recovery operates within explicitly authorized bounds. If the original window has closed or safe ownership is unresolved, retain the record and show a feasible fallback or pause. Scope any physical quantum teleportation experiment to verified qubit-state transfer with entanglement and classical communication.
+
+8. USE THE 100-MILLION-YEAR BACKWARD RECONSTRUCTION
+
+Use the early Cenomanian at 100.0 million years ago as a regression case for evidence, partial order, missing chronology, and scope. Verify source versions before using published dates. Preserve the difference between a dated stage boundary, a regional shoreline reconstruction, and a claim about one site at one time.
+
+Carry forward these baseline observations and synthetic results:
+
+- The Cenomanian began about 100.5 million years ago. The target falls inside the stage under the boundary ranges used in the reconstruction. Preserve the version of the geologic time chart and uncertainty of its boundaries.
+- Regional evidence supports a coastal plain near the western edge of an inland sea in the present-day Colorado Front Range region around that time. This does not settle whether a specific point was dry or flooded at the target instant.
+- In the synthetic local flooding case, the assumed interval was 100.5–99.5 million years ago. The target lies inside it. Preserve both possible local states.
+- In 10,000 synthetic archive-loss trials, each trial retained 10 of 10,000 chronology records. Six records carried decisive regional evidence. At least one survived in 62 trials. This tests the specified random-loss model.
+- A separate evidence summary produced 10,000 recoveries conditional on that summary surviving. Targeted deletion of all six copies and that summary produced zero recoveries. Evaluate protection against loss of the summary itself.
+- A dated local layer that brackets the transition can narrow the site-specific interval where the evidence and correlation justify it.
+
+Test archival alternatives under both random and targeted loss. Compare independent copies, compact evidence summaries, replicated packages, and erasure coding where warranted. Separate recovery of original bytes, reconstruction of claim meaning, verification of provenance, and recovery of the underlying evidence. A readable summary can survive without enough evidence to support its claim.
+
+Use the seed, assumptions, and sampling model when reproducing the baseline. Validate the expected random-retention rate analytically where practical. Compare repeated runs with uncertainty. Model shared failure domains, common format dependencies, compromised verification keys, and targeted deletion. Give any portable package enough source context to recover the claim’s meaning without silently strengthening it.
+
+Geology reference starting points
+https://stratigraphy.org/chart/
+https://www.nps.gov/subjects/fossils/dinosaur-freeway.htm
+https://www.nps.gov/subjects/fossils/volcanoes-and-fossils.htm
+
+9. PRESERVE AND REPLAY THE CERN FIXTURE
+
+Keep each original evidence class and caveat. Verify source references before treating a figure as a published fact.
+
+- CERN announced the planned shutdown schedule in 2024. Final LHC beams circulated June 27, 2026. Long Shutdown 3 began June 29, 2026. The restart target was June 2030. Store announcement, operational event, and plan separately.
+- CMS’s 99.6% figure referred to photon sample purity. A 1968 accelerator design report used 99.6% of c for injected protons. The source of the claim that modern LHC photons move at 0.996c remains unverified.
+- The 1964 CERN experiment reported 299,770 ± 40 km/s over 31.450 ± 0.0015 m. Air, beryllium, and Mylar were reported in the setup. The modeled delay at 0.996c on that baseline is about 0.421 ns. CERN’s 1977 muon experiment tested time dilation. The OPERA anomaly was traced to timing equipment, and the dedicated follow-up was consistent with zero timing discrepancy within uncertainty. The Glasgow and Heriot-Watt experiment addressed structured-light axial group delay.
+- The BIPM check covered 59 laboratories from June 8 to July 12, 2026. Median daily offset changes across June 27–30 were −0.1, +0.1, and −0.3 ns. The Swiss clock comparisons checked showed no abrupt relative shift at daily resolution. Circular T provided a five-day cross-check. Fractional TAI scale interval estimates relative to SI were (−0.30 ± 0.09) × 10^-15 and (−0.09 ± 0.12) × 10^-15 for the adjacent monthly periods. Preserve limits for short, local, and common-mode effects.
+- The simplified modern LHC first-hit model used a 14.3 m dipole, 2,803.95 m bending radius, and 44.04 × 34.28 mm nominal beam-screen opening. The approximately 26.7 km circumference describes the accelerator ring. The modeled photon travels to its first wall hit. Preserve the difference between normal vacuum and cryogenic specifications, actual sector conditions, and shutdown conditions.
+- The first 10,000 trajectories compared a continuous bend and assumed 1 m and 2 m gaps. Median first-hit paths were about 11.10, 11.46, and 11.75 m. The refined 100,000 cases used 100 batches of 1,000, stratified by emission point and horizontal launch angle. Vertical angles, starting offsets, and 0–2 m gaps were modeled. First-hit counts were 22,253 in the emitting bend, 6,603 in the gap, and 71,144 in the next bend.
+- The median modeled path was 11.42 m. It gives 38.091 ns at c and 38.244 ns at hypothetical 0.996c. The median extra delay is about 153 ps, with 142–169 ps for the middle 90% of paired cases. An extra 4.6 cm of path at c gives the same median delay. The middle 90% of modeled arrival times at c spans 35.42–42.14 ns. Preserve the distinction between simulated flight and measured speed.
+- The direct solver and the 45-step bisection reference matched classifications in the shared model, with maximum computed path difference below 0.4 pm. The trajectory-only median across 11 runs fell from 66.7 ms to 3.06 ms, approximately 22×. Rebenchmark on the target runtime. Solver agreement does not measure physical model accuracy.
+- In 10,000 synthetic trials per scenario at 5, 10, and 20 m with 3 ps random uncertainty per averaged baseline, a fixed electronics offset could be distinguished from a distance-dependent slope. A proportional path error and a 0.996c hypothesis both gave about 13.4 ps/m. One centimeter of path error adds about 33 ps. A 1 km one-way path at hypothetical 0.996c adds about 13.396 ns.
+- Extend the fixture with a hypothetical window requiring an independently surveyed path, synchronized timing, and a calibrated detector. Vary setup, approval, detector availability, evidence arrival, and expiry. Compare independent path and calibrated time-of-flight designs. Check whether the measurements share a failure source. Use a separate, appropriately sampled clock comparison for a clock-rate hypothesis.
+
+A future reader must recover the 153 ps and 4.6 cm equivalence from the portable example without rerunning 100,000 trajectories. When independent path evidence is absent, Pinpoint returns both explanations, Travel offers conditional next steps, Reverse recovers the earlier context, and Certify establishes only the mathematical equivalence in scope.
+
+CERN and timing reference starting points
+https://home.cern/updated-schedule-cerns-accelerators/
+https://home.cern/science/engineering/vacuum-empty-interstellar-space
+https://cds.cern.ch/record/1129806/files/jinst8_08_s08001.pdf
+https://cds.cern.ch/record/1609530/files/CR2013_276.pdf
+https://lss.fnal.gov/archive/design/fermilab-design-1968-01.pdf
+https://doi.org/10.1016/0031-9163(64)91095-9
+https://doi.org/10.1038/268301a0
+https://doi.org/10.1007/JHEP10(2012)093
+https://doi.org/10.1126/science.aaa3035
+https://webtai.bipm.org/ftp/pub/tai/Rapid-UTC/utcr/
+https://webtai.bipm.org/ftp/pub/tai/Circular-T/cirt/
+
+10. REPLAY THE SUPPLIED LARGE-SCALE STUDIES
+
+Retain the supplied 10,000,000-step timing findings and the claimed +100,000,000-year optimization pass with 10,000,000,000 adversarial trials. Treat them as supplied hypotheses pending reproducible inputs and results. Record model versions, seeds, workload definitions, denominators, sample independence, inputs, outcome criteria, and available logs. Distinguish modeled years, elapsed runtime, simulation steps, trials, and observations.
+
+- Test the reported 99.4% convergence beyond 3.2× the median latency budget. Define diminishing returns using decisions changed, missed opportunities avoided, improvement in outcomes, and added cost. Vary environmental drift and clock skew independently. Test whether longer lookahead reveals a deadline, dependency, fallback, or high-consequence outcome that a shorter horizon misses.
+- Test the latest-start claim against the complete critical path, equality policy, justified duration bounds, clock uncertainty, and recovery margin.
+- Test pruning on held-out ordinary and adversarial cases. Measure missed valid paths, altered decisions, and consequential states lost. Preserve hard constraints and consequential alternatives regardless of baseline probability.
+- Compare optical or clock checks with calibration, prerequisites, ownership, permission, and other independent checks. Verify the smallest decisive check in each domain.
+- Test whether stable structural invariants survive drift and migration. Preserve historical probability estimates with their original calibration and conditions. Test how forecasts degrade. A uniform distribution requires evidence or a justified model.
+- Test whether windows close, recur, or become feasible again under changed conditions. Preserve expired opportunities as history and recompute live eligibility.
+- Treat sub-Planckian coordinates, zero entropy, zero proof latency, infinite cache efficiency, and permanent memory as speculative design ambitions. Define observables and measurable objectives before assigning any verified status. Record the physical or logical resources required by each implementation.
+
+11. TEST STRUCTURAL INTEGRITY ACROSS THE WHOLE SYSTEM
+
+Build a test matrix with a baseline, candidate design, failure injection, observable, pass condition, and recovery requirement for each factor below. Define thresholds before judging results. Use existing requirements or an explicitly justified tolerance. Keep any unknown threshold provisional.
+
+Semantic integrity. Test unit and frame changes, schema migrations, lost terminology, partial records, identity collisions, disputed equivalence, lossy transforms, and invalid dates. Verify that a surviving record retains the intended meaning and scope.
+
+Evidence integrity. Test corrupted bytes, broken references, forged or revoked certificates, inaccessible originals, missing provenance, stale measurements, conflicting sources, and deletion of calibration evidence. Distinguish byte integrity, authenticity, evidence sufficiency, and recoverability.
+
+Causal and temporal integrity. Test skew, jumps, clock resets, reordered events, equal timestamps, partial chronology, false causal edges, and missing time anchors. Preserve the strongest defensible ordering. Recompute timing margins and invalidate conclusions that depend on missing anchors.
+
+Numerical integrity. Test exact arithmetic where required, rounding and overflow, unit scaling, near-degenerate geometry, boundary equality, conditioning, discontinuities, and cancellation. Compare direct and reference methods at difficult inputs. Propagate input uncertainty separately from numerical error.
+
+State and execution integrity. Test crashes at commit boundaries, partial writes, retries, duplicate and out-of-order messages, lost workers, stale leaders, split brain, conflicting checkpoints, and external effects with unclear completion. Verify idempotency, ownership fencing, checkpoint lineage, and recovery behavior.
+
+Authorization integrity. Test restricted evidence leaking through historical views, caches, summaries, previews, exports, and restores. Test revoked permissions between preview and execution. Keep credentials out of UI bundles, archives, logs, and generated adapters.
+
+Probability and decision integrity. Test drift, correlated errors, uncertainty near the decision threshold, censored observations, rare severe outcomes, misleading confidence, and checks that return after commitment. Measure calibration and consequential decision errors alongside aggregate performance.
+
+Archive and substrate integrity. Test random loss, targeted loss, and correlated loss across replicas. Remove up to 99.9% of defined chronology records in separate scenarios. Remove one crucial unit definition, time anchor, calibration, certificate, or verification key at a time. Rebuild on a clean environment without the original runtime, then compare semantic recovery against the intact reference.
+
+Adapter and release integrity. Test unsupported capabilities, API changes, old schemas, incompatible backends, wrong artifacts, digest mismatch, interrupted updates, downgraded data, and rollback across app and record versions. Exercise a generated adapter in isolation before enabling any capability.
+
+Human and interface integrity. Test accidental taps, repeated taps, stale screens, inconsistent previews, wrong units, weak connectivity, screen-reader operation, and use without fluent reading. Verify that the user can distinguish a practice run, a prediction, a confirmed action, and an observed result.
+
+For high-consequence operations, combine failures that could occur together. Include a stale clock plus missing evidence, an interrupted migration plus loss of a replica, and a revocation plus a cached preview. Preserve minimized counterexamples as regression fixtures.
+
+12. FIND AND PROVE THE BEST DESIGN IN SCOPE
+
+For each optimization, state the problem, baseline, candidate designs, admissible input scope, objective, hard constraints, tolerances, and evidence required to choose. Reject any candidate that fails a hard requirement. Compare feasible candidates by decision quality, latency, throughput, memory, I/O, storage, transfer, energy where measurable, financial cost, compatibility, usability, and recovery.
+
+When one candidate is better on every relevant measured dimension, document the evidence. When designs trade off speed, recoverability, cost, or completeness, report the non-dominated choices and the workload or priority under which each wins. Select the smallest candidate meeting the declared requirements. Report a proved optimum, a bounded result, or the best verified candidate under the search budget.
+
+Use this order of work:
+
+1. Remove duplicated computation, conversion, validation, and UI rendering.
+2. Apply cheap definitive constraints early and identify observational ambiguity before searching.
+3. Replace repeated iteration with direct geometry, verified lookups, or reusable proofs where preconditions hold.
+4. Reuse a result only under matching inputs, dependencies, versions, evidence scope, and permissions.
+5. Invalidate and recompute only affected dependents. Schedule work on consequential changes such as expiry, arrival, or threshold crossing.
+6. Generate lazily and stop once additional computation cannot change the decision in the available time.
+7. Add indexing, batching, concurrency, replication, or specialized hardware only when the measured benefit justifies it.
+
+Measure end-to-end time to first useful result, p50 and p95, throughput, CPU, memory, data movement, proof creation and verification, observation-to-display lag, recovery time, work per verified result, false alerts, stale recommendations, and missed windows. Test cold, warm, resumed, invalidated, offline, legacy, and branching-heavy cases. Compare equivalent outputs. State benchmark scope and uncertainty. Check the full workflow so a faster kernel cannot hide a slower user outcome.
+
+13. BUILD THE UNIVERSAL ADAPTER AND QUANTUM PATHS
+
+Use a versioned capability contract for schemas, units, frames, observations, valid actions, constraints, previews, authorized execution, verification, and checkpoint/restore. Support optional capabilities for compilation, sampling, proof checks, inversion, compensation, and external time. Return a typed reason and fallback for unavailable operations.
+
+Allow the controller to propose domain bindings from machine-readable specifications. Verify generated bindings in isolation against identity, semantic equivalence, permissions, failure behavior, and conformance fixtures. Activate only verified and authorized capabilities. Keep ambiguous mappings available for review.
+
+Use a typed algorithm representation with input types and bounds, steps, branches, dependencies, bounded execution or continuation, effects, outputs, and acceptance checks. A visual program must produce this real inspectable representation. Compile only where the target can preserve the required semantics. Verify translations against a proof, trusted reference, or scope-appropriate conformance tests.
+
+Keep a practical local CPU path. Support older hardware through portable formats and verified adapters. For quantum backends, verify target constraints including native gates, connectivity, qubits, depth, measurement, reset, classical control, noise, shots, cost, and availability. Compare small circuit examples with known answers or classical references. Label planned, simulator-verified, and hardware-verified support. Keep physical measurement, reversible unitary evolution, and software rollback distinct.
+
+Demonstrate the shared contract in the CERN and geological reconstruction cases and at least one live or simulated operational domain with a real deadline and recovery path. Show which semantics transfer and which remain domain-specific.
+
+14. UPDATE THE REAL-TIME GAME GUI AND OFFLINE HTML
+
+Build one simple visual board with a current position, goal, placeable pieces, previewed path, and four obvious controls for Pinpoint, Travel, Reverse, and Check. Use large touch targets, shapes, icons, accessible labels, optional short spoken cues, and a quiet reduced-motion mode. Support keyboard navigation, focus, screen readers, and accessible status updates.
+
+Design practice mode so a five-year-old who cannot read fluently can place a first piece, preview it, move, undo, and reach a goal. Teach through a guided move. Introduce Start, Move, Turn, Repeat, If, Check, and Goal when the level needs them. Show why a move failed and how to try again. Keep practice effects in the simulation. Verify that the same pieces compile into an inspectable program through the actual controller.
+
+Advanced mode must show the state geometry, program, evidence, uncertainty, window, alternatives, trace, certificates, backend, and revision history. Lead with the conclusion, what supports it, what is unresolved, and the next useful check. Display a countdown only at supported precision. Show why waiting matters and when a preview expires.
+
+Populate dropdowns from authoritative transitions, permissions, the live window, and backend capability. Offer Custom where the action contract supports it. Validate types, ranges, units, prerequisites, and permissions at preview and execution. Preserve valid input after errors. Enforce permissions in the runtime.
+
+Update the separate single-file Future Reader HTML companion with embedded CSS, JavaScript, and this complete prompt. Make offline practice, classical controller functions, record reading, opportunity calculations, revision previews, checkpoints, evidence fixtures, and prompt copy/download work directly from disk. Support inert JSON import/export and portable recovery. Use shared browser-compatible modules or conformance fixtures to verify parity with the runtime. Offer authorized full-runtime operations through versioned adapters when available and label any missing capability clearly.
+
+15. CONTROL REVISIONS, GITHUB ACCESS, AND RELEASE UPDATES
+
+Support propose → preview diff and impact → verify → approve → apply → audit → monitor → correct or roll back. Record identity, parent, author, reason, evidence, scope, approvals, schema and adapter versions, benchmark impact, migration requirements, and reversal conditions. Find impacted records, certificates, windows, and decisions. Detect stale or concurrent revisions. Test interruption, rollback, and forward recovery where migration is irreversible.
+
+Distinguish the source repository, GitHub Releases, and GitHub Packages. Verify registry and authentication rules against current official documentation. Document package coordinates, visibility, access permissions, install and upgrade commands, supported platforms, offline import, and rollback. Verify access separately for repository, release, and package. Check distribution rights for source, dependencies, and bundled evidence.
+
+Use a release manifest with artifact identity, version, commit, filename, size, SHA-256, release channel, compatibility, migration, and rollback details. Verify publisher provenance against independently trusted material. A digest matching a downloaded manifest checks consistency with that declaration. Keep secrets out of HTML, browser storage, logs, exports, and release artifacts.
+
+Keep browser discovery read-only. Preview the version, changes, trust basis, compatibility, migration effects, and rollback before applying a local update. Stage and verify the artifact before switching. Retain a known-good release and a compatible data checkpoint. Test offline use, rate limits, permission failure, invalid digests, stale metadata, downgrade, and interrupted installation. Remote mutations, background updates, and publication require applicable authorization.
+
+GitHub reference starting points
+https://docs.github.com/en/packages/learn-github-packages/about-permissions-for-github-packages
+https://docs.github.com/en/rest/releases/releases
+
+16. ENGINEER THE DEEP-TIME HANDOFF
+
+Treat millennia and the Centillionfold Horizon as reconstruction scenarios. Over years, keep the common workflow small and fast. Over decades, preserve traceable migration and independent verification. Over centuries, preserve original terminology, frames, uncertainty, and decision context. Across deep time, assume the app, clock, main backend, and much of the chronology are gone.
+
+Export a human-readable specification, versioned machine-readable records, units and frame definitions, evidence where authorized, algorithms or equations, worked examples, integrity and authenticity information, and continuation instructions. Give each consequential claim a compact independently stored evidence package. Record what the package can prove if the raw evidence disappears.
+
+Reconstruct in a clean environment using only the allowed surviving artifacts. Test random deletion and targeted loss separately. Score each claim as exactly recovered, bounded, ambiguous, contradicted, or unrecoverable. Compare against the intact reference. Preserve uncertainty through the migration. A reconstruction that silently guesses a missing fact fails even if the guess matches the original.
+
+17. IMPLEMENT, VERIFY, AND DELIVER
+
+Build in stages: canonical inventory and baseline, records and temporal views, geometry and controller, timing and probability, frontier and recovery, adapters and compilation, GUI and HTML, GitHub and revisions, then structural integrity and deep-time reconstruction.
+
+Run the existing regression suite and focused checks for the requirements above. Use deterministic boundary cases, independent reference implementations, repeated benchmarks, and adversarial scenarios. Record seeds, data and model versions, environment, acceptance criteria, and observed outputs. Report denominators and confidence or uncertainty where relevant. Where a proof is claimed, provide a checkable proof or certificate. Where an experiment cannot distinguish competing causes, preserve the ambiguity.
+
+Demonstrate the complete workflow in the actual GUI:
+
+- Build a visual algorithm in practice mode without relying on fluent reading. Pinpoint, preview, travel, reverse, and certify.
+- Inspect the same program in advanced mode and compare alternate paths and costs.
+- Show a crucial moment, act-now versus wait decisions, and the threshold or observation that changes the recommendation.
+- Use a Custom action and invalidate its preview through a material change.
+- Inject a failure, restore a checkpoint, revalidate the window, and resume or take the verified fallback.
+- Recover the CERN ambiguity and the early Cenomanian regional conclusion while preserving the unresolved local question.
+- Run the adversarial structural tests and compare the chosen design with its baseline and closest alternative.
+- Compile a supported quantum example and disclose its verified level.
+- Export, reconstruct in a clean environment, preview a package update, and demonstrate rollback.
+
+Deliver implemented source, standalone HTML with the complete prompt embedded, adapter and record schemas, test fixtures, integration map, launch and verification commands, benchmark results, compatibility matrix, release manifest, changelog, migration and rollback procedures, and the reconstruction report.
+
+For every requirement, report verified, provisional, or blocked. Include the test, proof, measurement, or dependency behind the status. Show what the chosen design optimizes, what it costs, what it can survive, and the conditions that would make another design better.
+
+FINAL HANDOFF
+
+“Here is what survived. Here is what I could locate, reproduce, and verify. Here is the path I can travel, the point I can return to, and the boundary of my certainty. Here is where the opportunity changes. Here is the smallest independent check that could take you further.”

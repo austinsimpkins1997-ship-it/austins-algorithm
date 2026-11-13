@@ -1,0 +1,245 @@
+{
+  "model": "illustrative joint scenarios/1",
+  "inputs": [
+    {
+      "id": "act-now",
+      "hard_eligible": true,
+      "scenarios": [
+        {
+          "weight": 7,
+          "duration": 8,
+          "success": true,
+          "value": 8
+        },
+        {
+          "weight": 3,
+          "duration": 15,
+          "success": false,
+          "value": -12
+        }
+      ]
+    },
+    {
+      "id": "wait-for-check",
+      "hard_eligible": true,
+      "scenarios": [
+        {
+          "weight": 8,
+          "duration": 11,
+          "success": true,
+          "value": 9
+        },
+        {
+          "weight": 2,
+          "duration": 17,
+          "success": false,
+          "value": -10
+        }
+      ]
+    },
+    {
+      "id": "prepare-reversibly",
+      "hard_eligible": true,
+      "scenarios": [
+        {
+          "weight": 6,
+          "duration": 11,
+          "success": true,
+          "value": 7
+        },
+        {
+          "weight": 4,
+          "duration": 16,
+          "success": false,
+          "value": -2
+        }
+      ]
+    },
+    {
+      "id": "fallback",
+      "hard_eligible": true,
+      "scenarios": [
+        {
+          "weight": 1,
+          "duration": 10,
+          "success": true,
+          "value": 3
+        }
+      ]
+    },
+    {
+      "id": "let-close",
+      "hard_eligible": true,
+      "scenarios": [
+        {
+          "weight": 1,
+          "duration": 0,
+          "success": false,
+          "value": 0
+        }
+      ]
+    }
+  ],
+  "result": {
+    "schema": "future-reader.decision/1",
+    "evidence": "SCENARIO_MODEL",
+    "deadline": 14,
+    "equality": true,
+    "actions": [
+      {
+        "id": "act-now",
+        "eligible": true,
+        "weight_sum": 10,
+        "p_success": {
+          "numerator": 7,
+          "denominator": 10
+        },
+        "p_on_time": {
+          "numerator": 7,
+          "denominator": 10
+        },
+        "p_success_and_on_time": {
+          "numerator": 7,
+          "denominator": 10
+        },
+        "p_success_given_on_time": {
+          "numerator": 1,
+          "denominator": 1
+        },
+        "expected_value": {
+          "numerator": 2,
+          "denominator": 1
+        },
+        "worst_value": -12
+      },
+      {
+        "id": "wait-for-check",
+        "eligible": true,
+        "weight_sum": 10,
+        "p_success": {
+          "numerator": 4,
+          "denominator": 5
+        },
+        "p_on_time": {
+          "numerator": 4,
+          "denominator": 5
+        },
+        "p_success_and_on_time": {
+          "numerator": 4,
+          "denominator": 5
+        },
+        "p_success_given_on_time": {
+          "numerator": 1,
+          "denominator": 1
+        },
+        "expected_value": {
+          "numerator": 26,
+          "denominator": 5
+        },
+        "worst_value": -10
+      },
+      {
+        "id": "prepare-reversibly",
+        "eligible": true,
+        "weight_sum": 10,
+        "p_success": {
+          "numerator": 3,
+          "denominator": 5
+        },
+        "p_on_time": {
+          "numerator": 3,
+          "denominator": 5
+        },
+        "p_success_and_on_time": {
+          "numerator": 3,
+          "denominator": 5
+        },
+        "p_success_given_on_time": {
+          "numerator": 1,
+          "denominator": 1
+        },
+        "expected_value": {
+          "numerator": 17,
+          "denominator": 5
+        },
+        "worst_value": -2
+      },
+      {
+        "id": "fallback",
+        "eligible": true,
+        "weight_sum": 1,
+        "p_success": {
+          "numerator": 1,
+          "denominator": 1
+        },
+        "p_on_time": {
+          "numerator": 1,
+          "denominator": 1
+        },
+        "p_success_and_on_time": {
+          "numerator": 1,
+          "denominator": 1
+        },
+        "p_success_given_on_time": {
+          "numerator": 1,
+          "denominator": 1
+        },
+        "expected_value": {
+          "numerator": 3,
+          "denominator": 1
+        },
+        "worst_value": 3
+      },
+      {
+        "id": "let-close",
+        "eligible": true,
+        "weight_sum": 1,
+        "p_success": {
+          "numerator": 0,
+          "denominator": 1
+        },
+        "p_on_time": {
+          "numerator": 1,
+          "denominator": 1
+        },
+        "p_success_and_on_time": {
+          "numerator": 0,
+          "denominator": 1
+        },
+        "p_success_given_on_time": {
+          "numerator": 0,
+          "denominator": 1
+        },
+        "expected_value": {
+          "numerator": 0,
+          "denominator": 1
+        },
+        "worst_value": 0
+      }
+    ],
+    "non_dominated": [
+      "wait-for-check",
+      "prepare-reversibly",
+      "fallback"
+    ],
+    "expected_value_choice": [
+      "wait-for-check"
+    ],
+    "robust_choice": [
+      "fallback"
+    ]
+  },
+  "act_now_vs_fallback": {
+    "probability": {
+      "numerator": 3,
+      "denominator": 4
+    },
+    "attainable": true,
+    "policy": "Prefer action when its success probability exceeds the threshold. Equality is a tie."
+  },
+  "limits": [
+    "Weights and utilities are authored examples.",
+    "No field calibration is claimed.",
+    "Each scenario's utility already accounts for its consequences and timing."
+  ]
+}
