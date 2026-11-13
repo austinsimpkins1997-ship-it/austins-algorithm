@@ -4,6 +4,11 @@ Austin's Algorithm package version is 0.1.0. These records cover the published G
 
 ## Current changes
 
+### 2026-11-13 17:36:50 -05:00 — cross-checkout export verification
+
+- **#147** Release Workbench 0.2.3-alpha. The verifier recognizes LF and CRLF forms of trusted replay modules and license text after verifying each member against its original manifest bytes.
+- Add a regression for equivalent checkout line endings and a rehashed archive containing changed executable source. Preserve the existing export schema.
+
 ### 2026-11-13 17:26:32 -05:00 — local worker recovery and release preparation
 
 - **#146** Add a live local worker recovery check to Workbench 0.2.2-alpha. A replacement resumes the SQLite checkpoint after the original process exits.

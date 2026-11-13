@@ -1,6 +1,6 @@
 # Austin's Algorithm
 
-**Python package** 0.1.0 (alpha) · **Windows Workbench** 0.2.2-alpha · **License** [Apache-2.0](LICENSE)
+**Python package** 0.1.0 (alpha) · **Windows Workbench** 0.2.3-alpha · **License** [Apache-2.0](LICENSE)
 
 **Project credit:** Austin Gregory Simpkins and Chandler Middlebrook / ChronoRealm.
 
@@ -8,9 +8,9 @@ For a short, ordered, beginner-friendly walkthrough, start with [`GETTING_STARTE
 
 ## Current state
 
-Reviewed **2026-11-13** through implementation milestone **#146**. The Python package version matches [`pyproject.toml`](pyproject.toml). The [changelog](CHANGELOG.md) tracks the independent Windows Workbench release.
+Reviewed **2026-11-13** through implementation milestone **#147**. The Python package version matches [`pyproject.toml`](pyproject.toml). The [changelog](CHANGELOG.md) tracks the independent Windows Workbench release.
 
-The **Future Reader** page in Workbench 0.2.2-alpha uses the optional
+The **Future Reader** page in Workbench 0.2.3-alpha uses the optional
 companion's local practice controller. Inspect the deadline and current
 route, preview a standard or custom route, confirm it, then check the
 observed result or preview a restore. The standalone build includes the

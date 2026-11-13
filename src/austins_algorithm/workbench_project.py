@@ -39,6 +39,17 @@ _EXPORT_RECORDS = {
     "exact_baseline.json", "metadata.json", "measurements.csv", "amplitudes.csv",
     "report.html", "reproduce.py", "README.txt", "LICENSE", "NOTICE.md",
 }
+_CHECKOUT_TEXT_MEMBERS = {"LICENSE", "NOTICE.md", *(f"austins_algorithm/{name}" for name in _REPLAY_MODULES)}
+
+
+def _matches_export_member(name: str, raw: bytes, expected: bytes) -> bool:
+    if raw == expected:
+        return True
+    # Git may materialize these source members as LF or CRLF. The manifest
+    # still verifies the exact archived bytes before equivalent text is accepted.
+    if name in _CHECKOUT_TEXT_MEMBERS:
+        return raw.replace(b"\r\n", b"\n") == expected.replace(b"\r\n", b"\n")
+    return False
 
 
 def _sensor_kit() -> dict[str, Any]:
@@ -579,7 +590,7 @@ def verify_export(path: str | Path) -> dict[str, Any]:
                         raw = _archive_entry(archive, members[name], MAX_PROJECT_BYTES)
                     if hashlib.sha256(raw).hexdigest() != row["sha256"]:
                         raise ValueError(f"Export entry does not match the manifest digest: {name}")
-                    if raw != expected[name]:
+                    if not _matches_export_member(name, raw, expected[name]):
                         raise ValueError(f"Export entry differs from trusted workbench data: {name}")
         except (BadZipFile, EOFError, NotImplementedError, RuntimeError) as exc:
             raise ValueError("The export ZIP could not be verified.") from exc

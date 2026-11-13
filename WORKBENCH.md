@@ -32,7 +32,7 @@ The executable bundles the side project. For source use, set
 `PYTHONPATH` to the Future Reader package directory plus Austin's
 `src` directory, or install both local packages. Builds accept
 `--future-reader PATH` and default to a sibling `future-reader`.
-The desktop version is 0.2.2-alpha. Weighted project and export
+The desktop version is 0.2.3-alpha. Weighted project and export
 verification continues to use the 0.2.0-alpha wire version.
 
 1. **Build.** Open a preset or enter a project name, one to eight variables,
@@ -152,7 +152,7 @@ uv pip install --python .build/workbench-build-env/Scripts/python.exe -r tools/w
 The executable and its SHA-256 record are in the selected build directory's
 `dist` folder. Use a fresh output directory for each build. The builder
 includes the runtime, interface assets, and replay source. The desktop
-release is 0.2.2-alpha. The Python package continues to report 0.1.0 for the
+release is 0.2.3-alpha. The Python package continues to report 0.1.0 for the
 existing checkpoint and receipt compatibility boundary.
 
 ## Design sources and operating scope

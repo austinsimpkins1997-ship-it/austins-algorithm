@@ -41,7 +41,7 @@ The browser displays a release preview example. Local application of
 reviewed artifacts goes through the CLI.
 
 For the public Austin repository, publish the matching commit and its
-`workbench-v0.2.2-alpha` tag through GitHub Desktop. The tag launches the
+`workbench-v0.2.3-alpha` tag through GitHub Desktop. The tag launches the
 repository release workflow. It verifies the executable and offline
 companion, stages the assets with fingerprints and the source commit, and
 publishes a GitHub prerelease. Repository availability and a successful

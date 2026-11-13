@@ -8,7 +8,7 @@ Open **Advanced** to compare routes, deadlines, and decisions. **Reader**
 opens the historical and reconstruction examples. **Handoff** exports the
 record and offers each of the three original briefs for download.
 
-In **Austin’s Algorithm Workbench 0.2.2-alpha**, select **Future Reader** in
+In **Austin’s Algorithm Workbench 0.2.3-alpha**, select **Future Reader** in
 the sidebar. The native view uses the Python practice controller and a
 separate local SQLite record. Its **Live recovery check** terminates a real
 disposable process and verifies that a replacement finishes its practice job.

@@ -223,6 +223,35 @@ class WorkbenchProjectTests(unittest.TestCase):
             with self.assertRaisesRegex(ValueError, "expanded export"):
                 projects.verify_export(output)
 
+    def test_checkout_line_endings_keep_manifest_and_source_checks(self):
+        output = self.root / "project.zip"
+        projects.export_project(output, projects.new_project())
+        with ZipFile(output) as archive:
+            files = {name: archive.read(name) for name in archive.namelist()}
+        source_paths = ("LICENSE", "NOTICE.md", "austins_algorithm/__init__.py")
+        for name in source_paths:
+            data = files[name]
+            files[name] = data.replace(b"\r\n", b"\n") if b"\r\n" in data else data.replace(b"\n", b"\r\n")
+        def variant(name, *, rehash):
+            path = self.root / name
+            members = dict(files)
+            if rehash:
+                manifest = json.loads(members["manifest.json"])
+                for row in manifest["files"]:
+                    value = members[row["path"]]
+                    row.update(size_bytes=len(value), sha256=sha256(value).hexdigest())
+                members["manifest.json"] = json.dumps(manifest).encode("utf-8")
+            with ZipFile(path, "w") as archive:
+                for member, value in members.items():
+                    archive.writestr(member, value)
+            return path
+        with self.assertRaisesRegex(ValueError, "size or digest"):
+            projects.verify_export(variant("untouched-manifest.zip", rehash=False))
+        self.assertEqual(projects.verify_export(variant("alternate-endings.zip", rehash=True))["run_status"], "NOT_RUN")
+        files["austins_algorithm/__init__.py"] += b"\nraise RuntimeError('unexpected')\n"
+        with self.assertRaisesRegex(ValueError, "differs from trusted"):
+            projects.verify_export(variant("altered-source.zip", rehash=True))
+
 
 if __name__ == "__main__":
     unittest.main()
