@@ -2,7 +2,7 @@
 
 **Python package** 0.1.0 (alpha) · **Windows Workbench** 0.2.3-alpha · **License** [Apache-2.0](LICENSE)
 
-**Project credit:** Austin Gregory Simpkins and Chandler Middlebrook / ChronoRealm.
+**Project credit:** Austin Gregory Simpkins and Chandler Middlebrooks / ChronoRealm.
 
 For a short, ordered, beginner-friendly walkthrough, start with [`GETTING_STARTED.md`](GETTING_STARTED.md). This README remains the package overview and reference.
 
@@ -315,4 +315,4 @@ For every package update, follow [`CONTRIBUTING.md`](CONTRIBUTING.md). Review th
 
 ## Credit and sources
 
-This package credits **Austin Gregory Simpkins and Chandler Middlebrook / ChronoRealm** for the project example. The search method is based on **Lov K. Grover's** 1996 paper, [“A fast quantum mechanical algorithm for database search”](https://doi.org/10.1145/237814.237866). IBM also has a [Grover's algorithm tutorial](https://quantum.cloud.ibm.com/docs/en/tutorials/grovers-algorithm).
+This package credits **Austin Gregory Simpkins and Chandler Middlebrooks / ChronoRealm** for the project example. The search method is based on **Lov K. Grover's** 1996 paper, [“A fast quantum mechanical algorithm for database search”](https://doi.org/10.1145/237814.237866). IBM also has a [Grover's algorithm tutorial](https://quantum.cloud.ibm.com/docs/en/tutorials/grovers-algorithm).
