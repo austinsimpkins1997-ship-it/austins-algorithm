@@ -9,9 +9,11 @@ from collections.abc import Callable, Mapping
 from dataclasses import dataclass
 from datetime import datetime
 from itertools import product
+from pathlib import Path
 from time import perf_counter
 from typing import Any
 
+from .compilation import compile_and_verify
 from .core import austin_predicate
 from .qiskit_adapter import MAX_LOCAL_SHOTS, build_austin_circuit
 
@@ -209,6 +211,7 @@ def _noisy_simulation(circuit: Any, *, shots: int, seed: int, probability: float
 
 def _load_ibm_runtime() -> tuple[Any, ...]:
     from qiskit_ibm_runtime import IBMBackend, QiskitRuntimeService
+    from qiskit_ibm_runtime.accounts.exceptions import AccountNotFoundError
     from qiskit_ibm_runtime.exceptions import (
         RuntimeInvalidStateError,
         RuntimeJobFailureError,
@@ -220,8 +223,12 @@ def _load_ibm_runtime() -> tuple[Any, ...]:
     return (
         QiskitRuntimeService, IBMBackend, Sampler,
         RuntimeJobTimeoutError, RuntimeJobMaxTimeoutError, RuntimeJobFailureError,
-        RuntimeInvalidStateError,
+        RuntimeInvalidStateError, AccountNotFoundError,
     )
+
+
+def _ibm_account_file() -> Path:
+    return Path.home() / ".qiskit" / "qiskit-ibm.json"
 
 
 def _is_named_qpu(backend: Any, backend_type: type, name: str) -> bool:
@@ -265,15 +272,17 @@ def _provider_metrics(job: Any) -> dict[str, Any]:
     }
 
 
-def _run_ibm_hardware(circuit: Any, hardware: IBMHardwareRun, shots: int, seed: int) -> dict[str, Any]:
-    from qiskit import transpile
-
+def _run_ibm_hardware(
+    circuit: Any, hardware: IBMHardwareRun, shots: int, seed: int, *, preflight_only: bool,
+) -> dict[str, Any]:
     started = perf_counter()
     report: dict[str, Any] = {
         "status": "NOT_SUBMITTED",
         "provider": "IBM Quantum",
         "requested_execution_mode": "QPU",
+        "preflight_only": preflight_only,
         "requested_backend": hardware.backend_name,
+        "verified_target": None,
         "actual_backend": None,
         "job_id": None,
         "requested_shots": shots,
@@ -295,25 +304,48 @@ def _run_ibm_hardware(circuit: Any, hardware: IBMHardwareRun, shots: int, seed: 
     stage_started = started
     try:
         (service_type, backend_type, sampler_type, wait_error, limit_error,
-         job_error, state_error) = _load_ibm_runtime()
-        stage = "select_backend"
+         job_error, state_error, account_error) = _load_ibm_runtime()
+        stage = "load_account"
         stage_started = perf_counter()
-        service = service_type(
-            channel="ibm_quantum_platform", name=hardware.account_name, instance=hardware.instance
-        )
+        account_file = _ibm_account_file()
+        if not account_file.is_file():
+            report["status"] = "IBM_SAVED_PROFILE_UNAVAILABLE"
+            return report
+        try:
+            service = service_type(
+                filename=str(account_file), name=hardware.account_name, instance=hardware.instance,
+            )
+        except account_error:
+            report["status"] = "IBM_SAVED_PROFILE_UNAVAILABLE"
+            return report
         if service.is_local is not False:
             report["status"] = "LOCAL_SERVICE_REJECTED"
             return report
+        timings["load_account"] = perf_counter() - stage_started
+        stage = "select_backend"
+        stage_started = perf_counter()
         backend = service.backend(hardware.backend_name, instance=hardware.instance)
         timings["select_backend"] = perf_counter() - stage_started
         if not _is_named_qpu(backend, backend_type, hardware.backend_name):
             report["status"] = "NON_QPU_OR_WRONG_BACKEND"
             return report
-        stage = "transpile"
+        stage = "backend_status"
         stage_started = perf_counter()
-        compiled = transpile(circuit, backend=backend, optimization_level=1, seed_transpiler=seed)
-        report["compiled_circuit"] = _circuit_resources(compiled)
-        timings["transpile"] = perf_counter() - stage_started
+        if backend.status().operational is not True:
+            report["status"] = "BACKEND_NOT_OPERATIONAL"
+            return report
+        timings["backend_status"] = perf_counter() - stage_started
+        stage = "compile_and_verify"
+        stage_started = perf_counter()
+        compiled = compile_and_verify(circuit, backend=backend, optimization_level=1, seed=seed)
+        report["verified_target"] = backend.name
+        report["compiled_circuit"] = _circuit_resources(compiled.circuit)
+        report["compilation"] = compiled.report
+        timings["compile_and_verify"] = perf_counter() - stage_started
+        timings["transpile"] = compiled.timing_seconds["transpile"]
+        if preflight_only:
+            report["status"] = "TARGET_COMPILED_AND_VERIFIED"
+            return report
         stage = "configure_sampler"
         stage_started = perf_counter()
         sampler = sampler_type(
@@ -331,7 +363,7 @@ def _run_ibm_hardware(circuit: Any, hardware: IBMHardwareRun, shots: int, seed: 
         stage_started = perf_counter()
         # A request may be accepted even if the client loses the response.
         report.update(provider_job_submitted=None, quantum_hardware_used=None)
-        job = sampler.run([compiled], shots=shots, dry_run=False)
+        job = sampler.run([compiled.circuit], shots=shots, dry_run=False)
         report.update(provider_job_submitted=True, job_id=job.job_id())
         timings["submit"] = perf_counter() - stage_started
         stage = "wait_and_fetch"
@@ -399,15 +431,19 @@ def run_austin_device_comparison(
     seed: int = 7,
     noise_probability: float = 0.02,
     hardware: IBMHardwareRun | None = None,
+    qpu_preflight_only: bool = False,
 ) -> dict[str, Any]:
     """Compare the same logical Austin circuit and direct classical solver.
 
     Noise is synthetic depolarization applied to each logical gate. The seed
     controls local sampling and target compilation. A supplied hardware
-    configuration explicitly requests one physical job with the given caps.
+    configuration explicitly requests one physical job with the given caps
+    unless qpu_preflight_only is true, which only checks the selected target.
     """
     if hardware is not None and not isinstance(hardware, IBMHardwareRun):
         raise TypeError("hardware must be an IBMHardwareRun")
+    if type(qpu_preflight_only) is not bool or (qpu_preflight_only and hardware is None):
+        raise ValueError("qpu_preflight_only requires an explicit hardware configuration")
     _bounded_int("shots", shots, 1, MAX_HARDWARE_SHOTS if hardware else MAX_LOCAL_SHOTS)
     _bounded_int("seed", seed, 0, 2**32 - 1)
     if (
@@ -426,7 +462,7 @@ def run_austin_device_comparison(
     ideal = _ideal_simulation(circuit, shots=shots, seed=seed)
     noisy = _noisy_simulation(circuit, shots=shots, seed=seed, probability=float(noise_probability))
     physical = (
-        _run_ibm_hardware(circuit, hardware, shots, seed)
+        _run_ibm_hardware(circuit, hardware, shots, seed, preflight_only=qpu_preflight_only)
         if hardware is not None
         else {"status": "NOT_REQUESTED", "provider_job_submitted": False, "quantum_hardware_used": False}
     )

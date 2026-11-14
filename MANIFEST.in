@@ -2,11 +2,15 @@ include README.md GETTING_STARTED.md LICENSE NOTICE.md CHANGELOG.md CITATION.cff
 include CONTRIBUTING.md EXTENDING.md ADAPTERS.md ROADMAP.md SECURITY.md USE_CASES.md
 include IBM_MODEL_RESEARCH.md
 include CONSTRAINT_WORKFLOW.md
+include WORKBENCH.md
+include IBM_HARDWARE.md
+recursive-include src/austins_algorithm/workbench_assets *.ico *.svg *.png *.txt *.json
 recursive-include .github/workflows *.yml
 recursive-include circuits *.qasm
 recursive-include examples *.py
 include examples/field_sensor_kit.json examples/site_interlock.json examples/telemetry_power.json
 include examples/checkpoint_constraint.json
+include examples/weighted_sensor_kit.json
 include examples/smoke-regression/constraint.json examples/smoke-regression/manifest.json examples/smoke-regression/requirements.txt
 include examples/smoke-regression/baseline/request.json examples/smoke-regression/baseline/report.json
 include examples/smoke-regression/baseline/selected.qasm examples/smoke-regression/baseline/receipt.json
@@ -20,6 +24,7 @@ include examples/placement-smoke-regression/baseline/request.json examples/place
 include examples/placement-smoke-regression/baseline/receipt.json
 recursive-include tests *.py
 recursive-include tools *.py
+include tools/workbench-build-requirements.txt
 prune .build
 prune build
 prune dist

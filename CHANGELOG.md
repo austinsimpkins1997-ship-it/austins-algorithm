@@ -4,6 +4,34 @@ Austin's Algorithm package version is 0.1.0. These records cover the published G
 
 ## Current changes
 
+### 2026-11-13 17:36:50 -05:00 — cross-checkout export verification
+
+- **#147** Release Workbench 0.2.3-alpha. The verifier recognizes LF and CRLF forms of trusted replay modules and license text after verifying each member against its original manifest bytes.
+- Add a regression for equivalent checkout line endings and a rehashed archive containing changed executable source. Preserve the existing export schema.
+
+### 2026-11-13 17:26:32 -05:00 — local worker recovery and release preparation
+
+- **#146** Add a live local worker recovery check to Workbench 0.2.2-alpha. A replacement resumes the SQLite checkpoint after the original process exits.
+- Add named IBM profile preflight and verify the compiled circuit before a provider submission. Preserve the explicit hardware, shot, and time-budget controls.
+- Add commit-bound release staging and a tag-triggered GitHub prerelease workflow. Preserve the weighted project format.
+- Include the Future Reader 0.1.1 timing and pruning evidence in the portable handoff.
+
+### 2026-11-13 17:03:26 -05:00 — Future Reader integration
+
+- **#145** Add a native Future Reader page to the Workbench and build it into the Windows 0.2.1-alpha executable. Include route preview, custom input, confirmation, restore, timing comparison, scoped certification, and the simulated recovery exercise.
+- Add the optional `future-reader` CLI dispatch and bundle the offline HTML as a separate export. Keep the weighted project and its replay format compatible with 0.2.0-alpha.
+- Verify the native workflow and standalone checkpoint replay with the rebuilt executable in both maintained locations. The 3.12 SDK suites passed 658 checks with four skips and the clean 3.10 suites passed 412 checks with 250 skips in each copy. Verify the archived weighted export against the current engine.
+
+### 2026-11-13 13:29:08 -05:00 — weighted search and Windows Workbench
+
+- **#144** Add bounded weighted Boolean optimization, exact classical minima, and seeded stepwise Grover simulation with one shared shot and query budget.
+- Add a reversible threshold circuit, independent phase audit, and weighted sensor-kit benchmark for ideal simulation and dated Jakarta.
+- Deliver Workbench 0.2.0-alpha as a standalone Windows x64 application with editable examples, a state grid, phase controls, manual and automatic measurement, project save and reopen, and generated replay code.
+- Add a plain-language Overview, a direct Optimize action, and an offline, rule-based AI Assistant that explains the active simulation.
+- Export a complete ZIP with project, settings, exact reference, traces, measurements, CSV, HTML, portable Python and a SHA-256 manifest. Add an offline verifier for received archives.
+- Preserve the Python engine version used by existing checkpoints and receipts. Record hosted success of the #143 repair in run #10.
+- Verify the Windows SDK and standard-library suites in both copies and the WSL standard-library suite in the workspace. Check both source distributions and wheels. Exercise each executable through Optimize, manual and automatic simulation, save and reopen, contextual help, and export. Independently replay both exported runs.
+
 ### 2026-11-12 15:22:13 -05:00 — local CI repair
 
 - **#143** Isolate the controlled benchmark worker subprocess binding in the test fixture. Keep the shared standard-library `subprocess` module available to Linux platform metadata collection. Production algorithm and benchmark code are unchanged; package version stays 0.1.0 (alpha).

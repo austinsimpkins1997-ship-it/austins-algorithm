@@ -1,6 +1,6 @@
 # Austin's Algorithm
 
-**Package version** 0.1.0 (alpha) · **Source** public on GitHub · **License** [Apache-2.0](LICENSE)
+**Python package** 0.1.0 (alpha) · **Windows Workbench** 0.2.3-alpha · **License** [Apache-2.0](LICENSE)
 
 **Project credit:** Austin Gregory Simpkins and Chandler Middlebrook / ChronoRealm.
 
@@ -8,7 +8,27 @@ For a short, ordered, beginner-friendly walkthrough, start with [`GETTING_STARTE
 
 ## Current state
 
-Reviewed **2026-11-12** against the local source through implementation milestone **#143**. The package version matches [`pyproject.toml`](pyproject.toml); dated development updates are recorded separately in the [changelog](CHANGELOG.md).
+Reviewed **2026-11-13** through implementation milestone **#147**. The Python package version matches [`pyproject.toml`](pyproject.toml). The [changelog](CHANGELOG.md) tracks the independent Windows Workbench release.
+
+The **Future Reader** page in Workbench 0.2.3-alpha uses the optional
+companion's local practice controller. Inspect the deadline and current
+route, preview a standard or custom route, confirm it, then check the
+observed result or preview a restore. The standalone build includes the
+controller and browser companion. The Python package exposes the same
+optional runtime through `python -m austins_algorithm future-reader`.
+See the [Workbench guide](WORKBENCH.md) for the source launch and separate
+practice checkpoint.
+
+**Live recovery check** stops a disposable local worker and verifies that a
+replacement completes the same SQLite-backed job. The [IBM hardware guide](IBM_HARDWARE.md)
+covers named-profile preflight and the optional physical device experiment.
+
+The release checkout includes the [Future Reader companion source](future-reader/README.md).
+In the ChronoRealm workspace the companion is maintained in the sibling package.
+
+**Austin's Algorithm Workbench** is a desktop application for exploring Grover search and optimizing the cost of a valid assignment. Start with the original Austin predicate, a two-bit cost example, or the weighted field sensor kit. The Overview explains the goal, latest result and next action. Optimize runs the exact solver, and AI Assistant gives local guidance about the active project. Open Simulate for preparation, phase marking and diffusion, choose rounds, and measure a seeded shot or run automatically. Save and reopen a project, copy its generated Python program, or export all evidence in one ZIP. See [the Workbench guide](WORKBENCH.md).
+
+For the command line, run `python -m austins_algorithm optimize examples/weighted_sensor_kit.json --mode exact`. The kit's first feasible answer costs 7 and its exact minimum costs 4. The desktop simulation and optional audited Qiskit threshold circuit use the same Boolean rules and weight order. See [the weighted benchmark](examples/benchmark_weighted_search.py).
 
 The project starts with a three-qubit Grover teaching example and supports bounded Boolean-constraint search with independent classical verification. The base package runs on Python 3.10 and newer. Optional Qiskit and Aer workflows compile for local targets, verify OpenQASM measurement behavior, and compare search budgets on dated IBM models.
 
@@ -253,7 +273,22 @@ The simulator finds `M` by checking every choice first. A real quantum search ne
 
 ## Tests and project guide
 
-The latest local implementation checks, recorded on **2026-11-12** for milestone **#143**, passed in both maintained package copies:
+For milestone **#145** on **2026-11-13**, both Windows copies passed
+658 SDK-enabled and 412 standard-library checks, with four and 250 skips
+respectively. Both executables passed the native Future Reader and weighted
+project smoke tests and reproduced the weighted run from exported Python.
+
+For milestone **#144** on **2026-11-13**, the Windows suites passed in both maintained copies. The WSL suite ran against the workspace source.
+
+| Environment | Passed | Skipped | Failures or errors |
+| --- | ---: | ---: | ---: |
+| Windows Python 3.12.15 with Qiskit, Aer, OpenQASM import and IBM Runtime | 658 | 4 (Cirq and symlink privileges) | 0 |
+| Windows Python 3.10.22 with optional SDKs excluded | 412 | 250 (optional dependencies and symlink privileges) | 0 |
+| WSL Ubuntu Python 3.12.3 with optional SDKs excluded | 414 | 248 (optional dependencies) | 0 |
+
+Both copies of the standalone executable passed the project save and reopen, exact optimization, manual and automatic simulation, Overview, and assistant checks. Each generated a 23-file export whose standalone Python replay reproduced the saved run. The source distribution and wheel each verified all 103 runtime files in both copies. An isolated wheel installation passed the exact search and desktop smoke check in each location.
+
+The local implementation checks for milestone **#143** on **2026-11-12** passed in both maintained package copies:
 
 | Environment | Passed | Skipped | Failures or errors |
 | --- | ---: | ---: | ---: |
@@ -266,7 +301,7 @@ These are dated results for the tested source and environments. The eight-layout
 
 [GitHub Actions run #8](https://github.com/austinsimpkins1997-ship-it/austins-algorithm/actions/runs/43249759269) passed all ten jobs for commit `6c2370b060dbfdcf2ea3feeca72963a282c386ad` on **2026-11-12**, including Python 3.10–3.14, optional frameworks, and the packaged Manila smoke regression. That result applies to that committed revision; later local updates need their own hosted run.
 
-[GitHub Actions run #9](https://github.com/austinsimpkins1997-ship-it/austins-algorithm/actions/runs/43286454985) failed all nine Ubuntu matrix jobs for commit `10533c88b96ddca98045904095a5d0203900ac9c`; its Windows Manila smoke job passed. The new benchmark test fixture had replaced the shared `subprocess.run` function, intercepting Linux host-metadata queries as worker launches. Update #143 scopes that test replacement to the benchmark module and adds a regression that reproduces the interaction on Windows too. The local Windows and Linux checks above pass the correction. Hosted verification of the corrected commit remains pending; run #8 does not establish its status.
+[GitHub Actions run #9](https://github.com/austinsimpkins1997-ship-it/austins-algorithm/actions/runs/43286454985) exposed the benchmark fixture's shared subprocess mock on Ubuntu. Update #143 scoped the replacement to the benchmark module. All ten hosted jobs passed for repair commit `33eab1190c31188c322951a78cc6b7f4e620c0fa`. [GitHub Actions run #10](https://github.com/austinsimpkins1997-ship-it/austins-algorithm/actions/runs/43300577324)
 
 To run the package checks:
 
@@ -276,7 +311,7 @@ python -B -m unittest discover -s tests -v
 
 The package has more detail in [`USE_CASES.md`](USE_CASES.md), [`EXTENDING.md`](EXTENDING.md), [`ADAPTERS.md`](ADAPTERS.md), and [`ROADMAP.md`](ROADMAP.md). The test suite checks the example code and math; it does not certify a real device or prove that the method is useful in every field.
 
-For every package update, follow [`CONTRIBUTING.md`](CONTRIBUTING.md): review this README's current state, commands, limits and dated verification; check its version against `pyproject.toml`; add a timestamped changelog entry; and reconcile both maintained copies with byte-count and SHA-256 checks. Update the verification summary when new checks replace the dated results above.
+For every package update, follow [`CONTRIBUTING.md`](CONTRIBUTING.md). Review this README's commands, limits and dated verification. Check its version against `pyproject.toml`, add a timestamped changelog entry, and reconcile both maintained copies with byte-count and SHA-256 checks.
 
 ## Credit and sources
 

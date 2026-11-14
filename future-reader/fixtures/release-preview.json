@@ -1,0 +1,9 @@
+{
+  "schema": "future-reader.release-preview-example/1",
+  "current": "0.1.0",
+  "candidate": "0.1.1",
+  "trust": "Illustrative local release fixture",
+  "compatibility": "Same checkpoint schema",
+  "migration": "Export a checkpoint before changing versions",
+  "rollback": "Restore previous verified bytes and a compatible checkpoint"
+}

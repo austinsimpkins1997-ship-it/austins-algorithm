@@ -8,6 +8,39 @@ from .core import AustinAlgorithmError, austin_predicate, run_austin_search, val
 
 
 def main() -> None:
+    if len(sys.argv) > 1 and sys.argv[1] == "future-reader":
+        try:
+            from future_reader.cli import main as reader_main
+        except ModuleNotFoundError as error:
+            if error.name != "future_reader":
+                raise
+            raise SystemExit("Future Reader is a separate optional package. Use the bundled Workbench or install Future Reader.") from error
+        raise SystemExit(reader_main(sys.argv[2:]))
+    if len(sys.argv) > 1 and sys.argv[1] == "workbench-export-verify":
+        from .workbench_project import verify_export
+
+        verify_parser = argparse.ArgumentParser(
+            prog="austins-algorithm workbench-export-verify",
+            description="Verify an exported Workbench ZIP without extracting or running its code.",
+        )
+        verify_parser.add_argument("archive")
+        args = verify_parser.parse_args(sys.argv[2:])
+        try:
+            receipt = verify_export(args.archive)
+        except (ValueError, OSError, RuntimeError) as exc:
+            verify_parser.error(str(exc))
+        print(json.dumps(receipt, indent=2, allow_nan=False))
+        return
+    if len(sys.argv) > 1 and sys.argv[1] == "optimize":
+        from .optimization_cli import main as optimization_main
+
+        optimization_main(sys.argv[2:])
+        return
+    if len(sys.argv) > 1 and sys.argv[1] == "workbench":
+        from .desktop import main as desktop_main
+
+        desktop_main(sys.argv[2:])
+        return
     if len(sys.argv) > 1 and sys.argv[1] in {
         "compile", "search", "constraint", "constraint-classical", "constraint-sweep", "constraint-cover", "compare",
         "witness-schedule", "unknown-count-plan", "unknown-count-select", "unknown-count-snapshot-select",
@@ -33,7 +66,7 @@ def main() -> None:
         return
     parser = argparse.ArgumentParser(description="Run a local ideal simulation of Grover search.")
     parser.epilog = (
-        "Additional commands: compile, search, constraint, constraint-classical, "
+        "Additional commands: optimize, workbench, future-reader, workbench-export-verify, compile, search, constraint, constraint-classical, "
         "constraint-sweep, constraint-cover, compare, witness-schedule, unknown-count-plan, unknown-count-select, "
         "unknown-count-snapshot-select, unknown-count-snapshot-profile-export, unknown-count-snapshot-profile-verify, "
         "unknown-count-snapshot-profile-compare, unknown-count-snapshot-layout-plan, snapshot-calibration-compare, "

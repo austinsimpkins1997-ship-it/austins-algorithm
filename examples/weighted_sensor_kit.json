@@ -1,0 +1,12 @@
+{
+  "name": "Weighted field sensor kit",
+  "variables": [
+    {"name": "Radar sensor", "cost": 1},
+    {"name": "Optical sensor", "cost": 4},
+    {"name": "LTE uplink", "cost": 1},
+    {"name": "Wired uplink", "cost": 3},
+    {"name": "Backup power", "cost": 1},
+    {"name": "Local buffer", "cost": 1}
+  ],
+  "clauses": [[1, 2], [-1, -2], [3, 4], [-3, -4], [-1, 5], [-3, 6]]
+}

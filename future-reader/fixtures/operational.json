@@ -1,0 +1,426 @@
+{
+  "schema": "future-reader.conformance/1",
+  "domain": {
+    "id": "future-reader.practice/1",
+    "nodes": {
+      "S": "Start",
+      "A": "Bench",
+      "B": "Shelf",
+      "G": "Goal"
+    },
+    "edges": [
+      {
+        "source": "S",
+        "target": "A",
+        "duration": 3,
+        "cost": 3,
+        "opens": 0,
+        "requires_check": false
+      },
+      {
+        "source": "A",
+        "target": "G",
+        "duration": 4,
+        "cost": 3,
+        "opens": 8,
+        "requires_check": true
+      },
+      {
+        "source": "S",
+        "target": "B",
+        "duration": 2,
+        "cost": 1,
+        "opens": 0,
+        "requires_check": false
+      },
+      {
+        "source": "B",
+        "target": "G",
+        "duration": 6,
+        "cost": 2,
+        "opens": 0,
+        "requires_check": false
+      }
+    ],
+    "deadline": 17,
+    "verify": 2,
+    "margin": 1,
+    "uncertainty": 1,
+    "equality": true
+  },
+  "routes": [
+    {
+      "start": "S",
+      "goal": "G",
+      "now": 0,
+      "check_available": true,
+      "result": [
+        {
+          "path": [
+            "S",
+            "B",
+            "G"
+          ],
+          "departure": 0,
+          "arrival": 8,
+          "cost": 3,
+          "latest_safe_start": 5,
+          "eligible": true,
+          "reason": null
+        },
+        {
+          "path": [
+            "S",
+            "A",
+            "G"
+          ],
+          "departure": 0,
+          "arrival": 12,
+          "cost": 6,
+          "latest_safe_start": 6,
+          "eligible": true,
+          "reason": null
+        }
+      ]
+    },
+    {
+      "start": "S",
+      "goal": "G",
+      "now": 5,
+      "check_available": true,
+      "result": [
+        {
+          "path": [
+            "S",
+            "B",
+            "G"
+          ],
+          "departure": 5,
+          "arrival": 13,
+          "cost": 3,
+          "latest_safe_start": 5,
+          "eligible": true,
+          "reason": null
+        },
+        {
+          "path": [
+            "S",
+            "A",
+            "G"
+          ],
+          "departure": 5,
+          "arrival": 12,
+          "cost": 6,
+          "latest_safe_start": 6,
+          "eligible": true,
+          "reason": null
+        }
+      ]
+    },
+    {
+      "start": "S",
+      "goal": "G",
+      "now": 6,
+      "check_available": true,
+      "result": [
+        {
+          "path": [
+            "S",
+            "B",
+            "G"
+          ],
+          "departure": 6,
+          "arrival": 14,
+          "cost": 3,
+          "latest_safe_start": 5,
+          "eligible": false,
+          "reason": "DEADLINE"
+        },
+        {
+          "path": [
+            "S",
+            "A",
+            "G"
+          ],
+          "departure": 6,
+          "arrival": 13,
+          "cost": 6,
+          "latest_safe_start": 6,
+          "eligible": true,
+          "reason": null
+        }
+      ]
+    },
+    {
+      "start": "S",
+      "goal": "G",
+      "now": 6,
+      "check_available": false,
+      "result": [
+        {
+          "path": [
+            "S",
+            "B",
+            "G"
+          ],
+          "departure": 6,
+          "arrival": 14,
+          "cost": 3,
+          "latest_safe_start": 5,
+          "eligible": false,
+          "reason": "DEADLINE"
+        },
+        {
+          "path": [
+            "S",
+            "A",
+            "G"
+          ],
+          "departure": 6,
+          "arrival": 13,
+          "cost": 6,
+          "latest_safe_start": 6,
+          "eligible": false,
+          "reason": "PREREQUISITE_UNAVAILABLE"
+        }
+      ]
+    },
+    {
+      "start": "S",
+      "goal": "G",
+      "now": 7,
+      "check_available": true,
+      "result": [
+        {
+          "path": [
+            "S",
+            "B",
+            "G"
+          ],
+          "departure": 7,
+          "arrival": 15,
+          "cost": 3,
+          "latest_safe_start": 5,
+          "eligible": false,
+          "reason": "DEADLINE"
+        },
+        {
+          "path": [
+            "S",
+            "A",
+            "G"
+          ],
+          "departure": 7,
+          "arrival": 14,
+          "cost": 6,
+          "latest_safe_start": 6,
+          "eligible": false,
+          "reason": "DEADLINE"
+        }
+      ]
+    },
+    {
+      "start": "S",
+      "goal": "G",
+      "now": 17,
+      "check_available": true,
+      "result": [
+        {
+          "path": [
+            "S",
+            "B",
+            "G"
+          ],
+          "departure": 17,
+          "arrival": 25,
+          "cost": 3,
+          "latest_safe_start": 5,
+          "eligible": false,
+          "reason": "DEADLINE"
+        },
+        {
+          "path": [
+            "S",
+            "A",
+            "G"
+          ],
+          "departure": 17,
+          "arrival": 24,
+          "cost": 6,
+          "latest_safe_start": 6,
+          "eligible": false,
+          "reason": "DEADLINE"
+        }
+      ]
+    },
+    {
+      "start": "B",
+      "goal": "G",
+      "now": 2,
+      "check_available": true,
+      "result": [
+        {
+          "path": [
+            "B",
+            "G"
+          ],
+          "departure": 2,
+          "arrival": 8,
+          "cost": 2,
+          "latest_safe_start": 7,
+          "eligible": true,
+          "reason": null
+        }
+      ]
+    },
+    {
+      "start": "A",
+      "goal": "G",
+      "now": 3,
+      "check_available": true,
+      "result": [
+        {
+          "path": [
+            "A",
+            "G"
+          ],
+          "departure": 3,
+          "arrival": 12,
+          "cost": 3,
+          "latest_safe_start": 9,
+          "eligible": true,
+          "reason": null
+        }
+      ]
+    },
+    {
+      "start": "G",
+      "goal": "G",
+      "now": 13,
+      "check_available": true,
+      "result": [
+        {
+          "path": [
+            "G"
+          ],
+          "departure": 13,
+          "arrival": 13,
+          "cost": 0,
+          "latest_safe_start": 13,
+          "eligible": true,
+          "reason": null
+        }
+      ]
+    }
+  ],
+  "session": {
+    "initial": {
+      "state": "S",
+      "now": 0,
+      "revision": 0
+    },
+    "travel": {
+      "state": "G",
+      "now": 8,
+      "revision": 1
+    },
+    "reverse": {
+      "state": "S",
+      "now": 8,
+      "revision": 2
+    },
+    "certificate": {
+      "schema": "future-reader.route-certificate/1",
+      "operation": "CERTIFY",
+      "mode": "SIMULATION",
+      "property": "MINIMUM_COST_WITHIN_ELIGIBLE_PRACTICE_PATHS",
+      "model": "future-reader.practice/1",
+      "model_digest": "30abebef3d3f9d94318a05f7fc293a51183fc83b16dcf806dda4823b2b4260d4",
+      "scope": {
+        "start": "S",
+        "goal": "G",
+        "now": 0,
+        "check_available": true,
+        "clock": "future-reader.practice-clock/1"
+      },
+      "method": "complete enumeration of simple paths with exact integer arithmetic",
+      "assumptions": [
+        "positive duration and cost",
+        "waiting allowed",
+        "deadline equality eligible"
+      ],
+      "status": "PROVED",
+      "candidates": [
+        {
+          "path": [
+            "S",
+            "B",
+            "G"
+          ],
+          "departure": 0,
+          "arrival": 8,
+          "cost": 3,
+          "latest_safe_start": 5,
+          "eligible": true,
+          "reason": null
+        },
+        {
+          "path": [
+            "S",
+            "A",
+            "G"
+          ],
+          "departure": 0,
+          "arrival": 12,
+          "cost": 6,
+          "latest_safe_start": 6,
+          "eligible": true,
+          "reason": null
+        }
+      ],
+      "cost": 3,
+      "co_optimal": [
+        [
+          "S",
+          "B",
+          "G"
+        ]
+      ],
+      "invalidation": "Model, clock, starting state, goal or prerequisite availability changes"
+    },
+    "program": {
+      "schema": "future-reader.program/1",
+      "steps": [
+        {
+          "op": "Start",
+          "state": "S"
+        },
+        {
+          "op": "Move",
+          "to": "B"
+        },
+        {
+          "op": "Move",
+          "to": "G"
+        },
+        {
+          "op": "Goal",
+          "state": "G"
+        }
+      ]
+    },
+    "program_route": {
+      "path": [
+        "S",
+        "B",
+        "G"
+      ],
+      "departure": 0,
+      "arrival": 8,
+      "cost": 3,
+      "latest_safe_start": 5,
+      "eligible": true,
+      "reason": null
+    }
+  }
+}
