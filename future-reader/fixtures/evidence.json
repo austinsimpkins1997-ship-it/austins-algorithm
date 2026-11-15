@@ -1,0 +1,1478 @@
+{
+  "schema_version": 1,
+  "cases": {
+    "cern": {
+      "PINPOINT": {
+        "schema_version": 1,
+        "case": "cern",
+        "operation": "PINPOINT",
+        "status": "AMBIGUOUS",
+        "summary": "The same modeled arrival time fits a slower flight or a longer path at c.",
+        "details": {
+          "candidates": [
+            "11.42 m at hypothetical 0.996c",
+            "11.42 m plus about 4.6 cm at c"
+          ],
+          "model": {
+            "path_m": "11.42",
+            "hypothetical_speed_over_c": "0.996",
+            "reference_c_m_per_s": 299792458,
+            "reference_time_ns": 38.093019672,
+            "hypothetical_time_ns": 38.246003686,
+            "delay_ps": 152.984014745,
+            "equivalent_extra_path_cm": 4.586345382,
+            "delay_s_exact": "571/3732416102100",
+            "extra_path_m_exact": "571/12450",
+            "method": "t = L/v, extra_path = L * (1/r - 1), r = v/c"
+          },
+          "observed_modern_lhc_photon_speed": "UNKNOWN"
+        },
+        "sources": [
+          {
+            "id": "bipm-si",
+            "title": "BIPM definition of the metre",
+            "url": "https://www.bipm.org/en/si-base-units/metre"
+          },
+          {
+            "id": "cern-machine",
+            "title": "CERN LHC Machine design report, 2008",
+            "url": "https://cds.cern.ch/record/1129806/files/jinst8_08_s08001.pdf"
+          },
+          {
+            "id": "cern-hilumi-design",
+            "title": "CERN HL-LHC Technical Design Report, CERN-2020-010",
+            "url": "https://e-publishing.cern.ch/index.php/CYRM/article/download/1188/986/4985"
+          },
+          {
+            "id": "supplied-brief",
+            "title": "User-supplied master prompt, sections 8\u201310",
+            "url": "../MASTER_PROMPT.txt"
+          }
+        ],
+        "limits": [
+          "The 11.42 m path is a supplied modeled median. The 0.996c speed is hypothetical.",
+          "The first wall hit and the circumference of the accelerator describe different paths.",
+          "These alternatives match flight time in the simplified model. Actual speed, path and calibration are unresolved."
+        ],
+        "next_check": "Independently survey the path and calibrate both timing endpoints, including shared references."
+      },
+      "TRAVEL": {
+        "schema_version": 1,
+        "case": "cern",
+        "operation": "TRAVEL",
+        "status": "CONDITIONAL",
+        "summary": "A path survey can distinguish these two models if its uncertainty is small enough and its failure sources are independent.",
+        "details": {
+          "options": [
+            {
+              "action": "Independent geometric survey",
+              "resolves": "Proportional path error",
+              "conditions": "Document reference frame and endpoint alignment. Aim for total path uncertainty well below 4.6 cm."
+            },
+            {
+              "action": "Calibrated time of flight",
+              "resolves": "Fixed electronics offset versus distance-dependent slope",
+              "conditions": "Synchronize both endpoints independently and quantify uncertainty well below 153 ps over the modeled baseline."
+            },
+            {
+              "action": "Separate clock-rate comparison",
+              "resolves": "A clock-rate hypothesis",
+              "conditions": "Use independent clocks and a cadence matched to the proposed effect."
+            },
+            {
+              "action": "Prepare or wait",
+              "resolves": "A missing prerequisite or expiring calibration",
+              "conditions": "Reserve reversible setup before the decision cutoff. Hold any commitment with unverified prerequisites."
+            }
+          ],
+          "shared_failure_sources": [
+            "Clock reference",
+            "Survey calibration",
+            "Endpoint alignment",
+            "Shared trigger"
+          ],
+          "hypothetical_window": {
+            "clock": "Relative seconds from opening of approved setup",
+            "stages": [
+              {
+                "id": "approval",
+                "duration": 20,
+                "requires": []
+              },
+              {
+                "id": "survey",
+                "duration": 40,
+                "requires": [
+                  "approval"
+                ]
+              },
+              {
+                "id": "calibration",
+                "duration": 45,
+                "requires": [
+                  "approval"
+                ]
+              },
+              {
+                "id": "queue",
+                "duration": 10,
+                "requires": [
+                  "survey",
+                  "calibration"
+                ]
+              },
+              {
+                "id": "measurement",
+                "duration": 15,
+                "requires": [
+                  "queue"
+                ]
+              },
+              {
+                "id": "verification",
+                "duration": 15,
+                "requires": [
+                  "measurement"
+                ]
+              }
+            ],
+            "deadline_s": 120,
+            "required_safety_margin_s": 10,
+            "critical_path_s": 105,
+            "critical_path": [
+              "approval",
+              "calibration",
+              "queue",
+              "measurement",
+              "verification"
+            ],
+            "latest_feasible_start_s": 15,
+            "deadline_safe_start_s": 5,
+            "latest_safe_start_s": 5,
+            "equality_qualifies": true,
+            "clock_uncertainty_s": 0,
+            "prerequisites_ready_s": 0,
+            "calibration_expires_s": "NO_EXPIRY_MODELED",
+            "earliest_measurement_completion_s": 90,
+            "status": "SYNTHETIC_WINDOW_OPEN",
+            "next_action": "Prepare and verify prerequisites."
+          },
+          "sensitivity": {
+            "approval_takes_26_s": {
+              "clock": "Relative seconds from opening of approved setup",
+              "stages": [
+                {
+                  "id": "approval",
+                  "duration": 26,
+                  "requires": []
+                },
+                {
+                  "id": "survey",
+                  "duration": 40,
+                  "requires": [
+                    "approval"
+                  ]
+                },
+                {
+                  "id": "calibration",
+                  "duration": 45,
+                  "requires": [
+                    "approval"
+                  ]
+                },
+                {
+                  "id": "queue",
+                  "duration": 10,
+                  "requires": [
+                    "survey",
+                    "calibration"
+                  ]
+                },
+                {
+                  "id": "measurement",
+                  "duration": 15,
+                  "requires": [
+                    "queue"
+                  ]
+                },
+                {
+                  "id": "verification",
+                  "duration": 15,
+                  "requires": [
+                    "measurement"
+                  ]
+                }
+              ],
+              "deadline_s": 120,
+              "required_safety_margin_s": 10,
+              "critical_path_s": 111,
+              "critical_path": [
+                "approval",
+                "calibration",
+                "queue",
+                "measurement",
+                "verification"
+              ],
+              "latest_feasible_start_s": 9,
+              "deadline_safe_start_s": -1,
+              "latest_safe_start_s": -1,
+              "equality_qualifies": true,
+              "clock_uncertainty_s": 0,
+              "prerequisites_ready_s": 0,
+              "calibration_expires_s": "NO_EXPIRY_MODELED",
+              "earliest_measurement_completion_s": 96,
+              "status": "SYNTHETIC_FALLBACK_REQUIRED",
+              "next_action": "Recalibrate within the remaining window or wait for another opening."
+            },
+            "detector_queue_is_15_s": {
+              "clock": "Relative seconds from opening of approved setup",
+              "stages": [
+                {
+                  "id": "approval",
+                  "duration": 20,
+                  "requires": []
+                },
+                {
+                  "id": "survey",
+                  "duration": 40,
+                  "requires": [
+                    "approval"
+                  ]
+                },
+                {
+                  "id": "calibration",
+                  "duration": 45,
+                  "requires": [
+                    "approval"
+                  ]
+                },
+                {
+                  "id": "queue",
+                  "duration": 15,
+                  "requires": [
+                    "survey",
+                    "calibration"
+                  ]
+                },
+                {
+                  "id": "measurement",
+                  "duration": 15,
+                  "requires": [
+                    "queue"
+                  ]
+                },
+                {
+                  "id": "verification",
+                  "duration": 15,
+                  "requires": [
+                    "measurement"
+                  ]
+                }
+              ],
+              "deadline_s": 120,
+              "required_safety_margin_s": 10,
+              "critical_path_s": 110,
+              "critical_path": [
+                "approval",
+                "calibration",
+                "queue",
+                "measurement",
+                "verification"
+              ],
+              "latest_feasible_start_s": 10,
+              "deadline_safe_start_s": 0,
+              "latest_safe_start_s": 0,
+              "equality_qualifies": true,
+              "clock_uncertainty_s": 0,
+              "prerequisites_ready_s": 0,
+              "calibration_expires_s": "NO_EXPIRY_MODELED",
+              "earliest_measurement_completion_s": 95,
+              "status": "SYNTHETIC_WINDOW_OPEN",
+              "next_action": "Prepare and verify prerequisites."
+            },
+            "evidence_arrives_at_6_s": {
+              "clock": "Relative seconds from opening of approved setup",
+              "stages": [
+                {
+                  "id": "approval",
+                  "duration": 20,
+                  "requires": []
+                },
+                {
+                  "id": "survey",
+                  "duration": 40,
+                  "requires": [
+                    "approval"
+                  ]
+                },
+                {
+                  "id": "calibration",
+                  "duration": 45,
+                  "requires": [
+                    "approval"
+                  ]
+                },
+                {
+                  "id": "queue",
+                  "duration": 10,
+                  "requires": [
+                    "survey",
+                    "calibration"
+                  ]
+                },
+                {
+                  "id": "measurement",
+                  "duration": 15,
+                  "requires": [
+                    "queue"
+                  ]
+                },
+                {
+                  "id": "verification",
+                  "duration": 15,
+                  "requires": [
+                    "measurement"
+                  ]
+                }
+              ],
+              "deadline_s": 120,
+              "required_safety_margin_s": 10,
+              "critical_path_s": 105,
+              "critical_path": [
+                "approval",
+                "calibration",
+                "queue",
+                "measurement",
+                "verification"
+              ],
+              "latest_feasible_start_s": 15,
+              "deadline_safe_start_s": 5,
+              "latest_safe_start_s": 5,
+              "equality_qualifies": true,
+              "clock_uncertainty_s": 0,
+              "prerequisites_ready_s": 6,
+              "calibration_expires_s": "NO_EXPIRY_MODELED",
+              "earliest_measurement_completion_s": 96,
+              "status": "SYNTHETIC_FALLBACK_REQUIRED",
+              "next_action": "Recalibrate within the remaining window or wait for another opening."
+            },
+            "calibration_expires_at_89_s": {
+              "clock": "Relative seconds from opening of approved setup",
+              "stages": [
+                {
+                  "id": "approval",
+                  "duration": 20,
+                  "requires": []
+                },
+                {
+                  "id": "survey",
+                  "duration": 40,
+                  "requires": [
+                    "approval"
+                  ]
+                },
+                {
+                  "id": "calibration",
+                  "duration": 45,
+                  "requires": [
+                    "approval"
+                  ]
+                },
+                {
+                  "id": "queue",
+                  "duration": 10,
+                  "requires": [
+                    "survey",
+                    "calibration"
+                  ]
+                },
+                {
+                  "id": "measurement",
+                  "duration": 15,
+                  "requires": [
+                    "queue"
+                  ]
+                },
+                {
+                  "id": "verification",
+                  "duration": 15,
+                  "requires": [
+                    "measurement"
+                  ]
+                }
+              ],
+              "deadline_s": 120,
+              "required_safety_margin_s": 10,
+              "critical_path_s": 105,
+              "critical_path": [
+                "approval",
+                "calibration",
+                "queue",
+                "measurement",
+                "verification"
+              ],
+              "latest_feasible_start_s": 15,
+              "deadline_safe_start_s": 5,
+              "latest_safe_start_s": -1,
+              "equality_qualifies": true,
+              "clock_uncertainty_s": 0,
+              "prerequisites_ready_s": 0,
+              "calibration_expires_s": 89,
+              "earliest_measurement_completion_s": 90,
+              "status": "SYNTHETIC_FALLBACK_REQUIRED",
+              "next_action": "Recalibrate within the remaining window or wait for another opening."
+            },
+            "clock_uncertainty_is_2_s": {
+              "clock": "Relative seconds from opening of approved setup",
+              "stages": [
+                {
+                  "id": "approval",
+                  "duration": 20,
+                  "requires": []
+                },
+                {
+                  "id": "survey",
+                  "duration": 40,
+                  "requires": [
+                    "approval"
+                  ]
+                },
+                {
+                  "id": "calibration",
+                  "duration": 45,
+                  "requires": [
+                    "approval"
+                  ]
+                },
+                {
+                  "id": "queue",
+                  "duration": 10,
+                  "requires": [
+                    "survey",
+                    "calibration"
+                  ]
+                },
+                {
+                  "id": "measurement",
+                  "duration": 15,
+                  "requires": [
+                    "queue"
+                  ]
+                },
+                {
+                  "id": "verification",
+                  "duration": 15,
+                  "requires": [
+                    "measurement"
+                  ]
+                }
+              ],
+              "deadline_s": 120,
+              "required_safety_margin_s": 10,
+              "critical_path_s": 105,
+              "critical_path": [
+                "approval",
+                "calibration",
+                "queue",
+                "measurement",
+                "verification"
+              ],
+              "latest_feasible_start_s": 15,
+              "deadline_safe_start_s": 3,
+              "latest_safe_start_s": 3,
+              "equality_qualifies": true,
+              "clock_uncertainty_s": 2,
+              "prerequisites_ready_s": 0,
+              "calibration_expires_s": "NO_EXPIRY_MODELED",
+              "earliest_measurement_completion_s": 92,
+              "status": "SYNTHETIC_WINDOW_OPEN",
+              "next_action": "Prepare and verify prerequisites."
+            }
+          }
+        },
+        "sources": [
+          {
+            "id": "bipm-si",
+            "title": "BIPM definition of the metre",
+            "url": "https://www.bipm.org/en/si-base-units/metre"
+          },
+          {
+            "id": "supplied-brief",
+            "title": "User-supplied master prompt, sections 8\u201310",
+            "url": "../MASTER_PROMPT.txt"
+          }
+        ],
+        "limits": [
+          "The 11.42 m path is a supplied modeled median. The 0.996c speed is hypothetical.",
+          "The first wall hit and the circumference of the accelerator describe different paths.",
+          "These alternatives match flight time in the simplified model. Actual speed, path and calibration are unresolved."
+        ],
+        "next_check": "Independently survey the path and calibrate both timing endpoints, including shared references."
+      },
+      "REVERSE": {
+        "schema_version": 1,
+        "case": "cern",
+        "operation": "REVERSE",
+        "status": "HISTORICAL_VIEW",
+        "summary": "The 2024 cutoff retains the schedule and Run 4 plan as then reported.",
+        "details": {
+          "cutoff_date": "2024-10-04",
+          "perspective": "Public availability in the selected records",
+          "available_at_cutoff": [
+            {
+              "event": "Revised schedule announced",
+              "event_date": "2024-10-04",
+              "available_date": "2024-10-04",
+              "evidence_kind": "REPORTED_OBSERVATION",
+              "source": "cern-2024-schedule"
+            },
+            {
+              "event": "Planned start of Run 4",
+              "event_month": "2030-06",
+              "available_date": "2024-10-04",
+              "evidence_kind": "FORECAST",
+              "source": "cern-2024-schedule"
+            }
+          ],
+          "later_evidence": [
+            {
+              "event": "Last beams dumped",
+              "event_date": "2026-06-27",
+              "available_date": "2026-06-29",
+              "evidence_kind": "REPORTED_OBSERVATION",
+              "source": "cern-2026-last-beams"
+            },
+            {
+              "event": "LHC enters Long Shutdown 3",
+              "event_date": "2026-06-29",
+              "available_date": "2026-06-29",
+              "evidence_kind": "REPORTED_OBSERVATION",
+              "source": "cern-2026-ls3"
+            }
+          ],
+          "recorded_release_day_precision": "Calendar day",
+          "external_effects": "NONE"
+        },
+        "sources": [
+          {
+            "id": "cern-2024-schedule",
+            "title": "CERN accelerator schedule, October 4, 2024",
+            "url": "https://home.cern/updated-schedule-cerns-accelerators/"
+          },
+          {
+            "id": "cern-2026-last-beams",
+            "title": "CERN operations report, June 29, 2026",
+            "url": "https://home.cern/so-long-and-thanks-for-all-the-collisions-2/"
+          },
+          {
+            "id": "cern-2026-ls3",
+            "title": "CERN Long Shutdown 3 announcement, June 29, 2026",
+            "url": "https://home.cern/cern-bids-farewell-to-the-lhc-and-enters-long-shutdown-3/"
+          }
+        ],
+        "limits": [
+          "The 11.42 m path is a supplied modeled median. The 0.996c speed is hypothetical.",
+          "The first wall hit and the circumference of the accelerator describe different paths.",
+          "These alternatives match flight time in the simplified model. Actual speed, path and calibration are unresolved."
+        ],
+        "next_check": "Independently survey the path and calibrate both timing endpoints, including shared references."
+      },
+      "CERTIFY": {
+        "schema_version": 1,
+        "case": "cern",
+        "operation": "CERTIFY",
+        "status": "PROVED_IN_MODEL",
+        "summary": "About 153 ps and 4.6 cm are equivalent in the declared flight-time model.",
+        "details": {
+          "property": "Mathematical equivalence of two flight times",
+          "assumptions": [
+            "Constant speed along each path",
+            "Identical endpoint time reference",
+            "Fixed SI value of c"
+          ],
+          "proof": {
+            "path_m": "11.42",
+            "hypothetical_speed_over_c": "0.996",
+            "reference_c_m_per_s": 299792458,
+            "reference_time_ns": 38.093019672,
+            "hypothetical_time_ns": 38.246003686,
+            "delay_ps": 152.984014745,
+            "equivalent_extra_path_cm": 4.586345382,
+            "delay_s_exact": "571/3732416102100",
+            "extra_path_m_exact": "571/12450",
+            "method": "t = L/v, extra_path = L * (1/r - 1), r = v/c"
+          },
+          "cross_checks": {
+            "historical_31_450_m": {
+              "path_m": "31.450",
+              "hypothetical_speed_over_c": "0.996",
+              "reference_c_m_per_s": 299792458,
+              "reference_time_ns": 104.90590794,
+              "hypothetical_time_ns": 105.327216807,
+              "delay_ps": 421.308867228,
+              "equivalent_extra_path_cm": 12.630522088,
+              "delay_s_exact": "629/1492966440840",
+              "extra_path_m_exact": "629/4980",
+              "method": "t = L/v, extra_path = L * (1/r - 1), r = v/c"
+            },
+            "one_kilometre": {
+              "path_m": "1000",
+              "hypothetical_speed_over_c": "0.996",
+              "reference_c_m_per_s": 299792458,
+              "reference_time_ns": 3335.640951982,
+              "hypothetical_time_ns": 3349.037100383,
+              "delay_ps": 13396.148401532,
+              "equivalent_extra_path_cm": 401.606425703,
+              "delay_s_exact": "500/37324161021",
+              "extra_path_m_exact": "1000/249",
+              "method": "t = L/v, extra_path = L * (1/r - 1), r = v/c"
+            },
+            "one_centimetre_at_c_ps": 33.35640952
+          },
+          "invalidation": "Recompute for a changed path, speed ratio, propagation model or synchronization assumption.",
+          "context": {
+            "published": [
+              {
+                "source": "alvager-1964",
+                "evidence_kind": "REPORTED_OBSERVATION",
+                "scope": "1964 CERN Proton Synchrotron gamma ray flight measurement",
+                "speed_km_per_s": 299770,
+                "reported_uncertainty_km_per_s": 40,
+                "baseline_m": "31.450",
+                "baseline_uncertainty_m": "0.0015",
+                "materials_reported": [
+                  "air",
+                  "beryllium",
+                  "Mylar"
+                ]
+              },
+              {
+                "source": "bailey-1977",
+                "evidence_kind": "REPORTED_OBSERVATION",
+                "scope": "1977 relativistic muon lifetime measurement in the CERN storage ring"
+              },
+              {
+                "source": "opera-2012",
+                "evidence_kind": "REPORTED_OBSERVATION",
+                "scope": "Corrected OPERA neutrino timing analysis"
+              },
+              {
+                "source": "opera-dedicated-2012",
+                "evidence_kind": "REPORTED_OBSERVATION",
+                "scope": "Dedicated 2012 OPERA neutrino run was compatible with zero timing discrepancy within uncertainty"
+              },
+              {
+                "source": "cern-opera-timing",
+                "evidence_kind": "REPORTED_OBSERVATION",
+                "scope": "CERN attributed the earlier anomaly to the fibre-optic timing system."
+              },
+              {
+                "source": "giovannini-2015",
+                "evidence_kind": "REPORTED_OBSERVATION",
+                "scope": "Axial group delay of spatially structured optical beams"
+              },
+              {
+                "source": "cern-machine",
+                "evidence_kind": "SPECIFICATION",
+                "scope": "Nominal LHC dipole length, bending radius and beam-screen opening",
+                "dipole_m": "14.3",
+                "radius_m": "2803.95",
+                "opening_mm": [
+                  "44.04",
+                  "34.28"
+                ],
+                "ring_circumference_km_approx": "26.7"
+              },
+              {
+                "source": "cern-vacuum",
+                "evidence_kind": "SPECIFICATION",
+                "scope": "General beam-pipe and cryogenic vacuum context",
+                "sector_pressure_on_shutdown": "UNKNOWN"
+              },
+              {
+                "source": "nal-1968-design",
+                "evidence_kind": "SPECIFICATION",
+                "scope": "1968 National Accelerator Laboratory design, PDF page 81. About 99.6% of c describes 10 BeV injection protons."
+              }
+            ],
+            "bipm": {
+              "evidence_kind": "CALCULATION_FROM_PUBLISHED_DATA",
+              "period": [
+                "2026-06-08",
+                "2026-07-12"
+              ],
+              "estimator": "Select laboratories with data on all 35 UTC days. Compute the median of each laboratory's consecutive daily changes in UTCr\u2212UTC(k).",
+              "complete_laboratories": 59,
+              "any_data_laboratories": 67,
+              "changes_27_to_30_jun_ns": [
+                "-0.1",
+                "0.1",
+                "-0.3"
+              ],
+              "bern_wabern_27_to_30_jun_ns": [
+                "0.8",
+                "0.8",
+                "0.9",
+                "0.9"
+              ],
+              "five_day_cross_check": {
+                "series": "UTC\u2212UTC(k) in Circular T, distinct from UTCr\u2212UTC(k)",
+                "bern_wabern_mjd": [
+                  61214,
+                  61219,
+                  61224
+                ],
+                "bern_wabern_ns": [
+                  "0.8",
+                  "0.8",
+                  "0.8"
+                ]
+              },
+              "tai_scale_intervals": [
+                {
+                  "circular": 462,
+                  "mjd": [
+                    61189,
+                    61219
+                  ],
+                  "d_in_1e_minus_15": "-0.30",
+                  "u_in_1e_minus_15": "0.09"
+                },
+                {
+                  "circular": 463,
+                  "mjd": [
+                    61219,
+                    61249
+                  ],
+                  "d_in_1e_minus_15": "-0.09",
+                  "u_in_1e_minus_15": "0.12"
+                }
+              ],
+              "limit": "Daily relative offsets and monthly averages leave short-lived, site-specific, and common-mode effects unresolved."
+            },
+            "supplied": {
+              "status": "NOT_REPRODUCED",
+              "notes": [
+                "The supplied CMS figure is attributed to sample purity. Its original CMS citation remains unverified.",
+                "The claim of modern LHC photons at 0.996c has no verified source."
+              ],
+              "trajectory_10000_gap_m": [
+                0,
+                1,
+                2
+              ],
+              "trajectory_10000_medians_m": [
+                "11.10",
+                "11.46",
+                "11.75"
+              ],
+              "trajectory_100000": {
+                "batches": 100,
+                "cases_per_batch": 1000,
+                "classifications": {
+                  "emitting_bend": 22253,
+                  "gap": 6603,
+                  "next_bend": 71144
+                },
+                "median_path_m": "11.42",
+                "supplied_median_arrival_times_ns": [
+                  "38.091",
+                  "38.244"
+                ],
+                "precision_difference": "Using the literal rounded 11.42 m gives 38.0930 and 38.2460 ns. The underlying unrounded path is unavailable.",
+                "paired_middle_90_percent_delay_ps": [
+                  142,
+                  169
+                ],
+                "reference_middle_90_percent_arrival_ns": [
+                  "35.42",
+                  "42.14"
+                ],
+                "inputs": "Stratified emission point and horizontal launch angle, vertical angles and starting offsets, gaps of 0\u20132 m.",
+                "missing": "Original seed, exact sampler, solver version, and per-trial records."
+              },
+              "solver_benchmark": {
+                "reference_bisection_steps": 45,
+                "supplied_max_path_difference_pm_lt": "0.4",
+                "runs": 11,
+                "supplied_reference_median_ms": "66.7",
+                "supplied_direct_median_ms": "3.06",
+                "missing": "Original solver and timing environment."
+              },
+              "baseline_slope_trials": {
+                "trials_per_scenario": 10000,
+                "baselines_m": [
+                  5,
+                  10,
+                  20
+                ],
+                "per_baseline_random_uncertainty_ps": 3,
+                "path_slope_and_speed_slope_are_equivalent_ps_per_m": "13.4",
+                "missing": "Original noise model, seed, and classification rule."
+              }
+            }
+          }
+        },
+        "sources": [
+          {
+            "id": "bipm-si",
+            "title": "BIPM definition of the metre",
+            "url": "https://www.bipm.org/en/si-base-units/metre"
+          },
+          {
+            "id": "alvager-1964",
+            "title": "Alv\u00e4ger et al., Physics Letters 12, 260\u2013262",
+            "url": "https://www.sciencedirect.com/science/article/abs/pii/0031916364910959"
+          },
+          {
+            "id": "bailey-1977",
+            "title": "Bailey et al., CERN muon lifetime experiment",
+            "url": "https://www.nature.com/articles/268301a0"
+          },
+          {
+            "id": "opera-2012",
+            "title": "OPERA Collaboration, corrected timing measurement",
+            "url": "https://arxiv.org/abs/1109.4897v4"
+          },
+          {
+            "id": "opera-dedicated-2012",
+            "title": "OPERA Collaboration, dedicated 2012 beam data",
+            "url": "https://arxiv.org/abs/1212.1276v2"
+          },
+          {
+            "id": "cern-opera-timing",
+            "title": "CERN OPERA update, June 8, 2012",
+            "url": "https://home.cern/opera-experiment-reports-anomaly-in-flight-time-of-neutrinos-from-cern-to-gran-sasso/"
+          },
+          {
+            "id": "giovannini-2015",
+            "title": "Giovannini et al., spatially structured light",
+            "url": "https://arxiv.org/abs/1411.3987"
+          },
+          {
+            "id": "cern-vacuum",
+            "title": "CERN descriptions of the LHC vacuum systems",
+            "url": "https://home.cern/science/engineering/vacuum-empty-interstellar-space"
+          },
+          {
+            "id": "cern-machine",
+            "title": "CERN LHC Machine design report, 2008",
+            "url": "https://cds.cern.ch/record/1129806/files/jinst8_08_s08001.pdf"
+          },
+          {
+            "id": "cern-hilumi-design",
+            "title": "CERN HL-LHC Technical Design Report, CERN-2020-010",
+            "url": "https://e-publishing.cern.ch/index.php/CYRM/article/download/1188/986/4985"
+          },
+          {
+            "id": "nal-1968-design",
+            "title": "National Accelerator Laboratory design report, 1968",
+            "url": "https://lss.fnal.gov/archive/design/fermilab-design-1968-01.pdf"
+          },
+          {
+            "id": "bipm-rapid-utc",
+            "title": "BIPM Rapid UTC files 2624\u20132628",
+            "url": "https://webtai.bipm.org/ftp/pub/tai/Rapid-UTC/utcr/"
+          },
+          {
+            "id": "bipm-circular-t-462",
+            "title": "BIPM Circular T 462",
+            "url": "https://webtai.bipm.org/ftp/pub/tai/Circular-T/cirt/cirt.462"
+          },
+          {
+            "id": "bipm-circular-t-463",
+            "title": "BIPM Circular T 463",
+            "url": "https://webtai.bipm.org/ftp/pub/tai/Circular-T/cirt/cirt.463"
+          },
+          {
+            "id": "supplied-brief",
+            "title": "User-supplied master prompt, sections 8\u201310",
+            "url": "../MASTER_PROMPT.txt"
+          }
+        ],
+        "limits": [
+          "The 11.42 m path is a supplied modeled median. The 0.996c speed is hypothetical.",
+          "The first wall hit and the circumference of the accelerator describe different paths.",
+          "These alternatives match flight time in the simplified model. Actual speed, path and calibration are unresolved."
+        ],
+        "next_check": "Independently survey the path and calibrate both timing endpoints, including shared references."
+      }
+    },
+    "cenomanian": {
+      "PINPOINT": {
+        "schema_version": 1,
+        "case": "cenomanian",
+        "operation": "PINPOINT",
+        "status": "AMBIGUOUS",
+        "summary": "The regional reconstruction supports a coastal plain. The chosen point could be dry or flooded at the target age.",
+        "details": {
+          "stage": "Cenomanian",
+          "bounds": {
+            "older_boundary_ma": [
+              "100.4",
+              "100.6"
+            ],
+            "younger_boundary_ma": [
+              "93.7",
+              "94.1"
+            ],
+            "target_ma": "100.0",
+            "units": "Millions of years before present",
+            "chart_version": "2026/06"
+          },
+          "regional": "Coastal plain near the western shore of the Western Interior Seaway, near the present-day Colorado Front Range.",
+          "possible_local_states": [
+            "DRY",
+            "FLOODED"
+          ],
+          "synthetic_local_transition_ma": [
+            "99.5",
+            "100.5"
+          ]
+        },
+        "sources": [
+          {
+            "id": "ics-chart-2026-06",
+            "title": "International Chronostratigraphic Chart v2026/06",
+            "url": "https://stratigraphy.org/chart/?scale=linear"
+          },
+          {
+            "id": "nps-dinosaur-freeway",
+            "title": "National Park Service, A Dinosaur Freeway",
+            "url": "https://www.nps.gov/subjects/fossils/dinosaur-freeway.htm"
+          },
+          {
+            "id": "nps-volcanoes-fossils",
+            "title": "National Park Service, Volcanoes and Fossils",
+            "url": "https://www.nps.gov/subjects/fossils/volcanoes-and-fossils.htm"
+          },
+          {
+            "id": "supplied-brief",
+            "title": "User-supplied master prompt, sections 8\u201310",
+            "url": "../MASTER_PROMPT.txt"
+          }
+        ],
+        "limits": [
+          "The regional evidence has coarser spatial and temporal resolution than a single point at an instant.",
+          "The 100.5\u201399.5 Ma bracket is a synthetic assumption.",
+          "Quoted numerical boundary ranges belong to chart v2026/06 and are used as model bounds here."
+        ],
+        "next_check": "Find and correlate a dated local layer that brackets the transition. Check for reworked material and dating uncertainty."
+      },
+      "TRAVEL": {
+        "schema_version": 1,
+        "case": "cenomanian",
+        "operation": "TRAVEL",
+        "status": "CONDITIONAL",
+        "summary": "A local dated horizon plus a justified stratigraphic correlation can narrow the flooding interval.",
+        "details": {
+          "options": [
+            "Inspect local sedimentary facies and identify a flooding surface",
+            "Date a suitable primary ash layer and assess whether it was reworked",
+            "Record interval overlap and retain both states if the bracket still contains 100.0 Ma"
+          ]
+        },
+        "sources": [
+          {
+            "id": "ics-chart-2026-06",
+            "title": "International Chronostratigraphic Chart v2026/06",
+            "url": "https://stratigraphy.org/chart/?scale=linear"
+          },
+          {
+            "id": "nps-dinosaur-freeway",
+            "title": "National Park Service, A Dinosaur Freeway",
+            "url": "https://www.nps.gov/subjects/fossils/dinosaur-freeway.htm"
+          },
+          {
+            "id": "nps-volcanoes-fossils",
+            "title": "National Park Service, Volcanoes and Fossils",
+            "url": "https://www.nps.gov/subjects/fossils/volcanoes-and-fossils.htm"
+          },
+          {
+            "id": "supplied-brief",
+            "title": "User-supplied master prompt, sections 8\u201310",
+            "url": "../MASTER_PROMPT.txt"
+          }
+        ],
+        "limits": [
+          "The regional evidence has coarser spatial and temporal resolution than a single point at an instant.",
+          "The 100.5\u201399.5 Ma bracket is a synthetic assumption.",
+          "Quoted numerical boundary ranges belong to chart v2026/06 and are used as model bounds here."
+        ],
+        "next_check": "Find and correlate a dated local layer that brackets the transition. Check for reworked material and dating uncertainty."
+      },
+      "REVERSE": {
+        "schema_version": 1,
+        "case": "cenomanian",
+        "operation": "REVERSE",
+        "status": "HISTORICAL_VIEW",
+        "summary": "The regional evidence and the synthetic local bracket can be recovered as separate records.",
+        "details": {
+          "available_at_regional_only_checkpoint": {
+            "regional_conclusion": "Regional coastal plain",
+            "local_state": "UNKNOWN"
+          },
+          "later_fixture": {
+            "type": "ASSUMPTION",
+            "synthetic_local_transition_ma": [
+              "99.5",
+              "100.5"
+            ],
+            "possible_local_states": [
+              "DRY",
+              "FLOODED"
+            ]
+          }
+        },
+        "sources": [
+          {
+            "id": "ics-chart-2026-06",
+            "title": "International Chronostratigraphic Chart v2026/06",
+            "url": "https://stratigraphy.org/chart/?scale=linear"
+          },
+          {
+            "id": "nps-dinosaur-freeway",
+            "title": "National Park Service, A Dinosaur Freeway",
+            "url": "https://www.nps.gov/subjects/fossils/dinosaur-freeway.htm"
+          },
+          {
+            "id": "nps-volcanoes-fossils",
+            "title": "National Park Service, Volcanoes and Fossils",
+            "url": "https://www.nps.gov/subjects/fossils/volcanoes-and-fossils.htm"
+          },
+          {
+            "id": "supplied-brief",
+            "title": "User-supplied master prompt, sections 8\u201310",
+            "url": "../MASTER_PROMPT.txt"
+          }
+        ],
+        "limits": [
+          "The regional evidence has coarser spatial and temporal resolution than a single point at an instant.",
+          "The 100.5\u201399.5 Ma bracket is a synthetic assumption.",
+          "Quoted numerical boundary ranges belong to chart v2026/06 and are used as model bounds here."
+        ],
+        "next_check": "Find and correlate a dated local layer that brackets the transition. Check for reworked material and dating uncertainty."
+      },
+      "CERTIFY": {
+        "schema_version": 1,
+        "case": "cenomanian",
+        "operation": "CERTIFY",
+        "status": "PROVED_IN_BOUNDS",
+        "summary": "100.0 Ma lies inside the Cenomanian for every combination of the declared boundary ranges.",
+        "details": {
+          "property": "Interval membership",
+          "bounds": {
+            "older_boundary_ma": [
+              "100.4",
+              "100.6"
+            ],
+            "younger_boundary_ma": [
+              "93.7",
+              "94.1"
+            ],
+            "target_ma": "100.0",
+            "units": "Millions of years before present",
+            "chart_version": "2026/06"
+          },
+          "membership": "INSIDE_FOR_ALL_BOUNDS",
+          "proof": "94.1 < 100.0 < 100.4 in Ma before present.",
+          "invalidation": "Recheck membership if chart version, numerical bounds or target age change.",
+          "local_flooding": "AMBIGUOUS"
+        },
+        "sources": [
+          {
+            "id": "ics-chart-2026-06",
+            "title": "International Chronostratigraphic Chart v2026/06",
+            "url": "https://stratigraphy.org/chart/?scale=linear"
+          },
+          {
+            "id": "nps-dinosaur-freeway",
+            "title": "National Park Service, A Dinosaur Freeway",
+            "url": "https://www.nps.gov/subjects/fossils/dinosaur-freeway.htm"
+          },
+          {
+            "id": "nps-volcanoes-fossils",
+            "title": "National Park Service, Volcanoes and Fossils",
+            "url": "https://www.nps.gov/subjects/fossils/volcanoes-and-fossils.htm"
+          },
+          {
+            "id": "supplied-brief",
+            "title": "User-supplied master prompt, sections 8\u201310",
+            "url": "../MASTER_PROMPT.txt"
+          }
+        ],
+        "limits": [
+          "The regional evidence has coarser spatial and temporal resolution than a single point at an instant.",
+          "The 100.5\u201399.5 Ma bracket is a synthetic assumption.",
+          "Quoted numerical boundary ranges belong to chart v2026/06 and are used as model bounds here."
+        ],
+        "next_check": "Find and correlate a dated local layer that brackets the transition. Check for reworked material and dating uncertainty."
+      }
+    },
+    "archive": {
+      "PINPOINT": {
+        "schema_version": 1,
+        "case": "archive",
+        "operation": "PINPOINT",
+        "status": "BOUNDED",
+        "summary": "Keeping 10 of 10,000 records leaves about a 0.599% chance of preserving any of the six decisive records.",
+        "details": {
+          "retained": 10,
+          "population": 10000,
+          "decisive": 6,
+          "exact_probability": "7187997070998829/1200698472552943000",
+          "supplied_recoveries": 62,
+          "supplied_trials": 10000,
+          "supplied_reproduction": "ORIGINAL_SEED_UNAVAILABLE"
+        },
+        "sources": [
+          {
+            "id": "supplied-brief",
+            "title": "User-supplied master prompt, sections 8\u201310",
+            "url": "../MASTER_PROMPT.txt"
+          }
+        ],
+        "limits": [
+          "Synthetic uniform sample without replacement within each trial. The study assumes separate trials.",
+          "Summary survival and regional claim recovery are separate from underlying evidence and provenance.",
+          "The original random seed was unavailable. The independent re-run uses predeclared, different seeds."
+        ],
+        "next_check": "Test survival across independent failure domains and try rebuilding after losing the summary, frame, calibration and trust anchor."
+      },
+      "TRAVEL": {
+        "schema_version": 1,
+        "case": "archive",
+        "operation": "TRAVEL",
+        "status": "CONDITIONAL",
+        "summary": "A compact summary preserves meaning if it survives. Independent copies protect more of the source evidence.",
+        "details": {
+          "alternatives": [
+            {
+              "design": "Two full copies",
+              "storage_relative": "2",
+              "failure_boundary": "Either copy independently survives."
+            },
+            {
+              "design": "Compact summary plus separate original",
+              "storage_relative": "1 plus summary size",
+              "failure_boundary": "A surviving summary alone gives bounded meaning and no original record bytes."
+            },
+            {
+              "design": "Two-of-three XOR coding",
+              "storage_relative": "About 1.5 binary payloads plus framing and Base64",
+              "failure_boundary": "Recover one shard erasure with any two intact shards, a compatible decoder and a separately trusted digest.",
+              "status": "VERIFIED_BOUNDED_IMPLEMENTATION"
+            }
+          ],
+          "shared_failure_domains": [
+            "Storage account",
+            "Archive decoder",
+            "Unit and frame registry",
+            "Verification key"
+          ]
+        },
+        "sources": [
+          {
+            "id": "supplied-brief",
+            "title": "User-supplied master prompt, sections 8\u201310",
+            "url": "../MASTER_PROMPT.txt"
+          }
+        ],
+        "limits": [
+          "Synthetic uniform sample without replacement within each trial. The study assumes separate trials.",
+          "Summary survival and regional claim recovery are separate from underlying evidence and provenance.",
+          "The original random seed was unavailable. The independent re-run uses predeclared, different seeds."
+        ],
+        "next_check": "Test survival across independent failure domains and try rebuilding after losing the summary, frame, calibration and trust anchor."
+      },
+      "REVERSE": {
+        "schema_version": 1,
+        "case": "archive",
+        "operation": "REVERSE",
+        "status": "SIMULATED_RECOVERY",
+        "summary": "The survivor list determines what can still be understood, checked, or recovered.",
+        "details": {
+          "original_missing": {
+            "decisive_original_bytes_available": false,
+            "claim_meaning": "BOUNDED_SUMMARY",
+            "original_provenance": "UNRESOLVED",
+            "underlying_evidence": "INCOMPLETE",
+            "local_flooding": "AMBIGUOUS"
+          },
+          "targeted_removal": {
+            "decisive_original_bytes_available": false,
+            "claim_meaning": "UNRECOVERABLE",
+            "original_provenance": "UNRESOLVED",
+            "underlying_evidence": "INCOMPLETE",
+            "local_flooding": "UNRECOVERABLE"
+          },
+          "frame_missing": {
+            "decisive_original_bytes_available": true,
+            "claim_meaning": "AMBIGUOUS",
+            "original_provenance": "CHECKABLE",
+            "underlying_evidence": "INCOMPLETE",
+            "local_flooding": "UNRECOVERABLE"
+          },
+          "shared_calibration_loss": {
+            "decisive_original_bytes_available": true,
+            "claim_meaning": "BOUNDED",
+            "original_provenance": "CHECKABLE",
+            "underlying_evidence": "INCOMPLETE",
+            "local_flooding": "AMBIGUOUS"
+          },
+          "trust_anchor_missing_or_revoked": {
+            "decisive_original_bytes_available": true,
+            "claim_meaning": "BOUNDED",
+            "original_provenance": "UNRESOLVED",
+            "underlying_evidence": "AVAILABLE",
+            "local_flooding": "AMBIGUOUS"
+          }
+        },
+        "sources": [
+          {
+            "id": "supplied-brief",
+            "title": "User-supplied master prompt, sections 8\u201310",
+            "url": "../MASTER_PROMPT.txt"
+          }
+        ],
+        "limits": [
+          "Synthetic uniform sample without replacement within each trial. The study assumes separate trials.",
+          "Summary survival and regional claim recovery are separate from underlying evidence and provenance.",
+          "The original random seed was unavailable. The independent re-run uses predeclared, different seeds."
+        ],
+        "next_check": "Test survival across independent failure domains and try rebuilding after losing the summary, frame, calibration and trust anchor."
+      },
+      "CERTIFY": {
+        "schema_version": 1,
+        "case": "archive",
+        "operation": "CERTIFY",
+        "status": "VERIFIED_SYNTHETIC_MODEL",
+        "summary": "Exact combinatorics and two independently seeded simulations describe the specified random-loss model.",
+        "details": {
+          "probability_formula": "1 \u2212 C(N\u2212D,k)/C(N,k), for N records, D decisive records, and k retained",
+          "independent_runs": [
+            {
+              "evidence_kind": "SIMULATION",
+              "seed": 20261113,
+              "trials": 10000,
+              "population": 10000,
+              "records_retained_per_trial": 10,
+              "decisive_records": 6,
+              "recoveries": 61,
+              "frequency": 0.0061,
+              "wilson_95_interval": [
+                0.004752103,
+                0.00782721
+              ],
+              "analytic_probability": 0.005986513046623273,
+              "analytic_probability_exact": "7187997070998829/1200698472552943000",
+              "model_version": "future-reader/archive/v1",
+              "sampler": "Uniform Floyd sampling per trial. Draw SHA-256 of ASCII model/seed/counter, take first eight bytes as a big-endian integer and use rejection before taking a remainder."
+            },
+            {
+              "evidence_kind": "SIMULATION",
+              "seed": 20261114,
+              "trials": 10000,
+              "population": 10000,
+              "records_retained_per_trial": 10,
+              "decisive_records": 6,
+              "recoveries": 68,
+              "frequency": 0.0068,
+              "wilson_95_interval": [
+                0.005367876,
+                0.0086109
+              ],
+              "analytic_probability": 0.005986513046623273,
+              "analytic_probability_exact": "7187997070998829/1200698472552943000",
+              "model_version": "future-reader/archive/v1",
+              "sampler": "Uniform Floyd sampling per trial. Draw SHA-256 of ASCII model/seed/counter, take first eight bytes as a big-endian integer and use rejection before taking a remainder."
+            }
+          ],
+          "supplied_only": {
+            "trials": 10000,
+            "random_hits": 62,
+            "summary_hits_conditional_on_survival": 10000,
+            "targeted_hits": 0,
+            "original_seed": "UNKNOWN"
+          },
+          "conditional_summary_recoveries": {
+            "condition": "Summary, its frame and units survive",
+            "trials": 10000,
+            "meaning_recoveries": 10000,
+            "underlying_evidence_restored_by_summary": false
+          },
+          "targeted_removal": {
+            "removed": [
+              "all six decisive records",
+              "summary"
+            ],
+            "recoveries": 0
+          },
+          "shard_recovery": {
+            "algorithm": "xor-2-of-3/v1",
+            "single_shard_losses": 3,
+            "exact_recoveries": 3,
+            "original_size": 81,
+            "original_sha256": "0880fe3596885fb03e3402d932920f66bade06d5a1118c97206e6e5f6e79b687",
+            "shared_failure": "With two shards missing or no trusted digest, original bytes are unavailable."
+          }
+        },
+        "sources": [
+          {
+            "id": "supplied-brief",
+            "title": "User-supplied master prompt, sections 8\u201310",
+            "url": "../MASTER_PROMPT.txt"
+          }
+        ],
+        "limits": [
+          "Synthetic uniform sample without replacement within each trial. The study assumes separate trials.",
+          "Summary survival and regional claim recovery are separate from underlying evidence and provenance.",
+          "The original random seed was unavailable. The independent re-run uses predeclared, different seeds."
+        ],
+        "next_check": "Test survival across independent failure domains and try rebuilding after losing the summary, frame, calibration and trust anchor."
+      }
+    },
+    "supplied-studies": {
+      "PINPOINT": {
+        "schema_version": 1,
+        "case": "supplied-studies",
+        "operation": "PINPOINT",
+        "status": "UNRESOLVED",
+        "summary": "The brief reports large timing and optimization runs. Their original inputs and logs are unavailable.",
+        "details": {
+          "supplied": {
+            "timing_steps": 10000000,
+            "reported_convergence_percent": "99.4",
+            "reported_latency_median_multiplier": "3.2",
+            "modeled_years": 100000000,
+            "claimed_adversarial_trials": 10000000000
+          },
+          "needed": [
+            "Exact workload and model revision",
+            "Random seeds and trial independence",
+            "Drift and clock skew models",
+            "Decision/outcome denominators",
+            "Raw traces and stopping rules"
+          ],
+          "scope": "Supplied hypotheses pending reproducible inputs and outputs."
+        },
+        "sources": [
+          {
+            "id": "supplied-brief",
+            "title": "User-supplied master prompt, sections 8\u201310",
+            "url": "../MASTER_PROMPT.txt"
+          }
+        ],
+        "limits": [
+          "Modeled years, wall-clock runtime, steps, trials and empirical observations are distinct."
+        ],
+        "next_check": "Obtain a pinned workload with outcome definitions, then compare cutoffs on held-out scenarios."
+      },
+      "TRAVEL": {
+        "schema_version": 1,
+        "case": "supplied-studies",
+        "operation": "TRAVEL",
+        "status": "UNRESOLVED",
+        "summary": "The brief reports large timing and optimization runs. Their original inputs and logs are unavailable.",
+        "details": {
+          "supplied": {
+            "timing_steps": 10000000,
+            "reported_convergence_percent": "99.4",
+            "reported_latency_median_multiplier": "3.2",
+            "modeled_years": 100000000,
+            "claimed_adversarial_trials": 10000000000
+          },
+          "needed": [
+            "Exact workload and model revision",
+            "Random seeds and trial independence",
+            "Drift and clock skew models",
+            "Decision/outcome denominators",
+            "Raw traces and stopping rules"
+          ],
+          "scope": "Supplied hypotheses pending reproducible inputs and outputs."
+        },
+        "sources": [
+          {
+            "id": "supplied-brief",
+            "title": "User-supplied master prompt, sections 8\u201310",
+            "url": "../MASTER_PROMPT.txt"
+          }
+        ],
+        "limits": [
+          "Modeled years, wall-clock runtime, steps, trials and empirical observations are distinct."
+        ],
+        "next_check": "Obtain a pinned workload with outcome definitions, then compare cutoffs on held-out scenarios."
+      },
+      "REVERSE": {
+        "schema_version": 1,
+        "case": "supplied-studies",
+        "operation": "REVERSE",
+        "status": "UNRESOLVED",
+        "summary": "The brief reports large timing and optimization runs. Their original inputs and logs are unavailable.",
+        "details": {
+          "supplied": {
+            "timing_steps": 10000000,
+            "reported_convergence_percent": "99.4",
+            "reported_latency_median_multiplier": "3.2",
+            "modeled_years": 100000000,
+            "claimed_adversarial_trials": 10000000000
+          },
+          "needed": [
+            "Exact workload and model revision",
+            "Random seeds and trial independence",
+            "Drift and clock skew models",
+            "Decision/outcome denominators",
+            "Raw traces and stopping rules"
+          ],
+          "scope": "Supplied hypotheses pending reproducible inputs and outputs."
+        },
+        "sources": [
+          {
+            "id": "supplied-brief",
+            "title": "User-supplied master prompt, sections 8\u201310",
+            "url": "../MASTER_PROMPT.txt"
+          }
+        ],
+        "limits": [
+          "Modeled years, wall-clock runtime, steps, trials and empirical observations are distinct."
+        ],
+        "next_check": "Obtain a pinned workload with outcome definitions, then compare cutoffs on held-out scenarios."
+      },
+      "CERTIFY": {
+        "schema_version": 1,
+        "case": "supplied-studies",
+        "operation": "CERTIFY",
+        "status": "UNRESOLVED",
+        "summary": "The brief reports large timing and optimization runs. Their original inputs and logs are unavailable.",
+        "details": {
+          "supplied": {
+            "timing_steps": 10000000,
+            "reported_convergence_percent": "99.4",
+            "reported_latency_median_multiplier": "3.2",
+            "modeled_years": 100000000,
+            "claimed_adversarial_trials": 10000000000
+          },
+          "needed": [
+            "Exact workload and model revision",
+            "Random seeds and trial independence",
+            "Drift and clock skew models",
+            "Decision/outcome denominators",
+            "Raw traces and stopping rules"
+          ],
+          "scope": "Supplied hypotheses pending reproducible inputs and outputs."
+        },
+        "sources": [
+          {
+            "id": "supplied-brief",
+            "title": "User-supplied master prompt, sections 8\u201310",
+            "url": "../MASTER_PROMPT.txt"
+          }
+        ],
+        "limits": [
+          "Modeled years, wall-clock runtime, steps, trials and empirical observations are distinct."
+        ],
+        "next_check": "Obtain a pinned workload with outcome definitions, then compare cutoffs on held-out scenarios."
+      }
+    }
+  }
+}

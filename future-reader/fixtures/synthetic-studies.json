@@ -1,0 +1,1072 @@
+{
+  "schema": "future-reader.synthetic-studies/1",
+  "status": "VERIFIED_NEW_SYNTHETIC_WORKLOAD",
+  "timing": {
+    "model": "future-reader.horizon-grid/1",
+    "sample_kind": "DETERMINISTIC_STRATIFIED_GRID",
+    "distinct_input_slots": 20000,
+    "independent_trial_count": "NOT_APPLICABLE",
+    "repeat_count": 125,
+    "steps_per_horizon": 2500000,
+    "total_policy_evaluations": 10000000,
+    "configured_grid": {
+      "latency_slots": 1000,
+      "base_median_lower_ticks": 118,
+      "drift_ticks": [
+        -20,
+        0,
+        20,
+        40,
+        60
+      ],
+      "clock_uncertainty_ticks": [
+        0,
+        10,
+        20,
+        40
+      ],
+      "check_kinds": [
+        "PREREQUISITE",
+        "DEADLINE",
+        "FALLBACK",
+        "HAZARD"
+      ],
+      "commit_deadline_ticks": 460,
+      "reserve_for_interpretation_execution_and_recovery_ticks": 45,
+      "equality_eligible": true,
+      "horizon_rounding": "floor to whole ticks"
+    },
+    "smallest_horizon_with_full_grid_agreement_ticks": 414,
+    "matching_definition": "Decision equals the finite reference that knows each check arriving by the last safe commitment.",
+    "late_censoring": "Checks after the last safe commitment are unavailable to the reference and all policies.",
+    "horizons": [
+      {
+        "steps": 2500000,
+        "matched_full_choice": 1190375,
+        "missed_feasible_opportunity": 646875,
+        "consequential_state_not_seen": 662750,
+        "excess_loss": 24755875,
+        "observed_checks": 838500,
+        "waiting_ticks": 270141000,
+        "horizon_ticks": 118,
+        "median_multiplier": "1",
+        "matched_full_choice_fraction": 0.47615,
+        "mean_waiting_ticks": 108.0564
+      },
+      {
+        "steps": 2500000,
+        "matched_full_choice": 2299375,
+        "missed_feasible_opportunity": 99375,
+        "consequential_state_not_seen": 101250,
+        "excess_loss": 3788875,
+        "observed_checks": 1947500,
+        "waiting_ticks": 376157500,
+        "horizon_ticks": 236,
+        "median_multiplier": "2",
+        "matched_full_choice_fraction": 0.91975,
+        "mean_waiting_ticks": 150.463
+      },
+      {
+        "steps": 2500000,
+        "matched_full_choice": 2473750,
+        "missed_feasible_opportunity": 12500,
+        "consequential_state_not_seen": 13750,
+        "excess_loss": 501500,
+        "observed_checks": 2121875,
+        "waiting_ticks": 441620625,
+        "horizon_ticks": 377,
+        "median_multiplier": "16/5",
+        "matched_full_choice_fraction": 0.9895,
+        "mean_waiting_ticks": 176.64825
+      },
+      {
+        "steps": 2500000,
+        "matched_full_choice": 2500000,
+        "missed_feasible_opportunity": 0,
+        "consequential_state_not_seen": 0,
+        "excess_loss": 0,
+        "observed_checks": 2148125,
+        "waiting_ticks": 449149375,
+        "horizon_ticks": 590,
+        "median_multiplier": "5",
+        "matched_full_choice_fraction": 1.0,
+        "mean_waiting_ticks": 179.65975
+      }
+    ],
+    "grid_one_pass": [
+      {
+        "drift_ticks": -20,
+        "clock_uncertainty_ticks": 0,
+        "horizons": [
+          {
+            "steps": 1000,
+            "matched_full_choice": 774,
+            "missed_feasible_opportunity": 109,
+            "consequential_state_not_seen": 117,
+            "excess_loss": 4349,
+            "observed_checks": 662,
+            "waiting_ticks": 91447
+          },
+          {
+            "steps": 1000,
+            "matched_full_choice": 911,
+            "missed_feasible_opportunity": 44,
+            "consequential_state_not_seen": 45,
+            "excess_loss": 1700,
+            "observed_checks": 799,
+            "waiting_ticks": 119123
+          },
+          {
+            "steps": 1000,
+            "matched_full_choice": 981,
+            "missed_feasible_opportunity": 9,
+            "consequential_state_not_seen": 10,
+            "excess_loss": 366,
+            "observed_checks": 869,
+            "waiting_ticks": 142564
+          },
+          {
+            "steps": 1000,
+            "matched_full_choice": 1000,
+            "missed_feasible_opportunity": 0,
+            "consequential_state_not_seen": 0,
+            "excess_loss": 0,
+            "observed_checks": 888,
+            "waiting_ticks": 147181
+          }
+        ]
+      },
+      {
+        "drift_ticks": -20,
+        "clock_uncertainty_ticks": 10,
+        "horizons": [
+          {
+            "steps": 1000,
+            "matched_full_choice": 779,
+            "missed_feasible_opportunity": 107,
+            "consequential_state_not_seen": 114,
+            "excess_loss": 4224,
+            "observed_checks": 662,
+            "waiting_ticks": 91447
+          },
+          {
+            "steps": 1000,
+            "matched_full_choice": 916,
+            "missed_feasible_opportunity": 42,
+            "consequential_state_not_seen": 42,
+            "excess_loss": 1575,
+            "observed_checks": 799,
+            "waiting_ticks": 119123
+          },
+          {
+            "steps": 1000,
+            "matched_full_choice": 986,
+            "missed_feasible_opportunity": 7,
+            "consequential_state_not_seen": 7,
+            "excess_loss": 241,
+            "observed_checks": 869,
+            "waiting_ticks": 142564
+          },
+          {
+            "steps": 1000,
+            "matched_full_choice": 1000,
+            "missed_feasible_opportunity": 0,
+            "consequential_state_not_seen": 0,
+            "excess_loss": 0,
+            "observed_checks": 883,
+            "waiting_ticks": 146036
+          }
+        ]
+      },
+      {
+        "drift_ticks": -20,
+        "clock_uncertainty_ticks": 20,
+        "horizons": [
+          {
+            "steps": 1000,
+            "matched_full_choice": 784,
+            "missed_feasible_opportunity": 104,
+            "consequential_state_not_seen": 112,
+            "excess_loss": 4144,
+            "observed_checks": 662,
+            "waiting_ticks": 91447
+          },
+          {
+            "steps": 1000,
+            "matched_full_choice": 921,
+            "missed_feasible_opportunity": 39,
+            "consequential_state_not_seen": 40,
+            "excess_loss": 1495,
+            "observed_checks": 799,
+            "waiting_ticks": 119123
+          },
+          {
+            "steps": 1000,
+            "matched_full_choice": 991,
+            "missed_feasible_opportunity": 4,
+            "consequential_state_not_seen": 5,
+            "excess_loss": 161,
+            "observed_checks": 869,
+            "waiting_ticks": 142564
+          },
+          {
+            "steps": 1000,
+            "matched_full_choice": 1000,
+            "missed_feasible_opportunity": 0,
+            "consequential_state_not_seen": 0,
+            "excess_loss": 0,
+            "observed_checks": 878,
+            "waiting_ticks": 144841
+          }
+        ]
+      },
+      {
+        "drift_ticks": -20,
+        "clock_uncertainty_ticks": 40,
+        "horizons": [
+          {
+            "steps": 1000,
+            "matched_full_choice": 794,
+            "missed_feasible_opportunity": 99,
+            "consequential_state_not_seen": 107,
+            "excess_loss": 3974,
+            "observed_checks": 662,
+            "waiting_ticks": 91447
+          },
+          {
+            "steps": 1000,
+            "matched_full_choice": 931,
+            "missed_feasible_opportunity": 34,
+            "consequential_state_not_seen": 35,
+            "excess_loss": 1325,
+            "observed_checks": 799,
+            "waiting_ticks": 119123
+          },
+          {
+            "steps": 1000,
+            "matched_full_choice": 1000,
+            "missed_feasible_opportunity": 0,
+            "consequential_state_not_seen": 0,
+            "excess_loss": 0,
+            "observed_checks": 868,
+            "waiting_ticks": 142301
+          },
+          {
+            "steps": 1000,
+            "matched_full_choice": 1000,
+            "missed_feasible_opportunity": 0,
+            "consequential_state_not_seen": 0,
+            "excess_loss": 0,
+            "observed_checks": 868,
+            "waiting_ticks": 142301
+          }
+        ]
+      },
+      {
+        "drift_ticks": 0,
+        "clock_uncertainty_ticks": 0,
+        "horizons": [
+          {
+            "steps": 1000,
+            "matched_full_choice": 624,
+            "missed_feasible_opportunity": 184,
+            "consequential_state_not_seen": 192,
+            "excess_loss": 7144,
+            "observed_checks": 502,
+            "waiting_ticks": 103007
+          },
+          {
+            "steps": 1000,
+            "matched_full_choice": 911,
+            "missed_feasible_opportunity": 44,
+            "consequential_state_not_seen": 45,
+            "excess_loss": 1661,
+            "observed_checks": 789,
+            "waiting_ticks": 134993
+          },
+          {
+            "steps": 1000,
+            "matched_full_choice": 981,
+            "missed_feasible_opportunity": 9,
+            "consequential_state_not_seen": 10,
+            "excess_loss": 370,
+            "observed_checks": 859,
+            "waiting_ticks": 159844
+          },
+          {
+            "steps": 1000,
+            "matched_full_choice": 1000,
+            "missed_feasible_opportunity": 0,
+            "consequential_state_not_seen": 0,
+            "excess_loss": 0,
+            "observed_checks": 878,
+            "waiting_ticks": 164841
+          }
+        ]
+      },
+      {
+        "drift_ticks": 0,
+        "clock_uncertainty_ticks": 10,
+        "horizons": [
+          {
+            "steps": 1000,
+            "matched_full_choice": 629,
+            "missed_feasible_opportunity": 182,
+            "consequential_state_not_seen": 189,
+            "excess_loss": 7058,
+            "observed_checks": 502,
+            "waiting_ticks": 103007
+          },
+          {
+            "steps": 1000,
+            "matched_full_choice": 916,
+            "missed_feasible_opportunity": 42,
+            "consequential_state_not_seen": 42,
+            "excess_loss": 1575,
+            "observed_checks": 789,
+            "waiting_ticks": 134993
+          },
+          {
+            "steps": 1000,
+            "matched_full_choice": 986,
+            "missed_feasible_opportunity": 7,
+            "consequential_state_not_seen": 7,
+            "excess_loss": 284,
+            "observed_checks": 859,
+            "waiting_ticks": 159844
+          },
+          {
+            "steps": 1000,
+            "matched_full_choice": 1000,
+            "missed_feasible_opportunity": 0,
+            "consequential_state_not_seen": 0,
+            "excess_loss": 0,
+            "observed_checks": 873,
+            "waiting_ticks": 163596
+          }
+        ]
+      },
+      {
+        "drift_ticks": 0,
+        "clock_uncertainty_ticks": 20,
+        "horizons": [
+          {
+            "steps": 1000,
+            "matched_full_choice": 634,
+            "missed_feasible_opportunity": 179,
+            "consequential_state_not_seen": 187,
+            "excess_loss": 6974,
+            "observed_checks": 502,
+            "waiting_ticks": 103007
+          },
+          {
+            "steps": 1000,
+            "matched_full_choice": 921,
+            "missed_feasible_opportunity": 39,
+            "consequential_state_not_seen": 40,
+            "excess_loss": 1491,
+            "observed_checks": 789,
+            "waiting_ticks": 134993
+          },
+          {
+            "steps": 1000,
+            "matched_full_choice": 991,
+            "missed_feasible_opportunity": 4,
+            "consequential_state_not_seen": 5,
+            "excess_loss": 200,
+            "observed_checks": 859,
+            "waiting_ticks": 159844
+          },
+          {
+            "steps": 1000,
+            "matched_full_choice": 1000,
+            "missed_feasible_opportunity": 0,
+            "consequential_state_not_seen": 0,
+            "excess_loss": 0,
+            "observed_checks": 868,
+            "waiting_ticks": 162301
+          }
+        ]
+      },
+      {
+        "drift_ticks": 0,
+        "clock_uncertainty_ticks": 40,
+        "horizons": [
+          {
+            "steps": 1000,
+            "matched_full_choice": 644,
+            "missed_feasible_opportunity": 174,
+            "consequential_state_not_seen": 182,
+            "excess_loss": 6769,
+            "observed_checks": 502,
+            "waiting_ticks": 103007
+          },
+          {
+            "steps": 1000,
+            "matched_full_choice": 931,
+            "missed_feasible_opportunity": 34,
+            "consequential_state_not_seen": 35,
+            "excess_loss": 1286,
+            "observed_checks": 789,
+            "waiting_ticks": 134993
+          },
+          {
+            "steps": 1000,
+            "matched_full_choice": 1000,
+            "missed_feasible_opportunity": 0,
+            "consequential_state_not_seen": 0,
+            "excess_loss": 0,
+            "observed_checks": 858,
+            "waiting_ticks": 159561
+          },
+          {
+            "steps": 1000,
+            "matched_full_choice": 1000,
+            "missed_feasible_opportunity": 0,
+            "consequential_state_not_seen": 0,
+            "excess_loss": 0,
+            "observed_checks": 858,
+            "waiting_ticks": 159561
+          }
+        ]
+      },
+      {
+        "drift_ticks": 20,
+        "clock_uncertainty_ticks": 0,
+        "horizons": [
+          {
+            "steps": 1000,
+            "matched_full_choice": 474,
+            "missed_feasible_opportunity": 259,
+            "consequential_state_not_seen": 267,
+            "excess_loss": 9974,
+            "observed_checks": 342,
+            "waiting_ticks": 111367
+          },
+          {
+            "steps": 1000,
+            "matched_full_choice": 911,
+            "missed_feasible_opportunity": 44,
+            "consequential_state_not_seen": 45,
+            "excess_loss": 1700,
+            "observed_checks": 779,
+            "waiting_ticks": 150663
+          },
+          {
+            "steps": 1000,
+            "matched_full_choice": 981,
+            "missed_feasible_opportunity": 9,
+            "consequential_state_not_seen": 10,
+            "excess_loss": 366,
+            "observed_checks": 849,
+            "waiting_ticks": 176924
+          },
+          {
+            "steps": 1000,
+            "matched_full_choice": 1000,
+            "missed_feasible_opportunity": 0,
+            "consequential_state_not_seen": 0,
+            "excess_loss": 0,
+            "observed_checks": 868,
+            "waiting_ticks": 182301
+          }
+        ]
+      },
+      {
+        "drift_ticks": 20,
+        "clock_uncertainty_ticks": 10,
+        "horizons": [
+          {
+            "steps": 1000,
+            "matched_full_choice": 479,
+            "missed_feasible_opportunity": 257,
+            "consequential_state_not_seen": 264,
+            "excess_loss": 9849,
+            "observed_checks": 342,
+            "waiting_ticks": 111367
+          },
+          {
+            "steps": 1000,
+            "matched_full_choice": 916,
+            "missed_feasible_opportunity": 42,
+            "consequential_state_not_seen": 42,
+            "excess_loss": 1575,
+            "observed_checks": 779,
+            "waiting_ticks": 150663
+          },
+          {
+            "steps": 1000,
+            "matched_full_choice": 986,
+            "missed_feasible_opportunity": 7,
+            "consequential_state_not_seen": 7,
+            "excess_loss": 241,
+            "observed_checks": 849,
+            "waiting_ticks": 176924
+          },
+          {
+            "steps": 1000,
+            "matched_full_choice": 1000,
+            "missed_feasible_opportunity": 0,
+            "consequential_state_not_seen": 0,
+            "excess_loss": 0,
+            "observed_checks": 863,
+            "waiting_ticks": 180956
+          }
+        ]
+      },
+      {
+        "drift_ticks": 20,
+        "clock_uncertainty_ticks": 20,
+        "horizons": [
+          {
+            "steps": 1000,
+            "matched_full_choice": 484,
+            "missed_feasible_opportunity": 254,
+            "consequential_state_not_seen": 262,
+            "excess_loss": 9769,
+            "observed_checks": 342,
+            "waiting_ticks": 111367
+          },
+          {
+            "steps": 1000,
+            "matched_full_choice": 921,
+            "missed_feasible_opportunity": 39,
+            "consequential_state_not_seen": 40,
+            "excess_loss": 1495,
+            "observed_checks": 779,
+            "waiting_ticks": 150663
+          },
+          {
+            "steps": 1000,
+            "matched_full_choice": 991,
+            "missed_feasible_opportunity": 4,
+            "consequential_state_not_seen": 5,
+            "excess_loss": 161,
+            "observed_checks": 849,
+            "waiting_ticks": 176924
+          },
+          {
+            "steps": 1000,
+            "matched_full_choice": 1000,
+            "missed_feasible_opportunity": 0,
+            "consequential_state_not_seen": 0,
+            "excess_loss": 0,
+            "observed_checks": 858,
+            "waiting_ticks": 179561
+          }
+        ]
+      },
+      {
+        "drift_ticks": 20,
+        "clock_uncertainty_ticks": 40,
+        "horizons": [
+          {
+            "steps": 1000,
+            "matched_full_choice": 494,
+            "missed_feasible_opportunity": 249,
+            "consequential_state_not_seen": 257,
+            "excess_loss": 9599,
+            "observed_checks": 342,
+            "waiting_ticks": 111367
+          },
+          {
+            "steps": 1000,
+            "matched_full_choice": 931,
+            "missed_feasible_opportunity": 34,
+            "consequential_state_not_seen": 35,
+            "excess_loss": 1325,
+            "observed_checks": 779,
+            "waiting_ticks": 150663
+          },
+          {
+            "steps": 1000,
+            "matched_full_choice": 1000,
+            "missed_feasible_opportunity": 0,
+            "consequential_state_not_seen": 0,
+            "excess_loss": 0,
+            "observed_checks": 848,
+            "waiting_ticks": 176621
+          },
+          {
+            "steps": 1000,
+            "matched_full_choice": 1000,
+            "missed_feasible_opportunity": 0,
+            "consequential_state_not_seen": 0,
+            "excess_loss": 0,
+            "observed_checks": 848,
+            "waiting_ticks": 176621
+          }
+        ]
+      },
+      {
+        "drift_ticks": 40,
+        "clock_uncertainty_ticks": 0,
+        "horizons": [
+          {
+            "steps": 1000,
+            "matched_full_choice": 313,
+            "missed_feasible_opportunity": 339,
+            "consequential_state_not_seen": 348,
+            "excess_loss": 12989,
+            "observed_checks": 171,
+            "waiting_ticks": 116461
+          },
+          {
+            "steps": 1000,
+            "matched_full_choice": 911,
+            "missed_feasible_opportunity": 44,
+            "consequential_state_not_seen": 45,
+            "excess_loss": 1661,
+            "observed_checks": 769,
+            "waiting_ticks": 166133
+          },
+          {
+            "steps": 1000,
+            "matched_full_choice": 981,
+            "missed_feasible_opportunity": 9,
+            "consequential_state_not_seen": 10,
+            "excess_loss": 370,
+            "observed_checks": 839,
+            "waiting_ticks": 193804
+          },
+          {
+            "steps": 1000,
+            "matched_full_choice": 1000,
+            "missed_feasible_opportunity": 0,
+            "consequential_state_not_seen": 0,
+            "excess_loss": 0,
+            "observed_checks": 858,
+            "waiting_ticks": 199561
+          }
+        ]
+      },
+      {
+        "drift_ticks": 40,
+        "clock_uncertainty_ticks": 10,
+        "horizons": [
+          {
+            "steps": 1000,
+            "matched_full_choice": 318,
+            "missed_feasible_opportunity": 337,
+            "consequential_state_not_seen": 345,
+            "excess_loss": 12903,
+            "observed_checks": 171,
+            "waiting_ticks": 116461
+          },
+          {
+            "steps": 1000,
+            "matched_full_choice": 916,
+            "missed_feasible_opportunity": 42,
+            "consequential_state_not_seen": 42,
+            "excess_loss": 1575,
+            "observed_checks": 769,
+            "waiting_ticks": 166133
+          },
+          {
+            "steps": 1000,
+            "matched_full_choice": 986,
+            "missed_feasible_opportunity": 7,
+            "consequential_state_not_seen": 7,
+            "excess_loss": 284,
+            "observed_checks": 839,
+            "waiting_ticks": 193804
+          },
+          {
+            "steps": 1000,
+            "matched_full_choice": 1000,
+            "missed_feasible_opportunity": 0,
+            "consequential_state_not_seen": 0,
+            "excess_loss": 0,
+            "observed_checks": 853,
+            "waiting_ticks": 198116
+          }
+        ]
+      },
+      {
+        "drift_ticks": 40,
+        "clock_uncertainty_ticks": 20,
+        "horizons": [
+          {
+            "steps": 1000,
+            "matched_full_choice": 323,
+            "missed_feasible_opportunity": 334,
+            "consequential_state_not_seen": 343,
+            "excess_loss": 12819,
+            "observed_checks": 171,
+            "waiting_ticks": 116461
+          },
+          {
+            "steps": 1000,
+            "matched_full_choice": 921,
+            "missed_feasible_opportunity": 39,
+            "consequential_state_not_seen": 40,
+            "excess_loss": 1491,
+            "observed_checks": 769,
+            "waiting_ticks": 166133
+          },
+          {
+            "steps": 1000,
+            "matched_full_choice": 991,
+            "missed_feasible_opportunity": 4,
+            "consequential_state_not_seen": 5,
+            "excess_loss": 200,
+            "observed_checks": 839,
+            "waiting_ticks": 193804
+          },
+          {
+            "steps": 1000,
+            "matched_full_choice": 1000,
+            "missed_feasible_opportunity": 0,
+            "consequential_state_not_seen": 0,
+            "excess_loss": 0,
+            "observed_checks": 848,
+            "waiting_ticks": 196621
+          }
+        ]
+      },
+      {
+        "drift_ticks": 40,
+        "clock_uncertainty_ticks": 40,
+        "horizons": [
+          {
+            "steps": 1000,
+            "matched_full_choice": 333,
+            "missed_feasible_opportunity": 329,
+            "consequential_state_not_seen": 338,
+            "excess_loss": 12614,
+            "observed_checks": 171,
+            "waiting_ticks": 116461
+          },
+          {
+            "steps": 1000,
+            "matched_full_choice": 931,
+            "missed_feasible_opportunity": 34,
+            "consequential_state_not_seen": 35,
+            "excess_loss": 1286,
+            "observed_checks": 769,
+            "waiting_ticks": 166133
+          },
+          {
+            "steps": 1000,
+            "matched_full_choice": 1000,
+            "missed_feasible_opportunity": 0,
+            "consequential_state_not_seen": 0,
+            "excess_loss": 0,
+            "observed_checks": 838,
+            "waiting_ticks": 193481
+          },
+          {
+            "steps": 1000,
+            "matched_full_choice": 1000,
+            "missed_feasible_opportunity": 0,
+            "consequential_state_not_seen": 0,
+            "excess_loss": 0,
+            "observed_checks": 838,
+            "waiting_ticks": 193481
+          }
+        ]
+      },
+      {
+        "drift_ticks": 60,
+        "clock_uncertainty_ticks": 0,
+        "horizons": [
+          {
+            "steps": 1000,
+            "matched_full_choice": 152,
+            "missed_feasible_opportunity": 424,
+            "consequential_state_not_seen": 424,
+            "excess_loss": 15900,
+            "observed_checks": 0,
+            "waiting_ticks": 118000
+          },
+          {
+            "steps": 1000,
+            "matched_full_choice": 911,
+            "missed_feasible_opportunity": 44,
+            "consequential_state_not_seen": 45,
+            "excess_loss": 1700,
+            "observed_checks": 759,
+            "waiting_ticks": 181403
+          },
+          {
+            "steps": 1000,
+            "matched_full_choice": 981,
+            "missed_feasible_opportunity": 9,
+            "consequential_state_not_seen": 10,
+            "excess_loss": 366,
+            "observed_checks": 829,
+            "waiting_ticks": 210484
+          },
+          {
+            "steps": 1000,
+            "matched_full_choice": 1000,
+            "missed_feasible_opportunity": 0,
+            "consequential_state_not_seen": 0,
+            "excess_loss": 0,
+            "observed_checks": 848,
+            "waiting_ticks": 216621
+          }
+        ]
+      },
+      {
+        "drift_ticks": 60,
+        "clock_uncertainty_ticks": 10,
+        "horizons": [
+          {
+            "steps": 1000,
+            "matched_full_choice": 157,
+            "missed_feasible_opportunity": 422,
+            "consequential_state_not_seen": 421,
+            "excess_loss": 15775,
+            "observed_checks": 0,
+            "waiting_ticks": 118000
+          },
+          {
+            "steps": 1000,
+            "matched_full_choice": 916,
+            "missed_feasible_opportunity": 42,
+            "consequential_state_not_seen": 42,
+            "excess_loss": 1575,
+            "observed_checks": 759,
+            "waiting_ticks": 181403
+          },
+          {
+            "steps": 1000,
+            "matched_full_choice": 986,
+            "missed_feasible_opportunity": 7,
+            "consequential_state_not_seen": 7,
+            "excess_loss": 241,
+            "observed_checks": 829,
+            "waiting_ticks": 210484
+          },
+          {
+            "steps": 1000,
+            "matched_full_choice": 1000,
+            "missed_feasible_opportunity": 0,
+            "consequential_state_not_seen": 0,
+            "excess_loss": 0,
+            "observed_checks": 843,
+            "waiting_ticks": 215076
+          }
+        ]
+      },
+      {
+        "drift_ticks": 60,
+        "clock_uncertainty_ticks": 20,
+        "horizons": [
+          {
+            "steps": 1000,
+            "matched_full_choice": 162,
+            "missed_feasible_opportunity": 419,
+            "consequential_state_not_seen": 419,
+            "excess_loss": 15695,
+            "observed_checks": 0,
+            "waiting_ticks": 118000
+          },
+          {
+            "steps": 1000,
+            "matched_full_choice": 921,
+            "missed_feasible_opportunity": 39,
+            "consequential_state_not_seen": 40,
+            "excess_loss": 1495,
+            "observed_checks": 759,
+            "waiting_ticks": 181403
+          },
+          {
+            "steps": 1000,
+            "matched_full_choice": 991,
+            "missed_feasible_opportunity": 4,
+            "consequential_state_not_seen": 5,
+            "excess_loss": 161,
+            "observed_checks": 829,
+            "waiting_ticks": 210484
+          },
+          {
+            "steps": 1000,
+            "matched_full_choice": 1000,
+            "missed_feasible_opportunity": 0,
+            "consequential_state_not_seen": 0,
+            "excess_loss": 0,
+            "observed_checks": 838,
+            "waiting_ticks": 213481
+          }
+        ]
+      },
+      {
+        "drift_ticks": 60,
+        "clock_uncertainty_ticks": 40,
+        "horizons": [
+          {
+            "steps": 1000,
+            "matched_full_choice": 172,
+            "missed_feasible_opportunity": 414,
+            "consequential_state_not_seen": 414,
+            "excess_loss": 15525,
+            "observed_checks": 0,
+            "waiting_ticks": 118000
+          },
+          {
+            "steps": 1000,
+            "matched_full_choice": 931,
+            "missed_feasible_opportunity": 34,
+            "consequential_state_not_seen": 35,
+            "excess_loss": 1325,
+            "observed_checks": 759,
+            "waiting_ticks": 181403
+          },
+          {
+            "steps": 1000,
+            "matched_full_choice": 1000,
+            "missed_feasible_opportunity": 0,
+            "consequential_state_not_seen": 0,
+            "excess_loss": 0,
+            "observed_checks": 828,
+            "waiting_ticks": 210141
+          },
+          {
+            "steps": 1000,
+            "matched_full_choice": 1000,
+            "missed_feasible_opportunity": 0,
+            "consequential_state_not_seen": 0,
+            "excess_loss": 0,
+            "observed_checks": 828,
+            "waiting_ticks": 210141
+          }
+        ]
+      }
+    ],
+    "analytic_match": true,
+    "analytical_evaluation_wall_ms": 48.9345,
+    "policy_evaluation_wall_ms": 2842.681,
+    "limits": [
+      "The same finite input grid is repeated for workload measurement. Ratios describe this grid.",
+      "Tick units and utility points are synthetic and do not represent wall time or calibrated forecasts.",
+      "Each case varies drift and clock uncertainty separately and includes one consequential check kind."
+    ]
+  },
+  "pruning": {
+    "model": "future-reader.pruning-holdout/1",
+    "sample_kind": "HELD_OUT_SYNTHETIC_SCENARIOS",
+    "trials_per_cohort": 10000,
+    "candidates_per_trial": 8,
+    "rule": "An unprotected feasible path can be deferred only if its upper reward bound is strictly below the best exact utility already evaluated. Equality stays eligible for ties.",
+    "adversarial_cases": [
+      "Rare large reward",
+      "Low success with severe downside",
+      "Ineligible high reward",
+      "Low-frequency severe downside",
+      "Exact score and deadline boundaries"
+    ],
+    "input_limits": "Small synthetic utility tables and hard feasibility flags. Guarded ranking proof assumes its declared utility upper bounds are valid.",
+    "measurement": "Repeated paired timings rotate policy order. Workload generation is outside timing. Nearest-rank p95 is the maximum of seven observations.",
+    "rng": "Python random.Random MT19937 integer draws. Reproduce with the recorded interpreter and seeds.",
+    "results": [
+      {
+        "cohort": "ordinary",
+        "seed": 20261113,
+        "policy": "full",
+        "trials": 10000,
+        "route_utility_evaluations": 43070,
+        "feasible_paths_pruned": 0,
+        "protected_paths_lost": 0,
+        "altered_decisions": 0,
+        "timing_repeats": 7,
+        "p50_wall_ms": 16.55,
+        "p95_wall_ms": 22.585
+      },
+      {
+        "cohort": "ordinary",
+        "seed": 20261113,
+        "policy": "probability_only",
+        "trials": 10000,
+        "route_utility_evaluations": 38832,
+        "feasible_paths_pruned": 4238,
+        "protected_paths_lost": 658,
+        "altered_decisions": 90,
+        "timing_repeats": 7,
+        "p50_wall_ms": 16.3213,
+        "p95_wall_ms": 22.9398
+      },
+      {
+        "cohort": "ordinary",
+        "seed": 20261113,
+        "policy": "guarded",
+        "trials": 10000,
+        "route_utility_evaluations": 34856,
+        "feasible_paths_pruned": 8214,
+        "protected_paths_lost": 0,
+        "altered_decisions": 0,
+        "timing_repeats": 7,
+        "p50_wall_ms": 20.9945,
+        "p95_wall_ms": 26.1371
+      },
+      {
+        "cohort": "adversarial",
+        "seed": 15485907386676073834,
+        "policy": "full",
+        "trials": 10000,
+        "route_utility_evaluations": 45833,
+        "feasible_paths_pruned": 0,
+        "protected_paths_lost": 0,
+        "altered_decisions": 0,
+        "timing_repeats": 7,
+        "p50_wall_ms": 19.004,
+        "p95_wall_ms": 27.7927
+      },
+      {
+        "cohort": "adversarial",
+        "seed": 15485907386676073834,
+        "policy": "probability_only",
+        "trials": 10000,
+        "route_utility_evaluations": 38071,
+        "feasible_paths_pruned": 7762,
+        "protected_paths_lost": 4545,
+        "altered_decisions": 2064,
+        "timing_repeats": 7,
+        "p50_wall_ms": 20.4437,
+        "p95_wall_ms": 27.3027
+      },
+      {
+        "cohort": "adversarial",
+        "seed": 15485907386676073834,
+        "policy": "guarded",
+        "trials": 10000,
+        "route_utility_evaluations": 38521,
+        "feasible_paths_pruned": 7312,
+        "protected_paths_lost": 0,
+        "altered_decisions": 0,
+        "timing_repeats": 7,
+        "p50_wall_ms": 18.8606,
+        "p95_wall_ms": 25.7031
+      }
+    ]
+  },
+  "supplied": {
+    "status": "UNRESOLVED",
+    "timing_steps": 10000000,
+    "claimed_match_percent": "99.4",
+    "claimed_multiplier": "3.2",
+    "modeled_years": 100000000,
+    "claimed_adversarial_trials": 10000000000,
+    "missing": [
+      "Original workload and generator",
+      "Model and source revision",
+      "Seed and random stream",
+      "Decision and convergence definitions",
+      "Trial denominator, dependence and stopping rules",
+      "Raw result logs and calibration inputs"
+    ]
+  },
+  "receipt": {
+    "started_utc": "2026-11-13T22:23:02+00:00",
+    "finished_utc": "2026-11-13T22:23:06+00:00",
+    "python": "3.12.15",
+    "platform": "Windows-11-10.0.26200-SP0",
+    "source_sha256": "82fc721511d7a2a30714693476fe737514ad8e72cfa01c04d956324113608b13",
+    "parameters": {
+      "repetitions": 125,
+      "seed": 20261113,
+      "pruning_trials": 10000
+    }
+  }
+}

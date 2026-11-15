@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; base-uri 'none'; form-action 'none'">
+<title>Future Reader</title>
+<style>{{STYLE}}</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to current view</a>
+<header class="masthead">
+  <div class="brand"><span aria-hidden="true">◈</span><div><strong>Future Reader</strong><small>Oracle Controller</small></div></div>
+  <span class="local"><span aria-hidden="true">●</span> Offline simulation</span>
+</header>
+<nav aria-label="Workspace views">
+  <button data-view="practice" aria-current="page">Practice</button>
+  <button data-view="advanced">Advanced</button>
+  <button data-view="records">Records</button>
+  <button data-view="handoff">Handoff</button>
+</nav>
+<main id="main" tabindex="-1">
+<p class="feedback" id="feedback" role="status" aria-live="polite" aria-atomic="true"></p>
+<section id="practice" aria-labelledby="practice-title">
+  <div class="intro">
+    <div><h1 id="practice-title">Reach the goal</h1><p>Place a move, preview the path, then travel.</p></div>
+    <label class="sound"><input type="checkbox" id="sound"> Speak cues</label>
+  </div>
+  <div class="practice-layout">
+    <article class="card board-card" aria-labelledby="board-title">
+      <div class="card-heading"><h2 id="board-title">The board</h2><span id="clock-badge" class="clock"></span></div>
+      <div class="board" id="board" aria-label="Choose a connected position"></div>
+      <p class="legend"><span>● Here</span><span>◇ Preview</span><span>⚑ Goal</span></p>
+      <div class="placed"><h3>Your pieces</h3><ol id="pieces" aria-label="Placed program pieces"></ol></div>
+      <div class="inline"><button id="guide">Show first move</button><button id="clear">Clear pieces</button></div>
+    </article>
+    <article class="card current-card" aria-labelledby="status-title">
+      <h2 id="status-title">What’s happening?</h2>
+      <p id="current" class="conclusion"></p>
+      <p id="next"></p>
+      <div id="preview-card" class="preview" hidden>
+        <h3>Preview</h3><p id="preview-path"></p><p id="preview-basis"></p>
+        <button id="confirm" class="primary">Move now</button>
+      </div>
+      <div id="certificate" class="result" hidden></div>
+    </article>
+  </div>
+  <div class="actions" aria-label="Oracle Controller operations">
+    <button id="pinpoint"><span aria-hidden="true">◎</span> Pinpoint</button>
+    <button id="travel" class="primary"><span aria-hidden="true">→</span> Travel</button>
+    <button id="reverse"><span aria-hidden="true">↶</span> Reverse</button>
+    <button id="check"><span aria-hidden="true">✓</span> Check</button>
+  </div>
+</section>
+<section id="advanced" aria-labelledby="advanced-title" hidden>
+  <div class="intro"><div><h1 id="advanced-title">Inspect the decision</h1><p id="decision"></p></div></div>
+  <div class="advanced-layout">
+    <article class="card"><h2>Opportunity window</h2><p id="window-summary"></p><p id="window-detail"></p>
+      <form id="revision-form">
+        <label>Clock (simulated seconds) <input id="new-clock" type="number" min="0" max="3600" step="1" required></label>
+        <label class="check-option"><input id="new-check" type="checkbox"> Independent check available</label>
+        <div class="inline"><button type="submit">Preview revision</button><button id="apply-revision" type="button" class="primary" disabled>Apply revision</button></div>
+      </form>
+      <p id="revision-diff" class="support"></p>
+    </article>
+    <article class="card"><h2>Route alternatives</h2><p>Ordered by cost, then arrival. The deadline and check are hard constraints.</p>
+      <div class="table-scroll"><table><thead><tr><th>Path</th><th>Cost</th><th>Arrival</th><th>Latest start</th><th>Eligibility</th></tr></thead><tbody id="routes"></tbody></table></div>
+    </article>
+    <article class="card decision-card"><h2>Act now, wait, or fall back?</h2><p id="model-choice" class="conclusion"></p>
+      <p id="model-boundary"></p><p id="model-threshold"></p>
+      <div class="table-scroll" tabindex="0" role="region" aria-label="Synthetic decision comparison"><table>
+        <thead><tr><th scope="col">Action</th><th scope="col">Expected value</th><th scope="col">Worst case</th>
+        <th scope="col">Success by deadline</th></tr></thead><tbody id="model-actions"></tbody></table></div>
+      <details><summary>Model inputs and limits</summary><ul id="model-limits"></ul><pre id="model-inputs"></pre></details>
+      <button id="download-decision">Download decision example</button>
+    </article>
+    <article class="card"><h2>Program</h2><p id="program-note"></p><pre id="program"></pre></article>
+    <article class="card"><h2>Geometry and trace</h2>
+      <p>Directed practice graph · whole seconds and cost units · bounded offline CPU model.</p>
+      <p id="trace-summary"></p><ol id="trace"></ol>
+    </article>
+  </div>
+</section>
+<section id="records" aria-labelledby="records-title" hidden>
+  <div class="intro"><div><h1 id="records-title">Read the surviving record</h1><p>Choose a perspective or inspect a reconstruction case.</p></div></div>
+  <div class="advanced-layout">
+    <article class="card"><h2>Perspectives</h2><label>View <select id="temporal-select"></select></label><div id="temporal-output"></div></article>
+    <article class="card"><h2>Evidence cases</h2>
+      <div class="inline"><label>Case <select id="case-select"></select></label><label>Operation <select id="case-operation"></select></label></div>
+      <div id="case-output"></div>
+    </article>
+  </div>
+</section>
+<section id="handoff" aria-labelledby="handoff-title" hidden>
+  <div class="intro"><div><h1 id="handoff-title">Carry the work forward</h1><p>Save the practice history and portable case evidence, or keep a copy of the original brief.</p></div></div>
+  <div class="advanced-layout">
+    <article class="card"><h2>Practice checkpoint</h2>
+      <p>Import replays a checkpoint or the practice portion of a portable record before offering to replace the session.</p>
+      <div class="inline"><button id="export">Download checkpoint</button><input id="import" type="file" accept=".json,application/json" aria-label="Choose a checkpoint or portable record"></div>
+      <p id="import-status"></p><div class="inline"><button id="restore-import" class="primary" hidden>Restore this checkpoint</button>
+      <button id="return-branch" hidden>Return to previous practice branch</button></div>
+      <h3>Portable record</h3><p>Includes scoped case evidence, the practice checkpoint, the model data, and the source brief.</p>
+      <button id="export-record">Download record</button>
+    </article>
+    <article class="card"><h2>Master prompt and supplements</h2>
+      <label>Source brief <select id="prompt-version"></select></label><p id="prompt-hash"></p>
+      <div class="inline"><button id="copy-prompt">Copy prompt</button><button id="download-prompt">Download prompt</button></div>
+      <details><summary>Read the complete selected brief</summary><pre id="prompt" tabindex="0"></pre></details>
+    </article>
+    <article class="card"><h2>Release preview example</h2><p id="release-summary"></p>
+      <ul id="release-steps"></ul><p>The local Python release tools verify the actual artifact and rollback checkpoint.</p>
+    </article>
+  </div>
+</section>
+</main>
+<noscript>This companion needs JavaScript for offline practice and reading the embedded records.</noscript>
+<footer>Future Reader · Practice actions affect this page only. Local Python provides the full runtime and verification tools.</footer>
+<script id="companion-data" type="application/json">{{DATA}}</script>
+<script>{{SCRIPT}}</script>
+</body>
+</html>

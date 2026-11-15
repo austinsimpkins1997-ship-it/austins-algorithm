@@ -1,0 +1,141 @@
+TIMELESS ARCHITECT MASTER PROMPT
+Austin’s Algorithm · Beyond Infinity’s Bounds · State Recovery · Oracle Planning · Full App Integration
+
+MISSION
+
+Bind Beyond Infinity’s Bounds, real-time state tracking, telemetry-driven recovery, and reversible and future-planning oracles into Austin’s Algorithm. Implement them through the algorithm’s normal runtime and update the existing Austin’s Algorithm app so a user can understand the current state, choose a transition, preview its consequences, authorize it, and verify what happened.
+
+Make exploration open-ended, execution bounded, and fulfillment evidence-backed. Preserve value, meaning, context, and truth through every supported transition, recovery, translation, and backend change. Apply Occam’s razor to latency, processing, cost, and interface complexity.
+
+1. FIND THE AUTHORITATIVE SYSTEM AND ESTABLISH A BASELINE
+
+Read and follow applicable AGENTS.md and agent.md instructions. Inspect authorized source, specifications, schemas, tests, version history, and app entry points. Locate the canonical Austin’s Algorithm implementation and the latest Beyond Infinity’s Bounds contract. Map callers, state transitions, persisted records, hardware dependencies, and existing controls. Capture baseline behavior and performance before changing the hot path.
+
+Trace each requirement in this prompt to the relevant component, interface, and verification check. Reuse the existing runtime and app conventions. Where a definition is missing, record the smallest reversible assumption that allows work to proceed and label affected behavior provisional. If a canonical component is inaccessible, finish and test the parts that can run independently, then identify the exact entry point or dependency required to complete the binding.
+
+2. BIND BEYOND INFINITY’S BOUNDS INTO THE RUNTIME
+
+Implement one shared lifecycle through the algorithm’s real entry points:
+
+Observe → resolve context and constraints → generate or resume possibilities → evaluate → preview → authorize → execute → verify → record → continue or recover.
+
+Represent possibilities as a resumable search frontier. Let domain adapters supply generation, comparison, and verification rules. Keep a shared contract for scheduling, evidence, budgets, checkpoints, and result status.
+
+- For finite spaces, report exhaustion only when the configured scope and all remaining work are accounted for.
+- For open-ended spaces, execute in bounded slices and preserve a durable continuation. A budget limit pauses the search. It preserves eligible work for later execution.
+- Give lower-priority eligible branches processing time under documented scheduling conditions. Record whether a branch was deferred, pruned by a definitive constraint, or exhausted.
+- Preserve parentage, assumptions, evidence, uncertainty, constraints, and unresolved obligations. Deduplicate only when domain rules establish equivalence. Keep distinct alternatives when their meaning, consequences, or evidence differ.
+- Resume under the recorded rule and data versions or run a verified migration with traceable lineage. Handle interruption, retries, and concurrent resumption consistently.
+
+Track possibility, feasibility, and fulfillment as distinct states. A representable candidate is a possibility. A candidate is feasible after it passes the applicable constraints. A result is fulfilled when evidence satisfies its explicit acceptance conditions. Express “absolute” as an invariant with a stated scope, preconditions, enforcement, and failure behavior. For an unbounded search, return verified results alongside the remaining frontier and continuation.
+
+3. IMPLEMENT REAL-TIME SUPERPOSITION TRACKING
+
+First determine what “being superposition” refers to in the project’s authoritative model. Support each applicable interpretation through an explicit state type and show its type in the app.
+
+- For software entities, maintain a live set of eligible, observed, inferred, and unresolved states. Pinpoint a state when the observation uniquely supports it. Show remaining candidates, freshness, source, and uncertainty when observations are incomplete or conflicting.
+- For simulated quantum systems, expose the simulator’s available state representation, measurement basis, probabilities, and model assumptions. Bound simulation size and cost.
+- For physical quantum systems, show measured outcomes and distinguish them from state estimates. Use repeated preparations and appropriate measurement bases when performing tomography. Report shots, latency, noise, and uncertainty. A single measurement of an arbitrary unknown quantum state cannot reveal its full state.
+
+Define real-time performance per adapter. Measure observation-to-display lag and expose stale, missing, or conflicting telemetry. Tie every observation to the relevant entity, source, version, and sequence. Keep observations, inferences, simulations, and confirmed execution outcomes distinguishable in both storage and the app.
+
+4. IMPLEMENT TELEMETRY-DRIVEN FAILOVER FROM TIME FAILURE
+
+Model time failure as an explicit runtime condition. Detect missed deadlines, clock discontinuities, out-of-order events, stale heartbeats, lost workers, and stalled transitions. Use monotonic clocks for elapsed time and explicit event ordering where causality matters. Record the trigger, affected scope, and evidence.
+
+Implement “teleportation by telemetry” as the transfer of execution to a compatible worker or recovery environment using verified telemetry, a durable checkpoint, and authorized recovery state.
+
+1. Detect the failure and establish which execution owns the affected work.
+2. Select the latest eligible checkpoint and verify integrity, permissions, dependency versions, and the state of outstanding side effects.
+3. Restore the checkpoint on a healthy compatible target, replay durable events where applicable, and fence the old writer before the replacement commits.
+4. Verify continuity, invariants, and the restored transition before marking recovery successful.
+5. If safe continuation cannot be established, pause the affected work and show the available recovery choices.
+
+Use idempotency and durable effect records to prevent duplicate actions. Restore committed state within the declared durability guarantees. Report any uncommitted work, unavailable dependencies, or side effects that need reconciliation. Measure recovery time and the amount of work that can be lost under each tested failure.
+
+Where supported, implement physical quantum teleportation as an experimental adapter with verified prerequisites. The protocol transfers a qubit state using shared entanglement and classical communication. Keep this adapter independently testable so the standard PC recovery path operates during hardware, network, or provider outages.
+
+5. BUILD A TURN-BASED ORACLE SYSTEM WITH PREVIEWS
+
+Provide a shared oracle contract for state validation, constraint checking, simulation, reversible transitions, future planning, and authorized custom oracles. During any turn, allow the user to invoke any oracle whose prerequisites, backend, and permissions are satisfied. Explain unavailable choices in context.
+
+Bind the preview to the exact input state, action, oracle and version, parameters, permissions, and backend. Before execution, show:
+
+- The current state, proposed action, and expected next state or range of outcomes.
+- Which results are deterministic, simulated, probabilistic, or dependent on external conditions.
+- Assumptions, prerequisites, side effects, resource use, costs, and failure conditions.
+- What can be reversed, compensated, or requires a recovery choice.
+- The specific conditions under which execution can proceed.
+
+Use a sandbox or a side-effect-free path for previews. Revalidate when state, permissions, configuration, or dependencies change before execution. Require a fresh preview when a material change makes the original preview stale. Record the preview and compare the observed result with it. Surface divergences, preserve their evidence, and apply the configured recovery policy. Block execution when a required check fails or the outcome cannot be characterized within the user’s chosen constraints.
+
+REVERSIBLE ORACLE
+
+Let authorized users inspect a prior state and preview a restore or a new branch from that state. Use verified inverses where the operation is reversible. Use checkpoint restore or replay where applicable. Preserve history and show the effect on dependent work. For external side effects, preview any available compensating action and explain consequences that persist after restoration. For quantum circuits, verify inverse behavior only across operations and conditions that support it. Model measurements, resets, discarded information, and noise according to the applicable recovery limits.
+
+FUTURE ORACLE
+
+Given a problem, ask only for the missing constraints that materially affect the result. Translate the problem into an explicit objective, acceptance criteria, hard constraints, and a resource budget. Generate and compare feasible execution paths and circuit candidates. Evaluate correctness, expected quality, latency, cost, and hardware requirements. Show the selected path, viable alternatives, tradeoffs, and evidence. Claim a global optimum only when the search scope and method establish it. Otherwise identify the best candidate evaluated within the declared budget.
+
+Compile candidate circuits against supported target capabilities, including gate set, connectivity, qubit count, measurement, reset, and classical control where relevant. Verify small reference cases against known answers or a classical baseline. Report compiled depth, resource estimates, and observed results. Replan when a required capability or assumption changes.
+
+6. FULLY UPDATE THE AUSTIN’S ALGORITHM APP
+
+Wire the existing app to the same runtime, policies, and state used by the algorithm. Make the primary flow easy to follow:
+
+Choose a problem → inspect the current state → select an action or oracle → preview → confirm → see the verified result or recovery options.
+
+Generate each dropdown from the authoritative transition rules for the current state, action, turn, backend, and user permissions. Include every valid choice and explain relevant unavailable choices that the user is authorized to see. Keep state labels readable and expose technical detail on demand. Refresh the options when their underlying state changes.
+
+Include a “Custom” option wherever the contract supports user-defined input. Build its fields from the applicable schema. Validate required fields, types, ranges, units, constraints, and permissions before preview. Show actionable validation errors in place and preserve valid input after an error. Apply the same execution checks to standard and custom choices.
+
+Make current state, proposed state, and observed result visually distinct. Show progress, freshness, confidence or uncertainty, budget, and recovery status in plain language. Support keyboard navigation, screen-reader labels, visible focus, and accessible status updates. Make the workflow responsive on supported screens.
+
+Enforce permissions in the runtime as well as the app. Distinguish viewing, previewing, executing, restoring, editing oracle definitions, and administering access. Apply existing project policy to confirmations, paid execution, external effects, and destructive or irreversible actions. Scope custom oracles to approved capabilities, data, time, and resource budgets. Verify permissions and audit outcomes through the same paths used by real users.
+
+7. SUPPORT REGULAR PCS, LEGACY SYSTEMS, AND QUANTUM BACKENDS
+
+Give every algorithm a usable local PC path. For problems beyond practical local capacity, provide a bounded solver, decomposition, or clearly labeled approximation with stated limits. Keep routine exploration, previews, and recovery operable locally. Detect capabilities and offer the simplest viable backend for the problem and user’s constraints.
+
+Maintain a dated capability matrix for local CPU, supported legacy environments, simulators, and quantum hardware. For current hardware, verify against official specifications and record tested configurations. For announced and upcoming hardware, use documented interface contracts, capability flags, and conformance fixtures until physical access is available. Label hardware support according to its evidence, including simulator-verified, hardware-verified, and planned.
+
+Preserve backward compatibility through existing interfaces, versioned schemas, migrations, and adapters where needed. Verify older records and checkpoints using representative fixtures. Preserve distinctions that an older backend cannot express in traceable metadata, or stop the conversion and report the specific incompatibility when a required invariant would be lost.
+
+8. PRESERVE MEANING AND EVIDENCE ACROSS DOMAINS
+
+For each supported domain or plane, define the identity, units, assumptions, scope, provenance, uncertainty, evidence, and obligations that must survive transfer. Define an equivalence rule before translating a state, result, or circuit. Verify round trips where the mapping permits them.
+
+When a conversion is lossy, preview the exact loss and retain the original record for inspection or recovery. Preserve source evidence through aggregation and ranking. Treat a hypothesis, simulation, physical observation, and verified fulfillment as distinct claims with their own provenance. Carry the evidence and conditions behind a conclusion whenever it is shown in another domain or interface.
+
+9. APPLY OCCAM’S RAZOR TO LATENCY
+
+Measure time to first usable result, preview latency, p50 and p95 execution latency, observation freshness, recovery time, memory, cost, and work per verified result. Compare equivalent cold, warm, resumed, and branching-heavy workloads. Check result quality and correctness alongside speed.
+
+Optimize in this order:
+
+1. Remove duplicate generation, validation, serialization, and conversion.
+2. Apply cheap definitive constraints before expensive evaluation.
+3. Generate lazily and stream verified results.
+4. Reuse deterministic work when the inputs, permissions, constraints, and versions match.
+5. Add indexing, batching, caching, or concurrency when measured gains justify the complexity.
+
+Keep ranking separate from correctness. A low ranking can defer an eligible branch. Definitive pruning requires a recorded reason. Verify that optimizations preserve meaningful alternatives, fairness under the stated conditions, recovery, and accepted outcomes.
+
+10. IMPLEMENT, VERIFY, AND DELIVER
+
+Work in stages. Establish the baseline and canonical contracts. Wire the core runtime and recovery path. Integrate oracle previews and execution. Update the full app. Then verify compatibility, failure behavior, and performance through the real entry points.
+
+Run the existing suite and add focused checks for:
+
+- Exact exhaustion of a finite case and restart-safe continuation of an open-ended case.
+- Fair processing of eligible branches and preservation of distinct alternatives.
+- Missing evidence, conflicting telemetry, stale previews, and invalid custom inputs.
+- Clock failure, worker loss, corrupt checkpoints, concurrent recovery, and duplicated side effects.
+- Restore, branch, and compensation paths with traceable history.
+- Future-oracle path and circuit selection against known reference cases.
+- Legacy migration, local PC operation, quantum simulation, and hardware conformance where access exists.
+- The complete app flow, including dropdown accuracy, accessibility, access control, preview, execution, and recovery.
+
+Demonstrate one end-to-end run in the actual app. Select a problem, preview an oracle action, execute it, verify a fulfilled result, trigger a controlled time failure, recover from a verified checkpoint, and resume the frontier to a second verified result. Demonstrate a custom choice and a prior-state restore or branch. Use at least two substantially different supported domains where suitable adapters exist.
+
+Deliver the implemented source and app changes, integration map, launch and verification commands, compatibility matrix, migration details, and before-and-after measurements. Mark each requirement verified, provisional, or blocked and attach the supporting evidence or missing dependency. Complete authorized implementation and verification in the workspace. External publication, deployment, and paid runs require explicit authorization.

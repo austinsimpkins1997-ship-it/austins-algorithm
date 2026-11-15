@@ -12,7 +12,7 @@ license = "Apache-2.0"
 license-files = ["LICENSE"]
 authors = [
   { name = "Austin Gregory Simpkins" },
-  { name = "Chandler Middlebrook" },
+  { name = "Chandler Middlebrooks" },
 ]
 keywords = ["quantum", "grover", "amplitude-amplification", "chronorealm", "education"]
 classifiers = [

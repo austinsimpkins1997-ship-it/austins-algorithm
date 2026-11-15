@@ -4,6 +4,14 @@ Austin's Algorithm package version is 0.1.0. These records cover the published G
 
 ## Current changes
 
+### 2026-11-15 14:28:59 -05:00 — reconcile local and incoming Workbench releases
+
+- Resolve the 15 merge conflicts by retaining the reviewed 0.2.6-alpha implementation, Decision Review, Focus, measurement distinctions, hidden GUI tests and Tk 9 builder support.
+- Preserve the incoming cross-checkout export verification fix and apply the incoming Middlebrooks author correction to current README, package and citation metadata. Existing exported license/notice bytes retain their compatibility boundary.
+- Bring the bundled Future Reader to the maintained 0.1.2 source, including exact studies and the Windows editable-environment worker repair. Keep the complete companion in the repository for hosted builds.
+- Fix Windows loopback rejection by draining a bounded request body before the denial response. Preserve authentication and origin checks.
+- Refresh current documentation and verify the merged package and companion before completing the local merge. Synchronize the merged authored files with the workspace copy.
+
 ### 2026-11-15 12:16:09 -05:00 — E-drive currency audit and installed launcher refresh
 
 - Inventory the accessible ordinary files in both maintained package folders and SHA-256 compare all 270 active source, documentation, test, example, tool and configuration files. Verify the current standalone Workbench executable in both copies.

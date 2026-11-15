@@ -1,0 +1,132 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Future Reader practice program and controller records",
+  "oneOf": [
+    {"$ref": "#/$defs/program"},
+    {"$ref": "#/$defs/controllerRecord"},
+    {"$ref": "#/$defs/frontier"},
+    {"$ref": "#/$defs/checkpoint"}
+  ],
+  "$defs": {
+    "node": {"enum": ["S", "A", "B", "G"]},
+    "tick": {"type": "integer", "minimum": 0, "maximum": 1000000000},
+    "hash": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "name": {"type": "string", "pattern": "^[A-Za-z0-9_.-]{1,64}$"},
+    "pieces": {"type": "array", "maxItems": 32, "items": {"$ref": "#/$defs/piece"}},
+    "piece": {
+      "oneOf": [
+        {
+          "type": "object", "required": ["op", "to"], "additionalProperties": false,
+          "properties": {"op": {"const": "Move"}, "to": {"$ref": "#/$defs/node"}}
+        },
+        {
+          "type": "object", "required": ["op", "condition"], "additionalProperties": false,
+          "properties": {"op": {"const": "Check"}, "condition": {"const": "independent_check"}}
+        },
+        {
+          "type": "object", "required": ["op", "times", "steps"], "additionalProperties": false,
+          "properties": {
+            "op": {"const": "Repeat"}, "times": {"type": "integer", "minimum": 1, "maximum": 4},
+            "steps": {"$ref": "#/$defs/pieces"}
+          }
+        },
+        {
+          "type": "object", "required": ["op", "condition", "then", "else"], "additionalProperties": false,
+          "properties": {
+            "op": {"const": "If"}, "condition": {"const": "independent_check"},
+            "then": {"$ref": "#/$defs/pieces"}, "else": {"$ref": "#/$defs/pieces"}
+          }
+        }
+      ]
+    },
+    "program": {
+      "type": "object", "required": ["schema", "steps"], "additionalProperties": false,
+      "properties": {
+        "schema": {"const": "future-reader.program/1"},
+        "steps": {
+          "type": "array", "minItems": 2, "maxItems": 32,
+          "prefixItems": [{
+            "type": "object", "required": ["op", "state"], "additionalProperties": false,
+            "properties": {"op": {"const": "Start"}, "state": {"$ref": "#/$defs/node"}}
+          }],
+          "items": {
+            "oneOf": [
+              {"$ref": "#/$defs/piece"},
+              {
+                "type": "object", "required": ["op", "state"], "additionalProperties": false,
+                "properties": {"op": {"const": "Goal"}, "state": {"$ref": "#/$defs/node"}}
+              }
+            ]
+          },
+          "contains": {"type": "object", "required": ["op"], "properties": {"op": {"const": "Goal"}}},
+          "minContains": 1, "maxContains": 1
+        }
+      },
+      "$comment": "The runtime additionally checks final Goal placement, nesting, operation bounds and valid transitions."
+    },
+    "controllerRecord": {
+      "type": "object", "required": ["schema", "operation", "status", "mode"],
+      "properties": {
+        "schema": {"const": "future-reader.controller/1"},
+        "operation": {"enum": ["PINPOINT", "TRAVEL", "REVERSE"]},
+        "status": {"enum": ["EXACT", "PREVIEW", "COMMITTED", "UNAVAILABLE"]},
+        "mode": {"const": "SIMULATION"},
+        "state": {"$ref": "#/$defs/node"},
+        "previous_state": {"$ref": "#/$defs/node"},
+        "clock": {"const": "future-reader.practice-clock/1"},
+        "now": {"$ref": "#/$defs/tick"},
+        "revision": {"type": "integer", "minimum": 0, "maximum": 1024},
+        "state_version": {"type": "integer", "minimum": 0},
+        "preview_id": {"$ref": "#/$defs/name"},
+        "digest": {"$ref": "#/$defs/hash"}
+      },
+      "allOf": [
+        {
+          "if": {"properties": {"status": {"const": "EXACT"}}},
+          "then": {"required": ["state", "now", "revision", "writable"], "properties": {"writable": {"type": "boolean"}}}
+        },
+        {
+          "if": {"properties": {"status": {"const": "PREVIEW"}}},
+          "then": {"required": ["preview_id", "actor", "session", "request", "plan", "state_version",
+                                 "expires_at_unix_ms", "authorization_epoch", "digest", "model_digest"]}
+        },
+        {
+          "if": {"properties": {"status": {"const": "COMMITTED"}}},
+          "then": {"required": ["preview_id", "request", "plan", "previous_state", "state", "parent_revision",
+                                 "revision", "now", "state_version", "preview_digest", "verification"]}
+        },
+        {
+          "if": {"properties": {"status": {"const": "UNAVAILABLE"}}},
+          "then": {"required": ["opportunity"]}
+        }
+      ]
+    },
+    "frontier": {
+      "type": "object", "required": ["schema", "context", "expanded", "pending"], "additionalProperties": false,
+      "properties": {
+        "schema": {"const": "future-reader.frontier/1"}, "context": {"$ref": "#/$defs/hash"},
+        "expanded": {"type": "integer", "minimum": 0, "maximum": 16},
+        "pending": {
+          "type": "array", "maxItems": 16,
+          "items": {"type": "array", "minItems": 1, "maxItems": 4, "items": {"$ref": "#/$defs/node"}}
+        }
+      }
+    },
+    "checkpoint": {
+      "type": "object", "required": ["content", "sha256"], "additionalProperties": false,
+      "properties": {
+        "sha256": {"$ref": "#/$defs/hash"},
+        "content": {
+          "type": "object", "required": ["schema", "domain", "source", "state", "history"],
+          "additionalProperties": false,
+          "properties": {
+            "schema": {"const": "future-reader.checkpoint/1"}, "domain": {"const": "future-reader.practice/1"},
+            "source": {"$ref": "#/$defs/name"},
+            "state": {"$ref": "#/$defs/controllerRecord"},
+            "history": {"type": "array", "maxItems": 1024, "items": {"$ref": "#/$defs/controllerRecord"}}
+          }
+        }
+      }
+    }
+  }
+}

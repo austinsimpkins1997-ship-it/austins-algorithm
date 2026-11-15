@@ -4,7 +4,7 @@
 
 **Workbench 0.2.6-alpha** · **Python package 0.1.0** · **Python 3.10+** · **[Apache-2.0](LICENSE)**
 
-Created by **Austin Gregory Simpkins and Chandler Middlebrook / ChronoRealm**. Current source reviewed **November 15, 2026**.
+Created by **Austin Gregory Simpkins and Chandler Middlebrooks / ChronoRealm**. Current source reviewed **November 15, 2026**.
 
 Start with a small search problem, inspect each simulated step, compare a candidate with an exact classical answer, and save the evidence. For a decision involving several operating conditions, use Decision Review to compare plans, inspect missing checks, and rehearse recovery. The Windows application brings these workflows together with instructions, visualization, project files, and a clear Export action.
 
@@ -32,7 +32,7 @@ On macOS or Linux, create the environment with `python3 -m venv .venv` and use `
 Both maintained local copies have the verified November 15 Workbench build at this package-relative path.
 
 ```powershell
-& ".\.build\focus-0.2.6-20261115-release\dist\AustinsAlgorithmWorkbench.exe"
+& ".\.build\merge-0.2.6-20261115\dist\AustinsAlgorithmWorkbench.exe"
 ```
 
 This is a local build location. A fresh Git checkout needs the source installation above or its own executable build. The Windows executable bundles its Python runtime, Workbench assets, and Future Reader companion. It remains unsigned. Build instructions describe the required tools, output directory, and verification. [Build and check release artifacts](CONTRIBUTING.md#build-and-check-release-artifacts)
@@ -71,7 +71,7 @@ The CPU reference enumerates the bounded candidate space to construct its ideal 
 
 For a multi-scenario plan, open **Decision Review** and start with the synthetic public-office intake continuity case. Its tabs cover the plan, evidence, handoff, recovery replay, Stasis trace, practice, and pilot receipts. Changing a prerequisite can invalidate affected downstream evidence. Held checks remain visible alongside optimization results.
 
-**Future Reader** uses a separate optional practice controller. The frozen Windows build includes it. Source use requires the companion installed or configured on the source path. Its source is in the sibling `../future-reader` folder in the maintained workspaces. The companion has separate checkpoints and a browser workflow, with a disposable SQLite-backed worker recovery check. [Companion setup and practice workflow](WORKBENCH.md#future-reader)
+**Future Reader** uses a separate optional practice controller. The frozen Windows build includes it. Source use requires the companion installed or configured on the source path. The merged repository includes its source in `future-reader/`, with the sibling `../future-reader` checkout supported for development. The companion has separate checkpoints and a browser workflow, with a disposable SQLite-backed worker recovery check. [Companion setup and practice workflow](WORKBENCH.md#future-reader)
 
 ## Use the CLI and Python API
 
@@ -154,7 +154,7 @@ Decision Review records supplied evidence and human responsibilities. Its result
 
 ## Verification and current status
 
-The latest **November 15, 2026** focus release verification recorded the following local results.
+The earlier **November 15, 2026** focus release verification recorded the following local results.
 
 | Check | Recorded result |
 |---|---|
@@ -165,6 +165,8 @@ The latest **November 15, 2026** focus release verification recorded the followi
 | Executable SHA-256 | `267e3e8b4e2dadb85509bed560ff9b0d36dff1761e7ad9c351012e885914b730` |
 
 These results apply to the recorded release and its selected checks. The existing local build receipt is `.build/focus-0.2.6-20261115-release/verification.json`. This README refresh updates source documentation after that build. Earlier SDK, standard-library, WSL, benchmark, and hosted CI outcomes retain their original dates and revisions in the changelog and workflow guides. [Change history](CHANGELOG.md)
+
+The reconciled November 15 build is available locally at `.build/merge-0.2.6-20261115/dist/AustinsAlgorithmWorkbench.exe`, with SHA-256 `0c8cbefaa3abd59821fdd93737247732d5c9a5ef0282f2126044d8fe933e0e38`. The merged Algorithm suite completed 722 tests in each maintained root under Python 3.12.15, with 588 passing and 134 skipped. The bundled Future Reader suite completed 73 tests, with 72 passing and one skipped. Its four offline browser tests and generated companion check passed. The rebuilt executable passed its hidden smoke check. These local records are in `.build/merge-reconcile-20261115` and the companion's `.build/merge-verification`. The system Python 3.14 full-suite attempt encountered its missing `secrets` standard-library module. The successful source-root rerun used the intact Python 3.12 environment.
 
 The Python library version is **0.1.0**. The desktop release is independently **0.2.6-alpha**. The weighted export's application wire label remains **0.2.0-alpha** for its compatibility contract. Decision Review uses its own versioned project and archive formats. These labels identify different interfaces.
 
@@ -196,4 +198,4 @@ For every subsequent update, reconcile this README's versions, capabilities, com
 
 ## Attribution
 
-Austin's Algorithm is ChronoRealm's project and example name. Its quantum search method builds on Lov K. Grover's published algorithm. Project credit belongs to Austin Gregory Simpkins and Chandler Middlebrook / ChronoRealm. See the original paper and the circuit tutorial for background. [Grover, 1996](https://doi.org/10.1145/237814.237866) · [IBM Grover tutorial](https://quantum.cloud.ibm.com/docs/en/tutorials/grovers-algorithm)
+Austin's Algorithm is ChronoRealm's project and example name. Its quantum search method builds on Lov K. Grover's published algorithm. Project credit belongs to Austin Gregory Simpkins and Chandler Middlebrooks / ChronoRealm. See the original paper and the circuit tutorial for background. [Grover, 1996](https://doi.org/10.1145/237814.237866) · [IBM Grover tutorial](https://quantum.cloud.ibm.com/docs/en/tutorials/grovers-algorithm)
