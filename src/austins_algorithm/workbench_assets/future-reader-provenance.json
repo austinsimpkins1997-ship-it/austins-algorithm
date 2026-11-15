@@ -1,0 +1,7 @@
+{
+  "source": "future-reader/future-reader.html",
+  "companion_version": "0.1.2",
+  "sha256": "413d6e3e3fe149dcadca6ba6a155fa517bfb9268f8c47424d47319ab40998b3a",
+  "purpose": "Offline companion export from an installed Python wheel",
+  "evidence_kind": "GENERATED_PROJECT_ARTIFACT"
+}

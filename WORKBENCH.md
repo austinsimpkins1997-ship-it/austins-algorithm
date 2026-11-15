@@ -208,8 +208,8 @@ uv pip install --python .build/workbench-build-env/Scripts/python.exe -r tools/w
 The executable and its SHA-256 record are in the selected build directory's
 `dist` folder. Use a fresh output directory for each build. The builder
 includes the runtime, interface assets, and replay source. The desktop
-release is 0.2.6-alpha. The Python package continues to report 0.1.0 for the
-existing checkpoint and receipt compatibility boundary.
+release is 0.2.6-alpha. The Python distribution reports 0.2.6a1. Existing weighted exports retain
+the 0.1.0 replay-engine compatibility label.
 
 ## Design sources and operating scope
 

@@ -4,7 +4,7 @@ import argparse
 from contextlib import contextmanager
 import json
 import os
-from pathlib import Path
+from pathlib import Path, PureWindowsPath
 import re
 import sqlite3
 import subprocess
@@ -49,7 +49,17 @@ def _integer(value, minimum, maximum, label):
 
 @contextmanager
 def _db(path, *, create=False):
-    target = path if create else f"{path.as_uri()}?mode=rw"
+    # Windows resolution may return a Win32 extended path. SQLite's URI parser
+    # needs a file URI, not the encoded '?' device namespace authority.
+    uri_path = path
+    if os.name == "nt":
+        name = os.fspath(path)
+        if name.startswith("\\\\?\\UNC\\"):
+            name = "\\\\" + name[8:]
+        elif name.startswith("\\\\?\\"):
+            name = name[4:]
+        uri_path = PureWindowsPath(name)
+    target = path if create else f"{uri_path.as_uri()}?mode=rw"
     connection = sqlite3.connect(target, uri=not create, timeout=1, isolation_level=None)
     connection.row_factory = sqlite3.Row
     try:
@@ -293,7 +303,13 @@ def _start_worker(store, job, claim):
     if getattr(sys, "frozen", False):
         command.append("--future-reader-worker")
     else:
-        command.extend(("-B", "-m", "future_reader.live_failover"))
+        # The Windows embedded interpreter deliberately ignores PYTHONPATH and
+        # does not inherit this process's import roots. Pin the worker's own
+        # package explicitly instead of depending on an unrelated installation.
+        bootstrap = ("import sys,runpy;sys.path.insert(0,sys.argv.pop(1));"
+                     "sys.argv[0]='future_reader.live_failover';"
+                     "runpy.run_module('future_reader.live_failover',run_name='__main__')")
+        command.extend(("-I", "-B", "-c", bootstrap, str(Path(__file__).resolve().parents[1])))
     command.extend(("_worker", str(store), job, str(generation)))
     process = subprocess.Popen(
         command,

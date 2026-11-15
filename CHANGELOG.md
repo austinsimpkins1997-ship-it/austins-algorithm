@@ -1,10 +1,106 @@
 # Changelog
 
-Austin's Algorithm package version is 0.1.0. These records cover the published Git history and the local implementation milestones in [the roadmap](ROADMAP.md). Local times use the UTC offset shown.
+Austin's Algorithm package version is 0.2.6a1. These records cover the published Git history and the local implementation milestones in [the roadmap](ROADMAP.md). Local times use the UTC offset shown.
+
+## Change-record attribution and signatures
+
+The original dates, version labels, milestone wording and measured outcomes are retained as historical records. Their statements apply to their recorded revisions and environments. Original implementation time and implementer remain UNKNOWN when the source gives insufficient detail. Project credits and Git-recorded author names have separate roles from per-change implementation authorship.
+
+Each change heading carries a record date or explicit UNKNOWN, an original-implementer field, a named review editor, an editorial signature, a source basis and a change-text SHA-256. These fields apply to every bullet and numbered milestone under that heading. Finer per-item authorship and time remain UNKNOWN unless the item supplies them. The digest covers the heading, one newline, the original body stripped of boundary blank lines, and a final newline. It verifies that recorded text against this review. The complete document byte hashes are in the app-local documentation receipt.
+
+Editorial signatures are textual attestations by the record editor. Git signature results are separately attributed to the local Git verification result. N means unsigned. E means local signature verification could not be completed. Neither a Git author field nor a text digest authenticates a human identity or the truth of a technical claim. No human approval or cryptographic signature is inferred from an editorial signature.
+
+New records should state the actual date with offset, editor name and role, source or verification evidence, and editorial signature. Use UNKNOWN for missing original attribution. Keep earlier entries and their provenance when recording a correction. Local observations, simulations, device measurements and published releases retain separate statuses.
 
 ## Current changes
 
+### 2026-11-15 16:07:39 -05:00 — whole-project documentation and attributable records
+
+> Change record `CR-6af557ecf5f0`
+>
+> Recorded change date — 2026-11-15 16:07:39 -05:00. Per-item original event times retain the source's uncertainty.
+>
+> Original implementer or scoped editor — Codex (AI assistant), documentation editor acting on Austin's request.
+>
+> Record review date — 2026-11-15T16:07:39-05:00 (America/New_York).
+>
+> Review editor — Codex (AI assistant).
+>
+> Editorial signature — `Codex / 2026-11-15T16:07:39-05:00 / CR-6af557ecf5f0`.
+>
+> Source basis — Current documentation review against inspected code, Git metadata and retained local verification receipts.
+>
+> Change-text SHA-256 — `7ddcaf0da1276b630c162ee9228084f5006fe07f48534456444135edca87c241`.
+
+- Update the root README with a current release matrix, the packaged and optional components, selected ChronoRealm adapters, actual verification totals, artifact identity and unverified boundaries.
+- Give every retained change group an explicit date basis, original-implementer status, named record editor, editorial signature, source basis and change-text integrity hash. Preserve original milestone text and dates.
+- Add Git-recorded names and separate local signature status to commit-history records. Preserve UNKNOWN attribution where the original implementer cannot be established.
+- Update the Future Reader README and changelog for its installed distribution, exact studies, loopback handling and Windows worker/database fixes. Verify links, record hashes and both maintained copies.
+
+### 2026-11-15 16:02:55 -05:00 — verified Python package and side-system delivery
+
+> Change record `CR-121b0e80ce87`
+>
+> Recorded change date — 2026-11-15 16:02:55 -05:00. Per-item original event times retain the source's uncertainty.
+>
+> Original implementer or scoped editor — Codex (AI assistant), integration and verification editor. Original implementer of imported workspace fixes UNKNOWN.
+>
+> Record review date — 2026-11-15T16:07:39-05:00 (America/New_York).
+>
+> Review editor — Codex (AI assistant).
+>
+> Editorial signature — `Codex / 2026-11-15T16:07:39-05:00 / CR-121b0e80ce87`.
+>
+> Source basis — Current chat work record and local package delivery receipts recorded 2026-11-15T21:02:55Z.
+>
+> Change-text SHA-256 — `e399d9fc394fcebb43c359eea985714e3e968f1f7ec30af9a22c7ce093f66c6e`.
+
+- Record Python 0.2.6a1, Workbench 0.2.6-alpha and optional Future Reader 0.1.2. The final package receipt records 120 main runtime files and 20 companion runtime files.
+- Each Algorithm root completed 723 tests under Python 3.12.15, with 589 passing and 134 skipped. The companion completed 74 tests, with 73 passing and one skipped. An isolated wheel installation exercised native workflows and old export verification.
+- Carry forward newer workspace fixes for Windows extended database paths and isolated child-process imports. Their original implementer is UNKNOWN. This entry records Codex's incorporation and verification of those source changes.
+- Record the rebuilt executable SHA-256 3535ed8fd3d0248ccfb57731d25cec3e697298a7882fc96069fd70e07b31e6f9. The receipt records 343 matching authored files across E and the workspace at delivery.
+- Source basis is the retained local package verification.json and installed-verification.json under .build/package-current-20261115, plus the companion test log. The distributions remain local verified artifacts, with package-index publication and physical-device validation pending.
+
+### 2026-11-15 15:49:55 -05:00 — current Python distribution 0.2.6a1
+
+> Change record `CR-6b63db40a409`
+>
+> Recorded change date — 2026-11-15 15:49:55 -05:00. Per-item original event times retain the source's uncertainty.
+>
+> Original implementer or scoped editor — Codex-assisted implementation and integration, performed on Austin's request in the current chat. Imported third-party or earlier workspace authorship retains its own attribution.
+>
+> Record review date — 2026-11-15T16:07:39-05:00 (America/New_York).
+>
+> Review editor — Codex (AI assistant).
+>
+> Editorial signature — `Codex / 2026-11-15T16:07:39-05:00 / CR-6b63db40a409`.
+>
+> Source basis — Current chat execution record, the retained dated entry and the local verification receipts for that task. Original wording and recorded date preserved.
+>
+> Change-text SHA-256 — `50e11a41951ed09328c713585dac128d5e8690947d04cfbdfa519377ab931022`.
+
+- Version the Python distribution for the implemented Workbench 0.2.6-alpha capabilities and update its package description, citation and installation guide.
+- Include the generated offline companion HTML in the Python wheel and source archive. Declare the optional Future Reader 0.1.2 controller extra and provide matching local companion distributions.
+- Preserve existing weighted archive application and replay-engine formats independently of package versions. Accept the exact legacy package-version source variant while rejecting other rehashed source changes.
+- Build distributions offline, verify their runtime bytes, exercise a clean wheel installation and synchronize maintained copies. Existing historical builds retain their recorded versions and results.
+
 ### 2026-11-15 14:28:59 -05:00 — reconcile local and incoming Workbench releases
+
+> Change record `CR-8cd5c473f227`
+>
+> Recorded change date — 2026-11-15 14:28:59 -05:00. Per-item original event times retain the source's uncertainty.
+>
+> Original implementer or scoped editor — Codex-assisted implementation and integration, performed on Austin's request in the current chat. Imported third-party or earlier workspace authorship retains its own attribution.
+>
+> Record review date — 2026-11-15T16:07:39-05:00 (America/New_York).
+>
+> Review editor — Codex (AI assistant).
+>
+> Editorial signature — `Codex / 2026-11-15T16:07:39-05:00 / CR-8cd5c473f227`.
+>
+> Source basis — Current chat execution record, the retained dated entry and the local verification receipts for that task. Original wording and recorded date preserved.
+>
+> Change-text SHA-256 — `0cf2fdd0ad84ec1b6843bfd0d5c8e6e0488917b3fc38e2b460a2b9b741f5183f`.
 
 - Resolve the 15 merge conflicts by retaining the reviewed 0.2.6-alpha implementation, Decision Review, Focus, measurement distinctions, hidden GUI tests and Tk 9 builder support.
 - Preserve the incoming cross-checkout export verification fix and apply the incoming Middlebrooks author correction to current README, package and citation metadata. Existing exported license/notice bytes retain their compatibility boundary.
@@ -14,11 +110,43 @@ Austin's Algorithm package version is 0.1.0. These records cover the published G
 
 ### 2026-11-15 12:16:09 -05:00 — E-drive currency audit and installed launcher refresh
 
+> Change record `CR-b404c176330c`
+>
+> Recorded change date — 2026-11-15 12:16:09 -05:00. Per-item original event times retain the source's uncertainty.
+>
+> Original implementer or scoped editor — Codex-assisted implementation and integration, performed on Austin's request in the current chat. Imported third-party or earlier workspace authorship retains its own attribution.
+>
+> Record review date — 2026-11-15T16:07:39-05:00 (America/New_York).
+>
+> Review editor — Codex (AI assistant).
+>
+> Editorial signature — `Codex / 2026-11-15T16:07:39-05:00 / CR-b404c176330c`.
+>
+> Source basis — Current chat execution record, the retained dated entry and the local verification receipts for that task. Original wording and recorded date preserved.
+>
+> Change-text SHA-256 — `d0d10c0a24c0ba5fab37606e32a640b880e1a42ae039cd6a09f10068088403a8`.
+
 - Inventory the accessible ordinary files in both maintained package folders and SHA-256 compare all 270 active source, documentation, test, example, tool and configuration files. Verify the current standalone Workbench executable in both copies.
 - Refresh E's editable installation offline to register its missing Workbench launcher. Preserve the prior package metadata and launchers, retain the editable source binding, and verify installed dependency versions remain unchanged.
 - Keep older builds, recovery records, environment files and Git metadata in their owning locations. Record the complete inventory, comparison boundary and repair evidence in app-local audit records.
 
 ### 2026-11-15 11:45:51 -05:00 — current capability overview and README refresh
+
+> Change record `CR-6c01a04a092e`
+>
+> Recorded change date — 2026-11-15 11:45:51 -05:00. Per-item original event times retain the source's uncertainty.
+>
+> Original implementer or scoped editor — Codex-assisted implementation and integration, performed on Austin's request in the current chat. Imported third-party or earlier workspace authorship retains its own attribution.
+>
+> Record review date — 2026-11-15T16:07:39-05:00 (America/New_York).
+>
+> Review editor — Codex (AI assistant).
+>
+> Editorial signature — `Codex / 2026-11-15T16:07:39-05:00 / CR-6c01a04a092e`.
+>
+> Source basis — Current chat execution record, the retained dated entry and the local verification receipts for that task. Original wording and recorded date preserved.
+>
+> Change-text SHA-256 — `d5bfeea35ae6273d9da88473f03826f3dea00f9ce87b68649a5cb6a1cdc56ace`.
 
 - Reorganize the README around installation, the desktop journey, a complete capability map, command examples, source limits, and the current documentation index.
 - Identify Workbench 0.2.6-alpha, Python library 0.1.0, and the weighted export wire label separately. Cover Focus, Decision Review, pilot receipts, planning, calibration continuity, verified exports, the optional Future Reader companion, and the dedicated IBM workflow.
@@ -27,6 +155,22 @@ Austin's Algorithm package version is 0.1.0. These records cover the published G
 
 ### 2026-11-15 11:10:49 -05:00 — explicit focus and resumption
 
+> Change record `CR-9589a027d0cc`
+>
+> Recorded change date — 2026-11-15 11:10:49 -05:00. Per-item original event times retain the source's uncertainty.
+>
+> Original implementer or scoped editor — Codex-assisted implementation and integration, performed on Austin's request in the current chat. Imported third-party or earlier workspace authorship retains its own attribution.
+>
+> Record review date — 2026-11-15T16:07:39-05:00 (America/New_York).
+>
+> Review editor — Codex (AI assistant).
+>
+> Editorial signature — `Codex / 2026-11-15T16:07:39-05:00 / CR-9589a027d0cc`.
+>
+> Source basis — Current chat execution record, the retained dated entry and the local verification receipts for that task. Original wording and recorded date preserved.
+>
+> Change-text SHA-256 — `acf917a1210f07dedf409bbd71d0e2e93ef3973fc33e4ddea76bb5a07b6b19fb`.
+
 - Workbench 0.2.6-alpha adds an optional Focus control to the weighted-search and Decision Review journeys. Record a goal and next action, park competing requests, and pause with a checkpoint when a priority interruption arrives.
 - Compare the resumed checkpoint with current applied inputs. Require explicit review before binding a resumed session to changed problem settings or review evidence. Keep prior basis digests and user actions in bounded history.
 - Include focus metadata in existing project save/load and verified complete exports, with a standalone `focus.json` and readable report section. Preserve earlier project and archive entry points.
@@ -34,16 +178,64 @@ Austin's Algorithm package version is 0.1.0. These records cover the published G
 
 ### 2026-11-14 16:04:37 -05:00 — decision benchmark timing and roadmap
 
+> Change record `CR-86aef8b8e6e3`
+>
+> Recorded change date — 2026-11-14 16:04:37 -05:00. Per-item original event times retain the source's uncertainty.
+>
+> Original implementer or scoped editor — UNKNOWN (retained source does not establish a per-change implementer).
+>
+> Record review date — 2026-11-15T16:07:39-05:00 (America/New_York).
+>
+> Review editor — Codex (AI assistant).
+>
+> Editorial signature — `Codex / 2026-11-15T16:07:39-05:00 / CR-86aef8b8e6e3`.
+>
+> Source basis — Retained historical entry in the pre-review document. Original wording and recorded date preserved.
+>
+> Change-text SHA-256 — `97659d2aba2bb098efcbba40bc6b3bb86f94cbf8ddfe367d7016ec395b3ddf14`.
+
 - Measure prepared and fresh Decision Review operations with a high-resolution elapsed clock. Report its resolution alongside the lookup deadline clock. Windows CPython 3.12 can distinguish operation times that the deadline clock previously rounded to zero.
 - Record which workloads benefit from preparation, the pending operator outcome, and the next compatibility checks.
 
 ### 2026-11-14 15:56:45 -05:00 — rehearsal and recovery receipt pilot
+
+> Change record `CR-c7789213520f`
+>
+> Recorded change date — 2026-11-14 15:56:45 -05:00. Per-item original event times retain the source's uncertainty.
+>
+> Original implementer or scoped editor — UNKNOWN (retained source does not establish a per-change implementer).
+>
+> Record review date — 2026-11-15T16:07:39-05:00 (America/New_York).
+>
+> Review editor — Codex (AI assistant).
+>
+> Editorial signature — `Codex / 2026-11-15T16:07:39-05:00 / CR-c7789213520f`.
+>
+> Source basis — Retained historical entry in the pre-review document. Original wording and recorded date preserved.
+>
+> Change-text SHA-256 — `5c4238946aefd84b764c9cbe6ff0353f09f00609edea801d7728804269a131e4`.
 
 - Workbench 0.2.5-alpha adds a read-only Decision Review tab for pinned rehearsal and recovery receipts.
 - Verify receipt identity and independently replay minimum coverage. Expose ties, missing checks and pending operator approvals without changing the current project, stored evidence, or action authority.
 - Add the matching `decision-review receipts` command for local paired review.
 
 ### 2026-11-14 15:04:50 -05:00 — quantum measurement and noise
+
+> Change record `CR-570b37fbbe2f`
+>
+> Recorded change date — 2026-11-14 15:04:50 -05:00. Per-item original event times retain the source's uncertainty.
+>
+> Original implementer or scoped editor — UNKNOWN (retained source does not establish a per-change implementer).
+>
+> Record review date — 2026-11-15T16:07:39-05:00 (America/New_York).
+>
+> Review editor — Codex (AI assistant).
+>
+> Editorial signature — `Codex / 2026-11-15T16:07:39-05:00 / CR-570b37fbbe2f`.
+>
+> Source basis — Retained historical entry in the pre-review document. Original wording and recorded date preserved.
+>
+> Change-text SHA-256 — `b892204dc5a84fdf818c12a86ffc559e0166c6cce10fc893a9fd76232212d676`.
 
 - Separate guaranteed ideal validity from the number of possible measurements in CPU CLI, Qiskit and Cirq reports. The one-round Austin example can return either of two valid strings.
 - Label ideal simulator, snapshot noise model, synthetic noise model and physical device counts by source. Scope each local sampling seed to the simulator. Hardware preflight has no measurement result.
@@ -52,10 +244,42 @@ Austin's Algorithm package version is 0.1.0. These records cover the published G
 
 ### 2026-11-14 12:56:18 -05:00 — hidden Workbench checks
 
+> Change record `CR-7b42840cc265`
+>
+> Recorded change date — 2026-11-14 12:56:18 -05:00. Per-item original event times retain the source's uncertainty.
+>
+> Original implementer or scoped editor — UNKNOWN (retained source does not establish a per-change implementer).
+>
+> Record review date — 2026-11-15T16:07:39-05:00 (America/New_York).
+>
+> Review editor — Codex (AI assistant).
+>
+> Editorial signature — `Codex / 2026-11-15T16:07:39-05:00 / CR-7b42840cc265`.
+>
+> Source basis — Retained historical entry in the pre-review document. Original wording and recorded date preserved.
+>
+> Change-text SHA-256 — `d8c9a7fbbc26c10fa13418840e7b3e02ad3b5a00b0f30d33a587c2a6f6f326c5`.
+
 - Keep Decision Review test windows and the automated Workbench smoke check off the desktop. The smoke check also keeps its Assistant window hidden and verifies both window states.
 - Include the Dimensional Design browser replay test fixture in the source distribution so the importer can be tested from a packaged checkout.
 
 ### 2026-11-14 12:45:57 -05:00 — Decision Review in the Windows Workbench
+
+> Change record `CR-0a33e9a4932a`
+>
+> Recorded change date — 2026-11-14 12:45:57 -05:00. Per-item original event times retain the source's uncertainty.
+>
+> Original implementer or scoped editor — UNKNOWN (retained source does not establish a per-change implementer).
+>
+> Record review date — 2026-11-15T16:07:39-05:00 (America/New_York).
+>
+> Review editor — Codex (AI assistant).
+>
+> Editorial signature — `Codex / 2026-11-15T16:07:39-05:00 / CR-0a33e9a4932a`.
+>
+> Source basis — Retained historical entry in the pre-review document. Original wording and recorded date preserved.
+>
+> Change-text SHA-256 — `5cbc711a0ff33c3244501a2e4b52a4a35b496568439f27aef3bc25ee8e4d4c32`.
 
 - **#148** Add a Decision Review screen, local CLI and a public-office tabletop preset. Compare one exact selection against up to eight scenarios and preserve reasons for blocked or excluded alternatives.
 - Record Dimensional Design interfaces, check dependencies, revision holds and reviewer decisions. Preserve participation, authority, consent, funding and delivery as attributed evidence.
@@ -66,10 +290,42 @@ Austin's Algorithm package version is 0.1.0. These records cover the published G
 
 ### 2026-11-13 17:36:50 -05:00 — cross-checkout export verification
 
+> Change record `CR-5f6a53e40d16`
+>
+> Recorded change date — 2026-11-13 17:36:50 -05:00. Per-item original event times retain the source's uncertainty.
+>
+> Original implementer or scoped editor — UNKNOWN (retained source does not establish a per-change implementer).
+>
+> Record review date — 2026-11-15T16:07:39-05:00 (America/New_York).
+>
+> Review editor — Codex (AI assistant).
+>
+> Editorial signature — `Codex / 2026-11-15T16:07:39-05:00 / CR-5f6a53e40d16`.
+>
+> Source basis — Retained historical entry in the pre-review document. Original wording and recorded date preserved.
+>
+> Change-text SHA-256 — `12c1636a74609ee5f8442fb3d582090edc58c3e7c8b0db84e3cb9eb0284dcca5`.
+
 - **#147** Release Workbench 0.2.3-alpha. The verifier recognizes LF and CRLF forms of trusted replay modules and license text after verifying each member against its original manifest bytes.
 - Add a regression for equivalent checkout line endings and a rehashed archive containing changed executable source. Preserve the existing export schema.
 
 ### 2026-11-13 17:26:32 -05:00 — local worker recovery and release preparation
+
+> Change record `CR-003fd1644e79`
+>
+> Recorded change date — 2026-11-13 17:26:32 -05:00. Per-item original event times retain the source's uncertainty.
+>
+> Original implementer or scoped editor — UNKNOWN (retained source does not establish a per-change implementer).
+>
+> Record review date — 2026-11-15T16:07:39-05:00 (America/New_York).
+>
+> Review editor — Codex (AI assistant).
+>
+> Editorial signature — `Codex / 2026-11-15T16:07:39-05:00 / CR-003fd1644e79`.
+>
+> Source basis — Retained historical entry in the pre-review document. Original wording and recorded date preserved.
+>
+> Change-text SHA-256 — `c8ddcef8bb8a4f114af4a00db502033745333addb0362248c0a1b85ba2d79478`.
 
 - **#146** Add a live local worker recovery check to Workbench 0.2.2-alpha. A replacement resumes the SQLite checkpoint after the original process exits.
 - Add named IBM profile preflight and verify the compiled circuit before a provider submission. Preserve the explicit hardware, shot, and time-budget controls.
@@ -78,11 +334,43 @@ Austin's Algorithm package version is 0.1.0. These records cover the published G
 
 ### 2026-11-13 17:03:26 -05:00 — Future Reader integration
 
+> Change record `CR-2e50efc2f48f`
+>
+> Recorded change date — 2026-11-13 17:03:26 -05:00. Per-item original event times retain the source's uncertainty.
+>
+> Original implementer or scoped editor — UNKNOWN (retained source does not establish a per-change implementer).
+>
+> Record review date — 2026-11-15T16:07:39-05:00 (America/New_York).
+>
+> Review editor — Codex (AI assistant).
+>
+> Editorial signature — `Codex / 2026-11-15T16:07:39-05:00 / CR-2e50efc2f48f`.
+>
+> Source basis — Retained historical entry in the pre-review document. Original wording and recorded date preserved.
+>
+> Change-text SHA-256 — `916cfabc2ca451f4c01ff7cf5ed8199855af82aa59fc68dabfe9ebb116115ddd`.
+
 - **#145** Add a native Future Reader page to the Workbench and build it into the Windows 0.2.1-alpha executable. Include route preview, custom input, confirmation, restore, timing comparison, scoped certification, and the simulated recovery exercise.
 - Add the optional `future-reader` CLI dispatch and bundle the offline HTML as a separate export. Keep the weighted project and its replay format compatible with 0.2.0-alpha.
 - Verify the native workflow and standalone checkpoint replay with the rebuilt executable in both maintained locations. The 3.12 SDK suites passed 658 checks with four skips and the clean 3.10 suites passed 412 checks with 250 skips in each copy. Verify the archived weighted export against the current engine.
 
 ### 2026-11-13 13:29:08 -05:00 — weighted search and Windows Workbench
+
+> Change record `CR-2d84217d78fe`
+>
+> Recorded change date — 2026-11-13 13:29:08 -05:00. Per-item original event times retain the source's uncertainty.
+>
+> Original implementer or scoped editor — UNKNOWN (retained source does not establish a per-change implementer).
+>
+> Record review date — 2026-11-15T16:07:39-05:00 (America/New_York).
+>
+> Review editor — Codex (AI assistant).
+>
+> Editorial signature — `Codex / 2026-11-15T16:07:39-05:00 / CR-2d84217d78fe`.
+>
+> Source basis — Retained historical entry in the pre-review document. Original wording and recorded date preserved.
+>
+> Change-text SHA-256 — `f980395b4950ee4085b0218ed7ede52e98d85179bf414968b882e1322e750445`.
 
 - **#144** Add bounded weighted Boolean optimization, exact classical minima, and seeded stepwise Grover simulation with one shared shot and query budget.
 - Add a reversible threshold circuit, independent phase audit, and weighted sensor-kit benchmark for ideal simulation and dated Jakarta.
@@ -94,12 +382,44 @@ Austin's Algorithm package version is 0.1.0. These records cover the published G
 
 ### 2026-11-12 15:22:13 -05:00 — local CI repair
 
+> Change record `CR-cea7cae5d1fa`
+>
+> Recorded change date — 2026-11-12 15:22:13 -05:00. Per-item original event times retain the source's uncertainty.
+>
+> Original implementer or scoped editor — UNKNOWN (retained source does not establish a per-change implementer).
+>
+> Record review date — 2026-11-15T16:07:39-05:00 (America/New_York).
+>
+> Review editor — Codex (AI assistant).
+>
+> Editorial signature — `Codex / 2026-11-15T16:07:39-05:00 / CR-cea7cae5d1fa`.
+>
+> Source basis — Retained historical entry in the pre-review document. Original wording and recorded date preserved.
+>
+> Change-text SHA-256 — `c2e8689180a8d5bdac126e06e90bbba45ef9052e246c40212d21b0886a37eaac`.
+
 - **#143** Isolate the controlled benchmark worker subprocess binding in the test fixture. Keep the shared standard-library `subprocess` module available to Linux platform metadata collection. Production algorithm and benchmark code are unchanged; package version stays 0.1.0 (alpha).
 - Inspect all nine failed jobs in GitHub Actions run #9 for commit `10533c88b96ddca98045904095a5d0203900ac9c`. Each reports the same eight failures and sixteen errors in the new benchmark-verifier fixtures; the Windows Manila smoke job passed. Reproduce the fixture failure on WSL Ubuntu and preserve the job logs and pre-fix results.
 - Add a regression separating host-metadata subprocess calls from the controlled worker launches. It fails with the old shared mock on Windows and passes with the module-local binding. Preserve worker ordering, timeout simulation and independent saved-record verification.
 - Both copies pass 635 SDK tests with four skips, 391 SDK-free tests with 248 skips on Windows Python 3.10/3.12, and 393 SDK-free tests with 246 optional-dependency skips on WSL Ubuntu Python 3.12.3. Update the README, guide and roadmap without substituting local results for a new hosted run.
 
 ### 2026-11-12 13:05:35 -05:00 — local update
+
+> Change record `CR-14cc6b5374f6`
+>
+> Recorded change date — 2026-11-12 13:05:35 -05:00. Per-item original event times retain the source's uncertainty.
+>
+> Original implementer or scoped editor — UNKNOWN (retained source does not establish a per-change implementer).
+>
+> Record review date — 2026-11-15T16:07:39-05:00 (America/New_York).
+>
+> Review editor — Codex (AI assistant).
+>
+> Editorial signature — `Codex / 2026-11-15T16:07:39-05:00 / CR-14cc6b5374f6`.
+>
+> Source basis — Retained historical entry in the pre-review document. Original wording and recorded date preserved.
+>
+> Change-text SHA-256 — `d5f005e93dc7019ebd4806882e6399da8c220091881e4ec22b1b8a55611bed63`.
 
 - **#142** Add `checkpoint-benchmark-verify` for an explicitly pinned saved benchmark. Check local stage files, canonical ordering, checkpoint handoffs, round/counter bounds, aggregate arithmetic, storage and available paired-study evidence without loading the quantum SDK or rerunning workers.
 - Preserve schema 1 records and support consistent complete and stopped runs. Report the recorded benchmark outcome separately from the audit result. Reject corrupted available reports even when the original summary records a verification failure.
@@ -111,12 +431,44 @@ Austin's Algorithm package version is 0.1.0. These records cover the published G
 
 ### 2026-11-12 12:35:04 -05:00 — local update
 
+> Change record `CR-091e328befba`
+>
+> Recorded change date — 2026-11-12 12:35:04 -05:00. Per-item original event times retain the source's uncertainty.
+>
+> Original implementer or scoped editor — UNKNOWN (retained source does not establish a per-change implementer).
+>
+> Record review date — 2026-11-15T16:07:39-05:00 (America/New_York).
+>
+> Review editor — Codex (AI assistant).
+>
+> Editorial signature — `Codex / 2026-11-15T16:07:39-05:00 / CR-091e328befba`.
+>
+> Source basis — Retained historical entry in the pre-review document. Original wording and recorded date preserved.
+>
+> Change-text SHA-256 — `499a038a410bbe027fd3f0693dbc611d4886842f9b7293399d1b2892318b1190`.
+
 - **#141** Retain restored compiled programs only for the current eligible fusion chunk. Complete, terminal, reference-only and predicted reference-pause calls discard setup while preserving all round, compilation-report, dated calibration and readout checks.
 - Eight-layout before/after probes in both copies reduce peak tracked programs from 32 to nine or eight for two-layout fusion chunks, and to one transient object for complete/reference-only calls. All cases retain 32 restorations, 64 calibration comparisons and eight readout checks; result envelopes are byte-identical.
 - Add six weak-reference and failure regressions for selected/excluded layouts, late corrupt skipped data and cleanup with retained exceptions. Keep default full-checkpoint behavior and public schemas unchanged. Repeat the real eight-layout workflow with exact study and generation evidence.
 - Both copies pass 613 SDK tests with three skips and 369 SDK-free tests with 247 skips, including Python 3.10. The full eight-layout workflow again produces the same pinned study; package checks use the full-runtime source-archive-first builder.
 
 ### 2026-11-12 11:52:39 -05:00 — local update
+
+> Change record `CR-a689ca00db17`
+>
+> Recorded change date — 2026-11-12 11:52:39 -05:00. Per-item original event times retain the source's uncertainty.
+>
+> Original implementer or scoped editor — UNKNOWN (retained source does not establish a per-change implementer).
+>
+> Record review date — 2026-11-15T16:07:39-05:00 (America/New_York).
+>
+> Review editor — Codex (AI assistant).
+>
+> Editorial signature — `Codex / 2026-11-15T16:07:39-05:00 / CR-a689ca00db17`.
+>
+> Source basis — Retained historical entry in the pre-review document. Original wording and recorded date preserved.
+>
+> Change-text SHA-256 — `a6198b6c458bcab9ee6f72e8acaed86d615304951ef2121ff8623f3bfe852572`.
 
 - **#140** Add a pinned, bounded fresh-process checkpoint benchmark and its six-variable fixture. Both copies complete eight reference layouts and eight fusion attempts in chunks of two, producing the same 3,640,898-byte study as the uninterrupted arm. Record 128 density preparations across both arms, 24 checkpoint-store files, timings, memory observations and explicit failure/timeout evidence.
 - Add scenario, worker handoff, raw-report comparison, SDK-free verification, and preparation-budget regression cases. Record the observed restart overhead without a speed or memory-saving claim.
@@ -126,12 +478,44 @@ Austin's Algorithm package version is 0.1.0. These records cover the published G
 
 ### 2026-11-12 11:33:58 -05:00 — local update
 
+> Change record `CR-9b990edc1b0e`
+>
+> Recorded change date — 2026-11-12 11:33:58 -05:00. Per-item original event times retain the source's uncertainty.
+>
+> Original implementer or scoped editor — UNKNOWN (retained source does not establish a per-change implementer).
+>
+> Record review date — 2026-11-15T16:07:39-05:00 (America/New_York).
+>
+> Review editor — Codex (AI assistant).
+>
+> Editorial signature — `Codex / 2026-11-15T16:07:39-05:00 / CR-9b990edc1b0e`.
+>
+> Source basis — Retained historical entry in the pre-review document. Original wording and recorded date preserved.
+>
+> Change-text SHA-256 — `ddbcd20593f3c3a428babf09110cb41d5c6fc164d9489d10d49d105e4ba923f2`.
+
 - **#139** Reuse validated fusion reference/history within one invocation. Preserve explicit branch identity, cached-state integrity, and standalone validation; rehash raw ancestors after the callback before installing each marker.
 - In the fixed three-append Jakarta store sequence, reduce semantic capture validations from six to three and profile calculations from twelve to six. Raw reads increase by 267,846 bytes to preserve the fresh ancestor checks. Report operation counts separately from timing.
 - Add regressions for independent invocations, prior-file and cached-state mutation, callback changes, failed marker retry, reentrancy, and unchanged reports/pins. Update both copies and their README, guide and roadmap.
 - Both copies pass 591 SDK tests with three skips and 347 SDK-free tests with 247 skips, including Python 3.10. The skipped filesystem case requires symlink creation unavailable in this Windows session; the remaining skips reflect missing optional dependencies.
 
 ### 2026-11-12 11:17:50 -05:00 — local update
+
+> Change record `CR-8ff711a5dbfc`
+>
+> Recorded change date — 2026-11-12 11:17:50 -05:00. Per-item original event times retain the source's uncertainty.
+>
+> Original implementer or scoped editor — UNKNOWN (retained source does not establish a per-change implementer).
+>
+> Record review date — 2026-11-15T16:07:39-05:00 (America/New_York).
+>
+> Review editor — Codex (AI assistant).
+>
+> Editorial signature — `Codex / 2026-11-15T16:07:39-05:00 / CR-8ff711a5dbfc`.
+>
+> Source basis — Retained historical entry in the pre-review document. Original wording and recorded date preserved.
+>
+> Change-text SHA-256 — `34a6127299fcc6d24b7208c2bf7271c038063d8b49b4a83c99a9aae125c31a72`.
 
 - **#138** Save immutable fusion attempts against a complete pinned reference chain. Resume with explicit reference and fusion pins, validate all saved evidence before new density jobs, and skip the saved canonical prefix.
 - Add `--reference-only` to incremental reference commands and the `snapshot-calibration-study-fusion-continue` command with bounded pauses and paired-study export. Preserve recognized failures, confirmed timeout continuation, terminal unconfirmed cancellation, and output/publication error evidence.
@@ -140,21 +524,85 @@ Austin's Algorithm package version is 0.1.0. These records cover the published G
 
 ### 2026-11-12 11:08:45 -05:00 — documentation update
 
+> Change record `CR-0e19920b3024`
+>
+> Recorded change date — 2026-11-12 11:08:45 -05:00. Per-item original event times retain the source's uncertainty.
+>
+> Original implementer or scoped editor — UNKNOWN (retained source does not establish a per-change implementer).
+>
+> Record review date — 2026-11-15T16:07:39-05:00 (America/New_York).
+>
+> Review editor — Codex (AI assistant).
+>
+> Editorial signature — `Codex / 2026-11-15T16:07:39-05:00 / CR-0e19920b3024`.
+>
+> Source basis — Retained historical entry in the pre-review document. Original wording and recorded date preserved.
+>
+> Change-text SHA-256 — `4d00eebf2a9a77dedd6c9f8b709f93c1063b71491df4d2623ca358596e455e90`.
+
 - Review the README against implementation milestone #137 and package metadata version 0.1.0 (alpha). Name the checkpoint commands, explicit pause/export options, completed-reference recovery boundary, and remaining fusion-checkpoint work.
 - Add the dated local verification results and the successful hosted run for commit `6c2370b060dbfdcf2ea3feeca72963a282c386ad`, keeping the scopes separate. Correct stale pending Manila-hosted-check entries in the roadmap and constraint guide.
 - Link the per-update README/version/changelog and two-copy reconciliation requirements in `CONTRIBUTING.md`. Verify documentation links, version agreement, recorded evidence, and source parity in both copies; runtime behavior is unchanged.
 
 ### 2026-11-12 10:47:37 -05:00 — local update
 
+> Change record `CR-c6b2560c71d6`
+>
+> Recorded change date — 2026-11-12 10:47:37 -05:00. Per-item original event times retain the source's uncertainty.
+>
+> Original implementer or scoped editor — UNKNOWN (retained source does not establish a per-change implementer).
+>
+> Record review date — 2026-11-15T16:07:39-05:00 (America/New_York).
+>
+> Review editor — Codex (AI assistant).
+>
+> Editorial signature — `Codex / 2026-11-15T16:07:39-05:00 / CR-c6b2560c71d6`.
+>
+> Source basis — Retained historical entry in the pre-review document. Original wording and recorded date preserved.
+>
+> Change-text SHA-256 — `41ad17a91853c4c796d177169c94a1766a91bc545f6089239cf192b2f9892f49`.
+
 - **#137** Save one immutable checkpoint per completed reference layout. Verify an explicitly pinned predecessor chain and restore its circuits before continuing the remaining references and fusion.
 - Add incremental start and resume commands, export completed paired reports, and document the workflow in the README and constraint guide.
 
 ### 2026-11-12 10:28:08 -05:00 — local update
 
+> Change record `CR-2a7f8ba58ae8`
+>
+> Recorded change date — 2026-11-12 10:28:08 -05:00. Per-item original event times retain the source's uncertainty.
+>
+> Original implementer or scoped editor — UNKNOWN (retained source does not establish a per-change implementer).
+>
+> Record review date — 2026-11-15T16:07:39-05:00 (America/New_York).
+>
+> Review editor — Codex (AI assistant).
+>
+> Editorial signature — `Codex / 2026-11-15T16:07:39-05:00 / CR-2a7f8ba58ae8`.
+>
+> Source basis — Retained historical entry in the pre-review document. Original wording and recorded date preserved.
+>
+> Change-text SHA-256 — `e3c7c02b22f72b94f3092d01ee0c35b922e1405d9b886a078de51125ef6f18a0`.
+
 - **#136** Add pinned paired-study checkpoints after the default reference phase. The checkpoint records completed captures and exact compiled rounds. A fresh process verifies the saved scope and resumes fusion with rebuilt compact simulators.
 - Document the restart workflow in the README and constraint guide. Add regressions for incomplete publication, corrupt checkpoint evidence and exact report parity.
 
 ### 2026-11-12 10:10:48 -05:00 — local update
+
+> Change record `CR-0d76ac8c08f0`
+>
+> Recorded change date — 2026-11-12 10:10:48 -05:00. Per-item original event times retain the source's uncertainty.
+>
+> Original implementer or scoped editor — UNKNOWN (retained source does not establish a per-change implementer).
+>
+> Record review date — 2026-11-15T16:07:39-05:00 (America/New_York).
+>
+> Review editor — Codex (AI assistant).
+>
+> Editorial signature — `Codex / 2026-11-15T16:07:39-05:00 / CR-0d76ac8c08f0`.
+>
+> Source basis — Retained historical entry in the pre-review document. Original wording and recorded date preserved.
+>
+> Change-text SHA-256 — `31ea793ae65eb7f5d9cfa5b765314d55b301adfe520810cfcb17d605e3be7f9e`.
 
 - Restore Python 3.10 test compatibility in the paired calibration study and offline verifier fixtures using standard-library context cleanup.
 - Add an opt-in Manila regression comparison for probability roundoff up to 1e-12. Preserve the saved baseline artifacts and require exact circuit identities, discrete budgets, seeded counts, and decisions. The phase-cover check records accepted numerical differences. The diffuser check verifies the modeled plan before sampling and records the observed plan digest.
@@ -166,6 +614,22 @@ Austin's Algorithm package version is 0.1.0. These records cover the published G
 The times below mark the earliest verified record available for each milestone. A Git time is the recorded commit time. A local recovery time is when a copy of the roadmap was saved. It may be later than the edit. Several changes share a time when their first available record groups them together.
 
 ### 2026-11-12
+
+> Change record `CR-d167ad8027e6`
+>
+> Recorded change date — 2026-11-12. Per-item original event times retain the source's uncertainty.
+>
+> Original implementer or scoped editor — UNKNOWN (retained source does not establish a per-change implementer).
+>
+> Record review date — 2026-11-15T16:07:39-05:00 (America/New_York).
+>
+> Review editor — Codex (AI assistant).
+>
+> Editorial signature — `Codex / 2026-11-15T16:07:39-05:00 / CR-d167ad8027e6`.
+>
+> Source basis — Retained historical entry in the pre-review document. Original wording and recorded date preserved.
+>
+> Change-text SHA-256 — `b27486ebdc84ea58b83dc8c5e920b546700c1c25eed86ac2ef1d5d01190a5692`.
 
 - 10:02:16 -0500 · **#135** · **Release paired simulator setup as each layout finishes.** Drop full programs after reference capture and release compact setup before planning, including after cancellation or error. Measure live objects and process memory and verify the resulting reports in fresh processes. See [release simulator setup and carry evidence across runs](CONSTRAINT_WORKFLOW.md#release-simulator-setup-and-carry-evidence-across-runs). (two-copy workflow verification)
 - 09:55:08 -0500 · **#134** · **Verify a saved paired study offline.** Bind both capture sets to the constraint and round request, verify coverage, and recompute the default plan, seeded replay, and complete fusion diagnostic. See [verify a saved paired calibration study offline](CONSTRAINT_WORKFLOW.md#verify-a-saved-paired-calibration-study-offline). (Git 37500ad)
@@ -205,6 +669,22 @@ The times below mark the earliest verified record available for each milestone. 
 - 00:06:36 -0500 · **#100** · **Unknown-count search benchmark.** Compare exact classical witnesses, bounded ideal searches, and the empty-proof path on fixed six-bit formulas. The report checks every sample and separates deterministic evidence from local timings. See [unknown-count search across solution densities](CONSTRAINT_WORKFLOW.md#benchmark-unknown-count-search-across-solution-densities). (local recovery)
 
 ### 2026-11-11
+
+> Change record `CR-417153ac33dd`
+>
+> Recorded change date — 2026-11-11. Per-item original event times retain the source's uncertainty.
+>
+> Original implementer or scoped editor — UNKNOWN (retained source does not establish a per-change implementer).
+>
+> Record review date — 2026-11-15T16:07:39-05:00 (America/New_York).
+>
+> Review editor — Codex (AI assistant).
+>
+> Editorial signature — `Codex / 2026-11-15T16:07:39-05:00 / CR-417153ac33dd`.
+>
+> Source basis — Retained historical entry in the pre-review document. Original wording and recorded date preserved.
+>
+> Change-text SHA-256 — `5e32a6343efe9c57b3389b5a85f0273b9c197b1262569148fc0e93f8da0b4c9a`.
 
 - 23:57:34 -0500 · **#99** · **Offline Manila smoke run comparison.** Verify each index against local evidence and compare phase outcomes, file fingerprints, and bound environment records. See [compare two Manila smoke run indexes](IBM_MODEL_RESEARCH.md#compare-two-manila-smoke-run-indexes). (local recovery)
 - 23:47:37 -0500 · **#98** · **Verifiable Manila smoke run index.** Link environment and replay bundles with observed step, upload, and command outcomes. Verify the recorded file evidence after downloading or relocating the bundles. See [verify a Manila smoke run index](IBM_MODEL_RESEARCH.md#verify-a-manila-smoke-run-index). (local recovery)
@@ -308,18 +788,44 @@ The times below mark the earliest verified record available for each milestone. 
 
 ## Git commit history
 
-- 2026-11-12T09:55:08-05:00 · Update · [37500ad](https://github.com/austinsimpkins1997-ship-it/austins-algorithm/commit/37500adaa473a4b683bb2e48c4b434053c8af93b)
-- 2026-11-11T14:21:33-05:00 · Updates · [2fa56be](https://github.com/austinsimpkins1997-ship-it/austins-algorithm/commit/2fa56beea11b2970ba5b87bb63b4e89856c58e53)
-- 2026-11-11T08:29:29-05:00 · Sample Austin's exact Grover circuit in Qiskit · [0300cdd](https://github.com/austinsimpkins1997-ship-it/austins-algorithm/commit/0300cdd6e5a3eee466026fbf005e3cf09e294143)
-- 2026-11-09T20:32:17-05:00 · Show Grover first-peak estimate · [505db8a](https://github.com/austinsimpkins1997-ship-it/austins-algorithm/commit/505db8ad019ca7a7ce8f3a5fbeca5366e5919cc3)
-- 2026-11-09T20:26:14-05:00 · Add optional Grover visualization · [3bb227d](https://github.com/austinsimpkins1997-ship-it/austins-algorithm/commit/3bb227d3919d68b29ea1772ce2b1de3c1a856b5a)
-- 2026-11-09T20:02:18-05:00 · Add optional Grover amplitude trace · [c4607b6](https://github.com/austinsimpkins1997-ship-it/austins-algorithm/commit/c4607b66a0b28e999d43ac3f0c83e773325ae041)
-- 2026-11-09T19:47:07-05:00 · Add Austin's Algorithm package · [88e61c6](https://github.com/austinsimpkins1997-ship-it/austins-algorithm/commit/88e61c6059fe792621d0cf180491f103c4394849)
-- 2026-11-09T19:42:57-05:00 · Initial commit · [c7ff733](https://github.com/austinsimpkins1997-ship-it/austins-algorithm/commit/c7ff733f71a440cee87e00bb582df465ee318bff)
+- 2026-11-15T14:34:57-05:00 · Merge upstream releases with Workbench 0.2.6 and Future Reader 0.1.2 · `4e594c00ef5c9c6a869c461c3543c38cd80a25d2` · Git-recorded name `austinsimpkins1997-ship-it` · Local Git signature status `N` · Record editor `Codex (AI assistant)` · Editorial signature `Codex / 2026-11-15T16:07:39-05:00`
+- 2026-11-15T14:20:11-05:00 · Add Workbench 0.2.6-alpha, Decision Review and focus tools · `21563807b15ccf04b73a91823192a72444044f74` · Git-recorded name `austinsimpkins1997-ship-it` · Local Git signature status `N` · Record editor `Codex (AI assistant)` · Editorial signature `Codex / 2026-11-15T16:07:39-05:00`
+- 2026-11-13T21:55:35-05:00 · Fix spelling of 'Middlebrook' to 'Middlebrooks' · `8b73aeca94f8d1b5ea4de1ef5bd5d49e14842bbc` · Git-recorded name `austinsimpkins1997-ship-it` · Local Git signature status `E` · Record editor `Codex (AI assistant)` · Editorial signature `Codex / 2026-11-15T16:07:39-05:00`
+- 2026-11-13T21:54:41-05:00 · Merge pull request #1 from austinsimpkins1997-ship-it/codex/future-reader-release · `2cc1e49ec8c382a95424d14f6b27dd3611dd96d6` · Git-recorded name `austinsimpkins1997-ship-it` · Local Git signature status `E` · Record editor `Codex (AI assistant)` · Editorial signature `Codex / 2026-11-15T16:07:39-05:00`
+- 2026-11-13T17:38:30-05:00 · Fix hosted Workbench export verification · `31c655bc428e03814e99bca074c701b9268c3e8c` · Git-recorded name `austinsimpkins1997-ship-it` · Local Git signature status `N` · Record editor `Codex (AI assistant)` · Editorial signature `Codex / 2026-11-15T16:07:39-05:00`
+- 2026-11-13T17:31:07-05:00 · Release Workbench 0.2.2-alpha and Future Reader · `a1878c7789a305b3c6c1021e0dd294dfa1651308` · Git-recorded name `austinsimpkins1997-ship-it` · Local Git signature status `N` · Record editor `Codex (AI assistant)` · Editorial signature `Codex / 2026-11-15T16:07:39-05:00`
+- 2026-11-12T15:27:55-05:00 · Fix Linux subprocess isolation in benchmark verifier tests · `33eab1190c31188c322951a78cc6b7f4e620c0fa` · Git-recorded name `austinsimpkins1997-ship-it` · Local Git signature status `N` · Record editor `Codex (AI assistant)` · Editorial signature `Codex / 2026-11-15T16:07:39-05:00`
+- 2026-11-12T14:04:50-05:00 · Add resumable calibration studies and benchmark verification · `10533c88b96ddca98045904095a5d0203900ac9c` · Git-recorded name `austinsimpkins1997-ship-it` · Local Git signature status `N` · Record editor `Codex (AI assistant)` · Editorial signature `Codex / 2026-11-15T16:07:39-05:00`
+- 2026-11-12T10:37:06-05:00 · Update · `6c2370b060dbfdcf2ea3feeca72963a282c386ad` · Git-recorded name `austinsimpkins1997-ship-it` · Local Git signature status `N` · Record editor `Codex (AI assistant)` · Editorial signature `Codex / 2026-11-15T16:07:39-05:00`
+- 2026-11-12T09:55:08-05:00 · Update · [37500ad](https://github.com/austinsimpkins1997-ship-it/austins-algorithm/commit/37500adaa473a4b683bb2e48c4b434053c8af93b) · Git-recorded name `austinsimpkins1997-ship-it` · Local Git signature status `N` · Record editor `Codex (AI assistant)` · Editorial signature `Codex / 2026-11-15T16:07:39-05:00`
+- 2026-11-11T14:21:33-05:00 · Updates · [2fa56be](https://github.com/austinsimpkins1997-ship-it/austins-algorithm/commit/2fa56beea11b2970ba5b87bb63b4e89856c58e53) · Git-recorded name `austinsimpkins1997-ship-it` · Local Git signature status `N` · Record editor `Codex (AI assistant)` · Editorial signature `Codex / 2026-11-15T16:07:39-05:00`
+- 2026-11-11T08:29:29-05:00 · Sample Austin's exact Grover circuit in Qiskit · [0300cdd](https://github.com/austinsimpkins1997-ship-it/austins-algorithm/commit/0300cdd6e5a3eee466026fbf005e3cf09e294143) · Git-recorded name `austinsimpkins1997-ship-it` · Local Git signature status `N` · Record editor `Codex (AI assistant)` · Editorial signature `Codex / 2026-11-15T16:07:39-05:00`
+- 2026-11-09T20:32:17-05:00 · Show Grover first-peak estimate · [505db8a](https://github.com/austinsimpkins1997-ship-it/austins-algorithm/commit/505db8ad019ca7a7ce8f3a5fbeca5366e5919cc3) · Git-recorded name `austinsimpkins1997-ship-it` · Local Git signature status `N` · Record editor `Codex (AI assistant)` · Editorial signature `Codex / 2026-11-15T16:07:39-05:00`
+- 2026-11-09T20:26:14-05:00 · Add optional Grover visualization · [3bb227d](https://github.com/austinsimpkins1997-ship-it/austins-algorithm/commit/3bb227d3919d68b29ea1772ce2b1de3c1a856b5a) · Git-recorded name `austinsimpkins1997-ship-it` · Local Git signature status `N` · Record editor `Codex (AI assistant)` · Editorial signature `Codex / 2026-11-15T16:07:39-05:00`
+- 2026-11-09T20:02:18-05:00 · Add optional Grover amplitude trace · [c4607b6](https://github.com/austinsimpkins1997-ship-it/austins-algorithm/commit/c4607b66a0b28e999d43ac3f0c83e773325ae041) · Git-recorded name `austinsimpkins1997-ship-it` · Local Git signature status `N` · Record editor `Codex (AI assistant)` · Editorial signature `Codex / 2026-11-15T16:07:39-05:00`
+- 2026-11-09T19:47:07-05:00 · Add Austin's Algorithm package · [88e61c6](https://github.com/austinsimpkins1997-ship-it/austins-algorithm/commit/88e61c6059fe792621d0cf180491f103c4394849) · Git-recorded name `austinsimpkins1997-ship-it` · Local Git signature status `N` · Record editor `Codex (AI assistant)` · Editorial signature `Codex / 2026-11-15T16:07:39-05:00`
+- 2026-11-09T19:42:57-05:00 · Initial commit · [c7ff733](https://github.com/austinsimpkins1997-ship-it/austins-algorithm/commit/c7ff733f71a440cee87e00bb582df465ee318bff) · Git-recorded name `austinsimpkins1997-ship-it` · Local Git signature status `N` · Record editor `Codex (AI assistant)` · Editorial signature `Codex / 2026-11-15T16:07:39-05:00`
+
 
 ## Original release notes
 
 ### Unreleased
+
+> Change record `CR-20ffc9c5926d`
+>
+> Recorded change date — UNKNOWN (undated source entry). Per-item original event times retain the source's uncertainty.
+>
+> Original implementer or scoped editor — UNKNOWN (retained source does not establish a per-change implementer).
+>
+> Record review date — 2026-11-15T16:07:39-05:00 (America/New_York).
+>
+> Review editor — Codex (AI assistant).
+>
+> Editorial signature — `Codex / 2026-11-15T16:07:39-05:00 / CR-20ffc9c5926d`.
+>
+> Source basis — Retained historical entry in the pre-review document. Original wording and recorded date preserved.
+>
+> Change-text SHA-256 — `392710716c48db2a6cbc0a6d6826410da823531e0d4d7cef8af6b69c1a90fb2a`.
 
 - Add an opt-in physical-index density-matrix method to offline cover sampling, retaining Aer’s routed active-wire checks.
 - Accept prespecified repeated witness batches and report exact batch-success lower bounds, completed shots, and nominal gate costs.
@@ -355,6 +861,22 @@ The times below mark the earliest verified record available for each milestone. 
 
 ### 0.1.0 — prepared 2026-11-09; no release tag
 
+> Change record `CR-45c3589871e3`
+>
+> Recorded change date — 2026-11-09. Per-item original event times retain the source's uncertainty.
+>
+> Original implementer or scoped editor — UNKNOWN (retained source does not establish a per-change implementer).
+>
+> Record review date — 2026-11-15T16:07:39-05:00 (America/New_York).
+>
+> Review editor — Codex (AI assistant).
+>
+> Editorial signature — `Codex / 2026-11-15T16:07:39-05:00 / CR-45c3589871e3`.
+>
+> Source basis — Retained historical entry in the pre-review document. Original wording and recorded date preserved.
+>
+> Change-text SHA-256 — `89705bc19b298a2b4505f3f75fe15838b9829920d5b61582d776b8c2b34fb7ec`.
+
 - Package the ChronoRealm three-qubit Grover example with a dependency-free CPU statevector reference.
 - Add optional Qiskit/Cirq circuits, generic explicit-marked-state circuit construction, documentation, tests, CI, citation and license files.
 - Correct the known-M first-peak estimate in the portable simulator to select the nearest iteration peak.
@@ -367,3 +889,4 @@ The times below mark the earliest verified record available for each milestone. 
 - Include guides, examples, circuits, tests, and CI in source distributions while excluding local build/cache/data artifacts.
 - Remove the citation release date until a public version is actually published.
 - No QPU connection, provider job, domain-specific deployment, or quantum-advantage claim is included.
+

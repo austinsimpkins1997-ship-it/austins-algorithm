@@ -4,8 +4,8 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "chronorealm-austins-algorithm"
-version = "0.1.0"
-description = "A transparent Grover-search teaching package from ChronoRealm"
+version = "0.2.6a1"
+description = "Local quantum-search experiments, bounded optimization, and decision-review workbench"
 readme = "README.md"
 requires-python = ">=3.10"
 license = "Apache-2.0"
@@ -30,6 +30,7 @@ classifiers = [
 dependencies = []
 
 [project.optional-dependencies]
+future-reader = ["chronorealm-future-reader==0.1.2"]
 qiskit = ["qiskit>=2.0,<3"]
 qasm = ["qiskit>=2.0,<3", "qiskit-qasm3-import>=0.6,<1"]
 ibm = [

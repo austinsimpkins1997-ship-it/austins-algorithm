@@ -19,7 +19,8 @@ from tempfile import NamedTemporaryFile
 from typing import Any
 from zipfile import BadZipFile, ZIP_DEFLATED, ZIP_STORED, ZipFile
 
-from . import __version__
+# Preserve the established replay engine contract independently of wheel releases.
+_ENGINE_FORMAT_VERSION = "0.1.0"
 from .constraints import _unique_object
 from .optimization import MAX_SHOTS, SearchSession, exact_minimum, problem_from_document
 from .focus_session import validate_focus
@@ -49,7 +50,13 @@ def _matches_export_member(name: str, raw: bytes, expected: bytes) -> bool:
     # Git may materialize these source members as LF or CRLF. The manifest
     # still verifies the exact archived bytes before equivalent text is accepted.
     if name in _CHECKOUT_TEXT_MEMBERS:
-        return raw.replace(b"\r\n", b"\n") == expected.replace(b"\r\n", b"\n")
+        actual_text = raw.replace(b"\r\n", b"\n")
+        expected_text = expected.replace(b"\r\n", b"\n")
+        if actual_text == expected_text:
+            return True
+        if name == "austins_algorithm/__init__.py":
+            legacy_text = expected_text.replace(b'__version__ = "0.2.6a1"', b'__version__ = "0.1.0"')
+            return actual_text == legacy_text
     return False
 
 
@@ -438,7 +445,7 @@ def _export_files(project: dict[str, Any], exported_at_utc: str) -> dict[str, by
         "exact_baseline.json": _json_bytes(baseline, readable=True),
         "metadata.json": _json_bytes({
             "schema_version": 1, "application": "Austin's Algorithm",
-            "application_version": WORKBENCH_VERSION, "engine_version": __version__,
+            "application_version": WORKBENCH_VERSION, "engine_version": _ENGINE_FORMAT_VERSION,
             "exported_at_utc": exported_at_utc,
             "run_status": run["status"] if run is not None else "NOT_RUN",
             "basis_order": "MSB-first display, q0 is rightmost",
@@ -496,7 +503,7 @@ def export_project(path: str | Path, project: object, *, overwrite: bool = False
         raise ValueError("The project exceeds the 32 MiB size limit.")
     manifest = {
         "schema_version": 1, "application_version": WORKBENCH_VERSION,
-        "engine_version": __version__, "digest_algorithm": "SHA-256",
+        "engine_version": _ENGINE_FORMAT_VERSION, "digest_algorithm": "SHA-256",
         "files": [
             {"path": name, "size_bytes": len(data), "sha256": hashlib.sha256(data).hexdigest()}
             for name, data in sorted(files.items())
@@ -553,7 +560,7 @@ def _archive_manifest(manifest: object, members: dict[str, Any]) -> dict[str, di
         not isinstance(manifest, dict)
         or set(manifest) != {"schema_version", "application_version", "engine_version", "digest_algorithm", "files"}
         or type(manifest["schema_version"]) is not int or manifest["schema_version"] != 1
-        or manifest["application_version"] != WORKBENCH_VERSION or manifest["engine_version"] != __version__
+        or manifest["application_version"] != WORKBENCH_VERSION or manifest["engine_version"] != _ENGINE_FORMAT_VERSION
         or manifest["digest_algorithm"] != "SHA-256"
         or not isinstance(manifest["files"], list) or len(manifest["files"]) != len(members) - 1
     ):
@@ -626,5 +633,5 @@ def verify_export(path: str | Path) -> dict[str, Any]:
         "path": str(file), "size_bytes": archive_size, "entries": len(members),
         "sha256": archive_digest.hexdigest(), "project_sha256": rows["project.json"]["sha256"],
         "project_schema_version": canonical["schema_version"], "application_version": WORKBENCH_VERSION,
-        "engine_version": __version__, "run_status": run["status"] if run is not None else "NOT_RUN",
+        "engine_version": _ENGINE_FORMAT_VERSION, "run_status": run["status"] if run is not None else "NOT_RUN",
     }

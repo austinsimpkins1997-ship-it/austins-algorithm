@@ -4,7 +4,7 @@ include IBM_MODEL_RESEARCH.md
 include CONSTRAINT_WORKFLOW.md
 include WORKBENCH.md
 include IBM_HARDWARE.md
-recursive-include src/austins_algorithm/workbench_assets *.ico *.svg *.png *.txt *.json
+recursive-include src/austins_algorithm/workbench_assets *.ico *.svg *.png *.txt *.json *.html
 recursive-include .github/workflows *.yml
 recursive-include circuits *.qasm
 recursive-include examples *.py
@@ -26,9 +26,16 @@ recursive-include tests *.py
 include tests/fixtures/dimensional-browser-v1.json
 recursive-include tools *.py
 include tools/workbench-build-requirements.txt
+recursive-include future-reader *.py *.html *.json *.md *.toml *.txt *.cjs *.css *.js
+prune future-reader/.build
+prune future-reader/build
+prune future-reader/dist
+prune future-reader/.venv
+prune future-reader/chronorealm_future_reader.egg-info
 prune .build
 prune build
 prune dist
 prune .venv
 prune .pytest_cache
+prune recovery
 global-exclude __pycache__ *.py[cod] *.sqlite *.sqlite3 *.db *.log

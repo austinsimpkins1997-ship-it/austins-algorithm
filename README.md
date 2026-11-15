@@ -2,13 +2,30 @@
 
 **A local workbench and Python toolkit for quantum-search experiments, bounded optimization, and evidence-based decision review.**
 
-**Workbench 0.2.6-alpha** · **Python package 0.1.0** · **Python 3.10+** · **[Apache-2.0](LICENSE)**
+**Workbench 0.2.6-alpha** · **Python package 0.2.6a1** · **Python 3.10+** · **[Apache-2.0](LICENSE)**
 
 Created by **Austin Gregory Simpkins and Chandler Middlebrooks / ChronoRealm**. Current source reviewed **November 15, 2026**.
 
 Start with a small search problem, inspect each simulated step, compare a candidate with an exact classical answer, and save the evidence. For a decision involving several operating conditions, use Decision Review to compare plans, inspect missing checks, and rehearse recovery. The Windows application brings these workflows together with instructions, visualization, project files, and a clear Export action.
 
 [Quick start](#quick-start) · [Capabilities](#capabilities) · [Workbench](#use-the-workbench) · [CLI and Python](#use-the-cli-and-python-api) · [Verification](#verification-and-current-status) · [Documentation](#documentation)
+
+## Current release and record ownership
+
+| Item | Current implementation or record |
+|---|---|
+| Python distribution | `chronorealm-austins-algorithm` **0.2.6a1** |
+| Windows desktop | Workbench **0.2.6-alpha** |
+| Optional Python side system | `chronorealm-future-reader` **0.1.2** |
+| Existing weighted file formats | Application label **0.2.0-alpha**, replay-engine label **0.1.0** |
+| Declared project authors | Austin Gregory Simpkins and Chandler Middlebrooks / ChronoRealm |
+| Documentation editor | Codex, an AI assistant working on Austin's request |
+| Review date | November 15, 2026, using America/New_York for displayed local times |
+| Change attribution and signatures | Per-entry editor, date basis, editorial signature, source and content hash in the changelog |
+
+Project authorship follows the package and citation metadata. An entry's implementer follows that entry's evidence. Editorial signatures identify the record editor and review time. Cryptographic Git verification, artifact signing and hashes retain their own meanings. Historical implementers and original dates remain `UNKNOWN` where a record supplies insufficient detail. [Timestamped and attributed history](CHANGELOG.md)
+
+This README covers the shipped Python runtime, desktop interface, optional companion, research tools, packaging, and selected ChronoRealm file integrations. A whole-project overview includes the status and boundary of each connection. The side-system map below identifies what is included, what consumes an explicit file, and what remains separately operated.
 
 ## Quick start
 
@@ -32,10 +49,22 @@ On macOS or Linux, create the environment with `python3 -m venv .venv` and use `
 Both maintained local copies have the verified November 15 Workbench build at this package-relative path.
 
 ```powershell
-& ".\.build\merge-0.2.6-20261115\dist\AustinsAlgorithmWorkbench.exe"
+& ".\.build\package-current-20261115\desktop\dist\AustinsAlgorithmWorkbench.exe"
 ```
 
 This is a local build location. A fresh Git checkout needs the source installation above or its own executable build. The Windows executable bundles its Python runtime, Workbench assets, and Future Reader companion. It remains unsigned. Build instructions describe the required tools, output directory, and verification. [Build and check release artifacts](CONTRIBUTING.md#build-and-check-release-artifacts)
+
+## Install the current Python distributions
+
+The Python release is `0.2.6a1`, matching the Workbench's `0.2.6-alpha` feature set using Python's alpha-version notation. The base wheel includes the main runtime, UI assets and offline HTML companion. The optional Python Future Reader controller is distributed alongside it as `chronorealm-future-reader` 0.1.2.
+
+After placing both wheels in one directory, install the complete local Workbench functionality from that directory.
+
+```powershell
+python -m pip install --no-index --find-links PATH-TO-WHEELS "chronorealm-austins-algorithm[future-reader]==0.2.6a1"
+```
+
+Installing the base wheel alone supports the CPU, optimization, Decision Review, Focus and export paths. The `[future-reader]` extra adds the native practice controller. Qiskit, IBM and Cirq still use their separate extras. Existing weighted archives retain their 0.2.0-alpha application and 0.1.0 replay-engine labels. These are file-format compatibility values. Installed library metadata reports 0.2.6a1.
 
 ## Capabilities
 
@@ -59,6 +88,27 @@ This is a local build location. A fresh Git checkout needs the source installati
 | Optional physical IBM experiment | Check a selected saved account and backend, compile and verify the circuit, then submit a separately authorized bounded comparison job. | [Hardware workflow](IBM_HARDWARE.md) |
 
 The CPU reference enumerates the bounded candidate space to construct its ideal model. Exact optimization and Decision Review use classical methods. Circuit simulation, dated noise models, physical-device measurements, and observed operator outcomes each carry their own evidence and costs.
+
+## Side systems and connection boundaries
+
+| Side system or workflow | Implemented relationship | Scope and owning record |
+|---|---|---|
+| Future Reader native practice | Optional installed controller used by the Workbench and CLI. Includes finite route choice, preview/commit, clock-preserving restore, certificates, checkpoints, SQLite state and disposable worker replacement. | The controller uses a bounded practice model. [Companion overview](future-reader/README.md) and [controller](future-reader/docs/CONTROLLER.md). |
+| Future Reader offline browser | Generated standalone HTML included in the main wheel and executable. The native **Offline HTML** action exports it. Browser and Python behavior are compared against declared fixtures. | Operates on bundled practice data and explicitly loaded records. [Browser and local workflow](future-reader/README.md). |
+| Future Reader evidence and time views | Named views preserve event, observation and availability roles, revisions, source-specific uncertainty and partial order. CERN, Cenomanian and archive-loss cases provide scoped examples. | Worked evidence/reconstruction cases retain their assumptions and missing observations. [Evidence guide](future-reader/docs/evidence.md). |
+| Future Reader exact studies | Finite-grid cap checks, early decisions, winner-set preservation, signed-outcome ranking and independent replay. Source tools accompany the source distribution. | The 414-tick result applies to its declared synthetic grid. Supplied large-scale claims retain their reproducibility gaps. [Exact studies](future-reader/docs/EXACT_STUDIES.md). |
+| Local recovery and release exercises | Real disposable local processes, heartbeat and generation checks, SQLite checkpoint recovery, local release previews and verified rollback. | Cross-machine and critical-infrastructure operation require separate integration evidence. [Worker guide](future-reader/docs/LIVE_WORKER.md) and [release guide](future-reader/docs/RELEASE.md). |
+| Dimensional Design | Explicit journal import maps reviewed stages, interfaces and evidence to Decision Review inputs. Costs and scenario constraints need review before solving. | A file adapter in the Algorithm package. [Importer source](src/austins_algorithm/decision_review_dimensional.py). |
+| Decision Containment and Cascade Resilience | Read-only receipt/replay inspection checks declared synthetic coverage, tied minima, processed/pending work and held recovery proposals. | The owning planners produce receipts. Operator approval and operational recovery remain with those systems. [Pilot receipt workflow](WORKBENCH.md#pilot-receipts) and [receipt reader](src/austins_algorithm/decision_review_receipts.py). |
+| Stasis Beam | Decision Review steps through an offline guard trace and counterexample with explicit state and transition explanations. | Abstract trace playback. Physical motion, timing and guarding stay in the owning bench system. [Replay source](src/austins_algorithm/decision_review_replays.py). |
+| Learning Blocks | Embedded practice records predictions, corrections, hint use, independent attempts, transfer and delayed checks. | Observed attempts determine the recorded status. Broader learning outcomes require learner evidence. [Practice implementation](src/austins_algorithm/decision_review_practice.py). |
+| Beyond Infinity's Bounds | Future Reader can inspect a caller-selected native ledger using an explicitly supplied, pinned implementation and bounded input. | An optional local-file binding with separate source and authority checks. [Binding contract](future-reader/docs/BIB_BINDING.md). |
+| ChronoRealm context handoffs and Local Agent | Algorithm projects export `AustinFocus/1` records for explicit context review. The separate workspace handoff tool can convert selected focus or Local Agent workflow records into Context Capsules. | The handoff tool belongs to the ChronoRealm workspace. This Python package supplies the export contract. [Focus record](src/austins_algorithm/focus_session.py) and [focus workflow](WORKBENCH.md#focus-and-resume). |
+| Qiskit, Cirq, Aer and IBM Runtime | Optional SDK paths build circuits, simulate, compile, compare and explicitly submit a configured hardware experiment. | Credentials, budgets and physical measurements belong to the selected provider workflow. [Hardware guide](IBM_HARDWARE.md). |
+
+Imported documents, declared roles, recorded consent and passing mathematical checks each keep their source and scope. A named reviewer can record authority, but a solver result supplies no authority by itself. The Workbench Assistant uses local rules. Existing provider and safety checks govern each operation at its own interface.
+
+The dependency-free main installation provides the CPU, optimization, Decision Review, Focus, export and browser-artifact paths. Installing the companion enables its native controller. Optional SDK extras enable their documented circuit workflows. The source distribution includes guides, examples, tests, study tools, the companion source and CI definitions. Generated build environments, recovery archives and local databases retain their own local lifecycle.
 
 ## Use the Workbench
 
@@ -154,29 +204,34 @@ Decision Review records supplied evidence and human responsibilities. Its result
 
 ## Verification and current status
 
-The earlier **November 15, 2026** focus release verification recorded the following local results.
+The current software evidence is the November 15, 2026 local Python-package delivery. These are the recorded results for the tested revisions, with skipped cases counted separately.
 
-| Check | Recorded result |
+| Checked area | Recorded result and scope |
 |---|---|
-| Selected Workbench, project, Assistant, Decision Review, and focus regressions | 64 passed in the workspace under Python 3.14.7 and 64 passed in the E-drive copy under Python 3.12.15 |
-| Frozen Windows application checks | Both executables passed hidden focus start, interruption, save/open, verified export, and resume checks, alongside the existing desktop journeys |
-| Package build | Verified source archive and wheel containing 118 runtime files |
-| Runtime and selected-artifact parity | All 118 packaged runtime files matched both source trees. All 18 selected source/build delivery records matched their digests. |
-| Executable SHA-256 | `267e3e8b4e2dadb85509bed560ff9b0d36dff1761e7ad9c351012e885914b730` |
+| Main suite in each maintained root | 723 total, **589 passed and 134 skipped**, using Python 3.12.15 with the existing SDK environment |
+| Current companion suite | 74 total, **73 passed and one skipped**, including Windows worker/database regressions |
+| Main distribution | Wheel built from a verified source archive, with **120 runtime files** checked against source |
+| Optional companion distribution | **20 runtime files**, with a separate controller wheel and source archive |
+| Isolated installed workflow | All **140 runtime files** matched wheel, source and installed bytes. CPU search, exact optimization, Decision Review, controller and old-export verification passed. |
+| Installed interface | Both registered launchers, hidden native Workbench flow and the real offline HTML Export handler passed. |
+| Rebuilt standalone executable | Hidden Focus, Decision Review and local-worker smoke checks passed. Workbench is **0.2.6-alpha**. |
+| Browser evidence | Four offline browser tests and generated companion checks passed during merged-source verification. |
+| Current executable identity | SHA-256 `3535ed8fd3d0248ccfb57731d25cec3e697298a7882fc96069fd70e07b31e6f9` |
+| Maintained copies at software delivery | **343 authored files** matched by bytes and SHA-256 across the workspace and E roots. |
 
-These results apply to the recorded release and its selected checks. The existing local build receipt is `.build/focus-0.2.6-20261115-release/verification.json`. This README refresh updates source documentation after that build. Earlier SDK, standard-library, WSL, benchmark, and hosted CI outcomes retain their original dates and revisions in the changelog and workflow guides. [Change history](CHANGELOG.md)
+Local delivery evidence is under `.build/package-current-20261115/verification.json`, `installed-verification.json`, and `distributions-current/build-result.json`. These generated files are available in the maintained local folders. A fresh checkout should build and verify its own artifacts using the contribution guide. Earlier test matrices, benchmark timings, CI runs and builds keep their original date and revision in the changelog and owning guides. [Change history](CHANGELOG.md) · [Build verification](CONTRIBUTING.md#build-and-check-release-artifacts)
 
-The reconciled November 15 build is available locally at `.build/merge-0.2.6-20261115/dist/AustinsAlgorithmWorkbench.exe`, with SHA-256 `0c8cbefaa3abd59821fdd93737247732d5c9a5ef0282f2126044d8fe933e0e38`. The merged Algorithm suite completed 722 tests in each maintained root under Python 3.12.15, with 588 passing and 134 skipped. The bundled Future Reader suite completed 73 tests, with 72 passing and one skipped. Its four offline browser tests and generated companion check passed. The rebuilt executable passed its hidden smoke check. These local records are in `.build/merge-reconcile-20261115` and the companion's `.build/merge-verification`. The system Python 3.14 full-suite attempt encountered its missing `secrets` standard-library module. The successful source-root rerun used the intact Python 3.12 environment.
+The Python library version is **0.2.6a1**, desktop release **0.2.6-alpha**, and optional companion **0.1.2**. The weighted archive's application label **0.2.0-alpha** and replay-engine label **0.1.0** are file-format compatibility values. Decision Review has its own versioned project and archive formats. The current verifier preserves the exact known older package-version source variant while rejecting other rehashed source changes.
 
-The Python library version is **0.1.0**. The desktop release is independently **0.2.6-alpha**. The weighted export's application wire label remains **0.2.0-alpha** for its compatibility contract. Decision Review uses its own versioned project and archive formats. These labels identify different interfaces.
+Full-suite results above used Python 3.12.15. The earlier system Python 3.14 attempt encountered a missing `secrets` standard-library module. Other operating-system and SDK combinations retain their separate dated evidence. A test result carries its tested scope and environment.
 
-To run package checks in a prepared environment, use the normal unittest entry point. Graphical checks use hidden roots and disposable fixtures.
+To run available checks in a prepared environment, use the normal unittest entry point. Graphical fixtures use hidden roots and disposable state.
 
 ```powershell
 python -B -m unittest discover -s tests -v
 ```
 
-The current release is alpha. Further evidence includes a real operator comparison, broader compatibility checks after environment changes, and an authorized physical-device study. The roadmap preserves prior measured baselines and open investigations. [Roadmap](ROADMAP.md)
+The software is alpha. Current artifacts are built and verified locally, with package-index publication pending. The Windows executable is unsigned. Physical IBM measurements, a real comparative operator study, human learning or productivity effects, and additional live cross-system adoption remain open evidence needs. The roadmap records the relevant prior measurements and next checks. [Roadmap](ROADMAP.md)
 
 ## Documentation
 
@@ -199,3 +254,9 @@ For every subsequent update, reconcile this README's versions, capabilities, com
 ## Attribution
 
 Austin's Algorithm is ChronoRealm's project and example name. Its quantum search method builds on Lov K. Grover's published algorithm. Project credit belongs to Austin Gregory Simpkins and Chandler Middlebrooks / ChronoRealm. See the original paper and the circuit tutorial for background. [Grover, 1996](https://doi.org/10.1145/237814.237866) · [IBM Grover tutorial](https://quantum.cloud.ibm.com/docs/en/tutorials/grovers-algorithm)
+
+## Documentation date and editorial signature
+
+This source review is dated `2026-11-15T16:07:39-05:00` in America/New_York. The record editor is **Codex (AI assistant)**, acting on Austin's request. Editorial signature is `Codex / 2026-11-15T16:07:39-05:00 / whole-project README review`. The corresponding source and document byte hashes are recorded in the local `.build/docs-whole-20261115/verification.json` receipt. Project credits follow package and citation metadata. Original implementers remain UNKNOWN where the historical source supplies insufficient attribution.
+
+This source-documentation revision has its own review signature and integrity record. Artifact-embedded documentation follows the build revision recorded with that artifact. Software test counts above remain attributed to their retained executions.

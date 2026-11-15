@@ -2,6 +2,7 @@
 
 from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
+import os
 import sqlite3
 from tempfile import TemporaryDirectory
 import unittest
@@ -16,6 +17,18 @@ PROGRAM = {"schema": "future-reader.program/1", "steps": [
 
 
 class LiveWorkerTests(unittest.TestCase):
+    @unittest.skipUnless(os.name == "nt", "Win32 extended-path regression")
+    def test_extended_path_reopens_same_database_without_creating_missing_file(self):
+        with TemporaryDirectory() as directory:
+            path = Path(directory) / "worker # percent%.sqlite"
+            worker.create_job(path, "practice", PROGRAM)
+            extended = Path("\\\\?\\" + str(path.absolute()).removeprefix("\\\\?\\"))
+            self.assertEqual(worker.status(extended, "practice")["cursor"], 0)
+            with self.assertRaises(sqlite3.OperationalError):
+                with worker._db(extended.with_name("missing.sqlite")):
+                    pass
+            self.assertFalse(extended.with_name("missing.sqlite").exists())
+
     def test_public_demo_really_kills_and_recovers(self):
         with TemporaryDirectory() as directory:
             result = worker.demo(Path(directory) / "worker.sqlite")

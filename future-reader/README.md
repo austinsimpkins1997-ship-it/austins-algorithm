@@ -1,5 +1,11 @@
 # Future Reader 0.1.2
 
+**Parent Python distribution** 0.2.6a1 · **Workbench** 0.2.6-alpha · **Review date** November 15, 2026.
+
+This side system provides finite route practice, source-aware evidence/time views, synthetic decision studies, local process recovery, checkpoint and release exercises, and explicit bindings to Austin's Algorithm and a caller-selected Beyond Infinity's Bounds ledger. The parent README maps its packaged interfaces and selected ChronoRealm relationships. [Whole-project overview](../README.md#side-systems-and-connection-boundaries)
+
+The parent project's declared credits are Austin Gregory Simpkins and Chandler Middlebrooks / ChronoRealm. This documentation revision was edited by Codex, an AI assistant, on Austin's request. Per-change original authorship, review dates, editorial signatures and integrity hashes are recorded in this side system's changelog. Unknown historical implementers remain explicitly UNKNOWN. [Change records](CHANGELOG.md)
+
 Open [Future Reader](future-reader.html) directly in a browser. Start with
 the practice board. Choose the Shelf, preview the move, then confirm it.
 Choose the Goal next. **Reverse** previews a restore that retains the
@@ -16,6 +22,8 @@ Its **Checkpoint** control exports or verifies a
 portable record. **Offline HTML** saves the browser companion.
 
 ## Run and verify locally
+
+The optional controller wheel is `chronorealm-future-reader` 0.1.2. With the two delivered wheels in one directory, install the complete parent and controller workflow using `python -m pip install --no-index --find-links PATH-TO-WHEELS "chronorealm-austins-algorithm[future-reader]==0.2.6a1"`. Installed use needs no workspace source path. The parent wheel supplies the generated offline HTML, while the optional wheel supplies the Python controller. SDK compilation remains separately selectable.
 
 From this directory, use Python 3.10 or newer. The core has no third-party
 dependencies.
@@ -45,11 +53,11 @@ checked against fixtures produced by the Python controller.
 
 ### Austin and Beyond Infinity’s Bounds
 
-In the workspace or matching E: sibling layout, add the Austin package to
-the Python path for the source integration.
+From the bundled `future-reader` directory inside Austin's Algorithm, add
+the parent's `src` directory for source integration.
 
 ```powershell
-$env:PYTHONPATH = (Resolve-Path '../austins-algorithm/src').Path
+$env:PYTHONPATH = (Resolve-Path '../src').Path
 python -B -m future_reader austin
 python -B -m future_reader austin --compile
 python -B -m austins_algorithm future-reader capabilities
@@ -60,6 +68,8 @@ bindings are described in [the controller guide](docs/CONTROLLER.md) and
 [the BIB guide](docs/BIB_BINDING.md). The latter requires an explicit native
 ledger and a reviewed BIB source path. It preserves the original ledger's
 vocabulary and evidence status.
+
+A standalone sibling checkout instead uses `../austins-algorithm/src`. Keep the path appropriate to the selected layout. The normal installed wheels use the registered Python packages.
 
 For the local Python API start `python -B -m future_reader serve`. The
 process prints a temporary bearer token and loopback URL. POST a JSON object
@@ -93,3 +103,11 @@ cases. The exact minimum and timing certificates apply to their stated
 models. Cross-machine failover, physical quantum experiments, and
 external releases require separately verified integrations. The supplied
 large studies remain provisional pending their original inputs and logs.
+
+## Current verification and record signature
+
+The November 15 delivery completed 74 companion tests under Python 3.12.15, with 73 passing and one skipped. The clean parent-plus-controller installation verified 140 runtime files, including all 20 companion runtime files. It exercised native practice and local-worker recovery through the hidden Workbench path. The four offline browser tests and generated companion consistency check passed in the earlier merged-source verification. Their dates and scopes remain separate in the parent records.
+
+The delivered source includes bounded body draining before early loopback denial responses, the actual-parent worker identity, Windows extended-path SQLite reopening and an isolated child-interpreter import root. Access, stale-generation, preview/commit and restore checks retain their owning contracts. Human benefits, physical devices and live external failover need separate evidence.
+
+Documentation record date is `2026-11-15T16:07:39-05:00` in America/New_York. Record editor is **Codex (AI assistant)**. Editorial signature is `Codex / 2026-11-15T16:07:39-05:00 / Future Reader README review`. Document byte integrity is recorded in the parent's local documentation verification receipt. Artifact-embedded documentation follows its recorded build revision.

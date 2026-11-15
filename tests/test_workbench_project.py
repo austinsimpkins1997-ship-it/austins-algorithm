@@ -253,5 +253,31 @@ class WorkbenchProjectTests(unittest.TestCase):
             projects.verify_export(variant("altered-source.zip", rehash=True))
 
 
+    def test_previous_package_version_export_stays_valid_and_rejects_other_source_changes(self):
+        current = self.root / "current.zip"
+        projects.export_project(current, projects.new_project())
+        with ZipFile(current) as archive:
+            files = {name: archive.read(name) for name in archive.namelist()}
+        name = "austins_algorithm/__init__.py"
+        files[name] = files[name].replace(b'__version__ = "0.2.6a1"', b'__version__ = "0.1.0"')
+
+        def legacy_archive(path):
+            manifest = json.loads(files["manifest.json"])
+            for row in manifest["files"]:
+                value = files[row["path"]]
+                row.update(size_bytes=len(value), sha256=sha256(value).hexdigest())
+            files["manifest.json"] = json.dumps(manifest).encode("utf-8")
+            with ZipFile(path, "w") as archive:
+                for member, value in files.items():
+                    archive.writestr(member, value)
+            return path
+
+        legacy = legacy_archive(self.root / "legacy.zip")
+        self.assertEqual(projects.verify_export(legacy)["engine_version"], "0.1.0")
+        files[name] += b"\nraise RuntimeError('unexpected legacy change')\n"
+        with self.assertRaisesRegex(ValueError, "differs from trusted"):
+            projects.verify_export(legacy_archive(self.root / "tampered.zip"))
+
+
 if __name__ == "__main__":
     unittest.main()

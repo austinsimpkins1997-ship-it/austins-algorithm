@@ -2,7 +2,7 @@
 
 ## Current priorities
 
-Reviewed November 15, 2026. The Python package is 0.1.0 and the Windows
+Reviewed November 15, 2026. The Python package is 0.2.6a1 and the Windows
 Workbench release is 0.2.6-alpha. Use the fresh exact reference for changing
 inputs. Preparation is worth testing where an unchanged reviewed case repeats
 enough to pay for setup and validation.
