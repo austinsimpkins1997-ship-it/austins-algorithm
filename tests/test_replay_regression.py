@@ -1,6 +1,7 @@
 """Exercise named replay preflight, execution boundaries and evidence."""
 
 import json
+import shutil
 import subprocess
 import sys
 import unittest
@@ -370,6 +371,29 @@ class DiffuserTimingComparisonTests(unittest.TestCase):
         "openqasm_import": 0.0,
         "openqasm_verify": 0.0,
     }
+
+    def setUp(self):
+        # Exercise legacy timing absence explicitly. Fresh CI baselines now contain
+        # real timings and must not implicitly define the legacy test condition.
+        build = PACKAGE_ROOT / ".build"
+        build.mkdir(exist_ok=True)
+        temporary = TemporaryDirectory(prefix="legacy-diffuser-timing-", dir=build)
+        self.addCleanup(temporary.cleanup)
+        for name, source in (("stable", self.stable), ("native", self.native)):
+            destination = Path(temporary.name) / name
+            shutil.copytree(source, destination)
+            report_path = destination / "report.json"
+            report = json.loads(report_path.read_bytes())
+            for cell in report["cells"]:
+                for variant in cell["variants"].values():
+                    variant.pop("compilation_timing_seconds", None)
+            raw = (json.dumps(report, indent=2, allow_nan=False) + "\n").encode("utf-8")
+            report_path.write_bytes(raw)
+            receipt_path = destination / "receipt.json"
+            receipt = json.loads(receipt_path.read_bytes())
+            receipt["artifacts"]["report.json"] = {"bytes": len(raw), "sha256": sha256(raw).hexdigest()}
+            receipt_path.write_text(json.dumps(receipt, indent=2) + "\n", encoding="utf-8")
+            setattr(self, name, destination)
 
     def test_diffuser_timings_are_opt_in_and_legacy_values_are_unavailable(self):
         from austins_algorithm.workflows_cli import main

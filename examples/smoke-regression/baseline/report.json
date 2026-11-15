@@ -285,7 +285,7 @@
                 "measure"
               ],
               "simulated_qubits": 2,
-              "aer_experiment_seconds": 0.0002952,
+              "aer_experiment_seconds": 0.0001378,
               "verified_hit_rate_wilson_95": [
                 0.3932559113685198,
                 0.7183466888495963
@@ -306,12 +306,12 @@
               "verified_hit_rate": 0.5625
             },
             "timing_seconds": {
-              "sample": 0.0008273000057670288,
-              "submit": 4.520000220509246e-05,
-              "result_wait": 0.0007810000024619512,
-              "verify": 8.859999798005447e-05,
-              "count_format": 4.189999890513718e-05,
-              "count_verify": 4.140000237384811e-05
+              "sample": 0.00057050003670156,
+              "submit": 4.190002800896764e-05,
+              "result_wait": 0.0005273999995552003,
+              "verify": 8.939998224377632e-05,
+              "count_format": 4.20999713242054e-05,
+              "count_verify": 4.220003029331565e-05
             }
           },
           {
@@ -345,12 +345,12 @@
               "verified_hit_rate": 0.5
             },
             "timing_seconds": {
-              "sample": 0.0004757000060635619,
-              "submit": 3.470000228844583e-05,
-              "result_wait": 0.0004394999996293336,
-              "verify": 5.789999704575166e-05,
-              "count_format": 2.8399997972883284e-05,
-              "count_verify": 2.510000194888562e-05
+              "sample": 0.0004629999748431146,
+              "submit": 3.5699980799108744e-05,
+              "result_wait": 0.00042589998338371515,
+              "verify": 5.6100019719451666e-05,
+              "count_format": 2.8199981898069382e-05,
+              "count_verify": 2.400000812485814e-05
             }
           }
         ],
@@ -377,7 +377,7 @@
                 "measure"
               ],
               "simulated_qubits": 2,
-              "aer_experiment_seconds": 0.0001198,
+              "aer_experiment_seconds": 0.0001114,
               "verified_hit_rate_wilson_95": [
                 0.3932559113685198,
                 0.7183466888495963
@@ -398,12 +398,12 @@
               "verified_hit_rate": 0.5625
             },
             "timing_seconds": {
-              "sample": 0.0006380000049830414,
-              "submit": 5.750000127591193e-05,
-              "result_wait": 0.0005797000048914924,
-              "verify": 6.27999979769811e-05,
-              "count_format": 3.0499999411404133e-05,
-              "count_verify": 2.720000338740647e-05
+              "sample": 0.0005922999698668718,
+              "submit": 5.050003528594971e-05,
+              "result_wait": 0.0005407999851740897,
+              "verify": 7.680000271648169e-05,
+              "count_format": 3.6100042052567005e-05,
+              "count_verify": 3.4699973184615374e-05
             }
           },
           {
@@ -416,7 +416,7 @@
                 "measure"
               ],
               "simulated_qubits": 2,
-              "aer_experiment_seconds": 9.68e-05,
+              "aer_experiment_seconds": 0.0001007,
               "verified_hit_rate_wilson_95": [
                 0.3644951711897464,
                 0.6913061289193116
@@ -437,12 +437,12 @@
               "verified_hit_rate": 0.53125
             },
             "timing_seconds": {
-              "sample": 0.0004521999944699928,
-              "submit": 3.199999628122896e-05,
-              "result_wait": 0.0004191999978502281,
-              "verify": 5.310000415192917e-05,
-              "count_format": 2.4100001610349864e-05,
-              "count_verify": 2.600000152597204e-05
+              "sample": 0.0005029999883845448,
+              "submit": 4.2599975131452084e-05,
+              "result_wait": 0.00045930000487715006,
+              "verify": 4.930002614855766e-05,
+              "count_format": 2.2899999748915434e-05,
+              "count_verify": 2.2899999748915434e-05
             }
           }
         ],
@@ -479,7 +479,7 @@
         ],
         "trace_real": 0.9999999920318168,
         "trace_imag": 0.0,
-        "wall_seconds": 0.023639500002900604
+        "wall_seconds": 0.017366499989293516
       },
       "complement": {
         "status": "COMPLETED",
@@ -490,7 +490,7 @@
         ],
         "trace_real": 0.9999999920318168,
         "trace_imag": 0.0,
-        "wall_seconds": 0.01342839999415446
+        "wall_seconds": 0.01265589997638017
       }
     },
     "versions": {
@@ -525,7 +525,7 @@
       "nodes_visited": 2,
       "forced_assignments": 1,
       "conflicts": 0,
-      "wall_seconds": 3.2500000088475645e-05
+      "wall_seconds": 2.8399983420968056e-05
     },
     "candidates": {
       "direct": {
@@ -549,7 +549,7 @@
               "measure"
             ],
             "simulated_qubits": 2,
-            "aer_experiment_seconds": 8.37e-05,
+            "aer_experiment_seconds": 6.72e-05,
             "verified_hit_rate_wilson_95": [
               0.15003898915214947,
               0.8499610108478506
@@ -567,12 +567,12 @@
             "verified_hit_rate": 0.5
           },
           "timing_seconds": {
-            "sample": 0.0005740999986301176,
-            "submit": 5.439999949885532e-05,
-            "result_wait": 0.0005185999980312772,
-            "verify": 4.9299997044727206e-05,
-            "count_format": 2.4300003133248538e-05,
-            "count_verify": 2.0399995264597237e-05
+            "sample": 0.00043080002069473267,
+            "submit": 3.779999678954482e-05,
+            "result_wait": 0.00039220001781359315,
+            "verify": 4.139996599406004e-05,
+            "count_format": 1.999997766688466e-05,
+            "count_verify": 1.7700018361210823e-05
           }
         },
         "validation_batches": [
@@ -586,7 +586,7 @@
                 "measure"
               ],
               "simulated_qubits": 2,
-              "aer_experiment_seconds": 8.37e-05,
+              "aer_experiment_seconds": 6.72e-05,
               "verified_hit_rate_wilson_95": [
                 0.15003898915214947,
                 0.8499610108478506
@@ -604,12 +604,12 @@
               "verified_hit_rate": 0.5
             },
             "timing_seconds": {
-              "sample": 0.0005740999986301176,
-              "submit": 5.439999949885532e-05,
-              "result_wait": 0.0005185999980312772,
-              "verify": 4.9299997044727206e-05,
-              "count_format": 2.4300003133248538e-05,
-              "count_verify": 2.0399995264597237e-05
+              "sample": 0.00043080002069473267,
+              "submit": 3.779999678954482e-05,
+              "result_wait": 0.00039220001781359315,
+              "verify": 4.139996599406004e-05,
+              "count_format": 1.999997766688466e-05,
+              "count_verify": 1.7700018361210823e-05
             }
           }
         ],
@@ -646,7 +646,7 @@
               "measure"
             ],
             "simulated_qubits": 2,
-            "aer_experiment_seconds": 7.07e-05,
+            "aer_experiment_seconds": 6.68e-05,
             "verified_hit_rate_wilson_95": [
               0.15003898915214947,
               0.8499610108478506
@@ -664,12 +664,12 @@
             "verified_hit_rate": 0.5
           },
           "timing_seconds": {
-            "sample": 0.0003938000008929521,
-            "submit": 2.220000169472769e-05,
-            "result_wait": 0.0003708000003825873,
-            "verify": 4.829999670619145e-05,
-            "count_format": 2.2499996703118086e-05,
-            "count_verify": 2.1899999410379678e-05
+            "sample": 0.0003855999675579369,
+            "submit": 2.7999980375170708e-05,
+            "result_wait": 0.00035689998185262084,
+            "verify": 4.3599982745945454e-05,
+            "count_format": 2.2299995180219412e-05,
+            "count_verify": 1.799996243789792e-05
           }
         },
         "validation_batches": [
@@ -683,7 +683,7 @@
                 "measure"
               ],
               "simulated_qubits": 2,
-              "aer_experiment_seconds": 7.07e-05,
+              "aer_experiment_seconds": 6.68e-05,
               "verified_hit_rate_wilson_95": [
                 0.15003898915214947,
                 0.8499610108478506
@@ -701,12 +701,12 @@
               "verified_hit_rate": 0.5
             },
             "timing_seconds": {
-              "sample": 0.0003938000008929521,
-              "submit": 2.220000169472769e-05,
-              "result_wait": 0.0003708000003825873,
-              "verify": 4.829999670619145e-05,
-              "count_format": 2.2499996703118086e-05,
-              "count_verify": 2.1899999410379678e-05
+              "sample": 0.0003855999675579369,
+              "submit": 2.7999980375170708e-05,
+              "result_wait": 0.00035689998185262084,
+              "verify": 4.3599982745945454e-05,
+              "count_format": 2.2299995180219412e-05,
+              "count_verify": 1.799996243789792e-05
             }
           }
         ],
@@ -725,15 +725,15 @@
     },
     "local_cancellation_unconfirmed": false,
     "timing_seconds": {
-      "classical_reference": 3.839999408228323e-05,
-      "backend_setup": 1.2690627999982098,
-      "compile_and_audit": 0.14742229999683332,
-      "noise_model_setup": 0.03303320000122767,
-      "density_preparation": 0.03711279999697581,
-      "calibration": 0.013755399995716289,
-      "budget_planning": 9.919999865815043e-05,
-      "holdout_validation": 0.0025106000030064024,
-      "workflow_wall": 1.5032592999996268
+      "classical_reference": 3.3400021493434906e-05,
+      "backend_setup": 2.2627262999885716,
+      "compile_and_audit": 0.4379328000359237,
+      "noise_model_setup": 0.02484820003155619,
+      "density_preparation": 0.030050200002733618,
+      "calibration": 0.009932199958711863,
+      "budget_planning": 9.059999138116837e-05,
+      "holdout_validation": 0.002228700031992048,
+      "workflow_wall": 2.7680572000099346
     }
   }
 }

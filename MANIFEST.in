@@ -12,6 +12,7 @@ include examples/field_sensor_kit.json examples/site_interlock.json examples/tel
 include examples/checkpoint_constraint.json
 include examples/weighted_sensor_kit.json
 include examples/smoke-regression/constraint.json examples/smoke-regression/manifest.json examples/smoke-regression/requirements.txt
+include examples/smoke-regression/BASELINE_REFRESH_2026-11-15.json
 include examples/smoke-regression/baseline/request.json examples/smoke-regression/baseline/report.json
 include examples/smoke-regression/baseline/selected.qasm examples/smoke-regression/baseline/receipt.json
 include examples/diffuser-smoke-regression/constraint.json examples/diffuser-smoke-regression/manifest.json

@@ -14,6 +14,32 @@ New records should state the actual date with offset, editor name and role, sour
 
 ## Current changes
 
+### 2026-11-15 17:01:16 -0500 — repair Manila smoke baselines after the package-version update
+
+> Change record `CR-7eb2e97f1bba`
+>
+> Recorded change date — 2026-11-15 17:01:16 -0500.
+>
+> Original implementer or scoped editor — Codex (AI assistant), repair and verification editor acting on Austin's request.
+>
+> Record review date — 2026-11-15T17:01:16-05:00 (America/New_York).
+>
+> Review editor — Codex (AI assistant).
+>
+> Editorial signature — `Codex / 2026-11-15T17:01:16-05:00 / CR-7eb2e97f1bba`.
+>
+> Source basis — Hosted run 43763164723 logs and artifacts; local pinned simulator replays; [baseline refresh record](examples/smoke-regression/BASELINE_REFRESH_2026-11-15.json).
+>
+> Change-text SHA-256 — `6b885c338c63968f3b4e6d10ec0740e90dfa018e61099132eb8d4f1f62108d2c`.
+
+- Diagnose hosted run 43763164723 at commit 51ee4ef: nine test-matrix jobs passed; Manila replay rejected the four baseline receipts still identifying package 0.1.0.
+- Regenerate phase-cover, standard-importer diffuser, native-importer diffuser and placement baselines with package 0.2.6a1, CPython 3.12.15 and the six recorded SDK pins. Preserve the original requests, circuit identities, seeded histograms, workload and decisions under the existing comparison rules. Keep strict version checking and the existing probability-only tolerance.
+- Add a dependency-free baseline-currency guard. Make the legacy timing tests build explicit missing-timing fixtures, so refreshing current evidence does not erase older-format coverage.
+- Verify the six source-package Manila commands locally; placement replay matches all eight histograms and changes no cell evaluation or model decision. Retain the original failed local attempts and the isolated phase replay; its earlier Windows native crash has no established cause.
+- Pass the full 724-test suite in each maintained root: 590 passed and 134 skipped under Python 3.12.15. Verify byte and SHA-256 parity for 345 active authored files; retain historical recovery archives and generated environments locally.
+- Add a public before/after artifact record, update the README, and synchronize the changed files with the ChronoRealm workspace copy. The runtime, desktop version and unsigned executable are unchanged. Hosted CI on the repair remains pending publication.
+
+
 ### 2026-11-15 16:07:39 -05:00 — whole-project documentation and attributable records
 
 > Change record `CR-6af557ecf5f0`

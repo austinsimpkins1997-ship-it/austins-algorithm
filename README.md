@@ -204,7 +204,7 @@ Decision Review records supplied evidence and human responsibilities. Its result
 
 ## Verification and current status
 
-The current software evidence is the November 15, 2026 local Python-package delivery. These are the recorded results for the tested revisions, with skipped cases counted separately.
+The software evidence includes the November 15, 2026 local Python-package delivery and the later Manila baseline repair described below. These are the recorded results for the tested revisions, with skipped cases counted separately.
 
 | Checked area | Recorded result and scope |
 |---|---|
@@ -232,6 +232,18 @@ python -B -m unittest discover -s tests -v
 ```
 
 The software is alpha. Current artifacts are built and verified locally, with package-index publication pending. The Windows executable is unsigned. Physical IBM measurements, a real comparative operator study, human learning or productivity effects, and additional live cross-system adoption remain open evidence needs. The roadmap records the relevant prior measurements and next checks. [Roadmap](ROADMAP.md)
+
+### Manila CI baseline repair — November 15, 2026
+
+The first hosted run after the package-version update passed the five Python and four optional-framework jobs, but failed the Manila smoke job. Its strict software-identity checks found that four historical baseline receipts still recorded package **0.1.0**, while the installed release reported **0.2.6a1**. The repair regenerates those receipts by running their pinned simulator requests. It preserves the checked circuit identities, seeded histograms, workload and decisions, keeps historical evidence in Git, and leaves the version and probability checks intact.
+
+Both maintained source copies passed the full suite after this repair: **724 tests, 590 passed and 134 skipped** in each under Python 3.12.15. All **345 active authored files** matched by bytes and SHA-256; historical recovery archives, Git metadata, environments and generated outputs remain local to each copy.
+
+The six packaged commands passed locally: phase-cover regression, both diffuser regressions, placement receipt verification, placement identity checking and placement replay. Placement replay matched **8/8 histograms**, with no changed cell evaluations or model decisions. A new dependency-free release guard checks all four baseline versions and SDK pins, and legacy timing tests now construct their missing-timing condition explicitly. The earlier full-suite totals above retain their original revision; this repair has its own verification record.
+
+[Dated baseline identities, comparisons and limits](examples/smoke-regression/BASELINE_REFRESH_2026-11-15.json) · [Failed historical run](https://github.com/austinsimpkins1997-ship-it/austins-algorithm/actions/runs/43763164723). Local logs and recovery files are under `.build/manila-repair-20261115/`. Hosted success on the repair remains pending until a new commit runs in GitHub Actions. The Python package remains **0.2.6a1** and the Workbench remains **0.2.6-alpha**; this patch changes simulator evidence, tests and documentation rather than the application runtime.
+
+For a future package-version update, run the release guard and regenerate and compare the pinned smoke baselines before publishing. Do not edit old version labels to manufacture a match. Preserve the old receipts and verify the packaged source archive, including every mandatory replay command.
 
 ## Documentation
 

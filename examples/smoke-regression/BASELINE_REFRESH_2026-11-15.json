@@ -1,0 +1,198 @@
+{
+  "schema_version": 1,
+  "recorded_at": "2026-11-15T17:01:16-05:00",
+  "editor": "Codex (AI assistant)",
+  "editorial_signature": "Codex / 2026-11-15T17:01:16-05:00 / Manila baseline refresh",
+  "signature_kind": "Editorial text; no human approval or cryptographic identity is inferred.",
+  "status": "REFRESHED_BASELINES_VERIFIED_LOCALLY",
+  "package_version": "0.2.6a1",
+  "prior_baseline_commit": "51ee4ef4f1aa410a0df7d4f08a50ff444e85e868",
+  "failed_hosted_run": "https://github.com/austinsimpkins1997-ship-it/austins-algorithm/actions/runs/43763164723",
+  "cause": "All four historical baseline receipts recorded austins_algorithm 0.1.0; current execution recorded 0.2.6a1.",
+  "method": "Execute the original pinned simulator requests in a clean CPython 3.12.15 environment; independently compare outputs before accepting new receipts. Preserve prior evidence in Git and local recovery copies.",
+  "environment": {
+    "python": "3.12.15",
+    "austins_algorithm": "0.2.6a1",
+    "qiskit": "2.6.2",
+    "qiskit-aer": "0.18.2",
+    "qiskit-ibm-runtime": "0.51.0",
+    "qiskit-qasm3-import": "0.6.0",
+    "numpy": "2.5.4",
+    "scipy": "1.18.1"
+  },
+  "baselines": [
+    {
+      "path": "examples/smoke-regression/baseline",
+      "before": {
+        "receipt.json": {
+          "bytes": 702,
+          "sha256": "0b89b7e8434e4e2d823597b29f7a948699310d274bf9043a5d69d6f188b04df2"
+        },
+        "report.json": {
+          "bytes": 21777,
+          "sha256": "0280fbccb871b628627fd957df4c69f5330fec8869db67824ff48564bc390aef"
+        },
+        "request.json": {
+          "bytes": 1719,
+          "sha256": "f943dd13eb57ea4dea1753bd803f5574a7171c6924fc1ba569c000a562450471"
+        },
+        "selected.qasm": {
+          "bytes": 842,
+          "sha256": "f90ab0d3959c93d1fd087e0a21108cf907821e65152cf06aa95941867c20fc3a"
+        }
+      },
+      "after": {
+        "receipt.json": {
+          "bytes": 704,
+          "sha256": "ace56ac6600df41e2efc3f5ef401607b885c268e2163d0844e464375d8ee8920"
+        },
+        "report.json": {
+          "bytes": 21787,
+          "sha256": "f2435548f2b05a8bdf5b287511ad84340067e4f3a7d87cc8a634d7fcf4742f63"
+        },
+        "request.json": {
+          "bytes": 1719,
+          "sha256": "f943dd13eb57ea4dea1753bd803f5574a7171c6924fc1ba569c000a562450471"
+        },
+        "selected.qasm": {
+          "bytes": 842,
+          "sha256": "f90ab0d3959c93d1fd087e0a21108cf907821e65152cf06aa95941867c20fc3a"
+        }
+      }
+    },
+    {
+      "path": "examples/diffuser-smoke-regression/baseline",
+      "before": {
+        "receipt.json": {
+          "bytes": 596,
+          "sha256": "16915f8993954e457780fe87cd9e1fe1877a0bec9e508570d550068046c92b67"
+        },
+        "report.json": {
+          "bytes": 87877,
+          "sha256": "d355c8ea5e3ee64b36bf0ad8f467243305124725b6d7fbdc1ede08f104537d15"
+        },
+        "request.json": {
+          "bytes": 1541,
+          "sha256": "682ce1e306c972018254a56bcaa6ff860c4623f0ba98aee143a504ad3f888603"
+        }
+      },
+      "after": {
+        "receipt.json": {
+          "bytes": 598,
+          "sha256": "b6a649c4e82484d94c4411a9cb461bd40dc482c680af12217003c341d3830ae5"
+        },
+        "report.json": {
+          "bytes": 90685,
+          "sha256": "8b3050787e78e5b17052533eba59eaa14a44120f7301cbd159cfc9adc4916c9e"
+        },
+        "request.json": {
+          "bytes": 1541,
+          "sha256": "682ce1e306c972018254a56bcaa6ff860c4623f0ba98aee143a504ad3f888603"
+        }
+      }
+    },
+    {
+      "path": "examples/diffuser-smoke-regression/baseline-native",
+      "before": {
+        "receipt.json": {
+          "bytes": 596,
+          "sha256": "2c69521686bf8f9fe70436f86b8fdd20418fa7a6359d52ceb36cd2d64fc60cb6"
+        },
+        "report.json": {
+          "bytes": 88520,
+          "sha256": "feff2309c7c4abbe74c4dc62838cfa5a62af547a7c34ae095491a9064fa25cc5"
+        },
+        "request.json": {
+          "bytes": 1573,
+          "sha256": "6d27398094662f16e60ea6457b380d9bdadedfecedb5ed583fbeaac5efe8d12b"
+        }
+      },
+      "after": {
+        "receipt.json": {
+          "bytes": 598,
+          "sha256": "a16e5b030130cb5a2262189612a9196f7e33e166bff8e18e2171b9e292c17926"
+        },
+        "report.json": {
+          "bytes": 91428,
+          "sha256": "6e8e602dd5b05f06659eb833bf2a64a5eed41026d83334c07783e7b499eb5238"
+        },
+        "request.json": {
+          "bytes": 1573,
+          "sha256": "6d27398094662f16e60ea6457b380d9bdadedfecedb5ed583fbeaac5efe8d12b"
+        }
+      }
+    },
+    {
+      "path": "examples/placement-smoke-regression/baseline",
+      "before": {
+        "receipt.json": {
+          "bytes": 596,
+          "sha256": "65c484c9cbfa844f000db82ccd200906e55cec404287fa9eda8658f4f4140c0b"
+        },
+        "report.json": {
+          "bytes": 105209,
+          "sha256": "f47618f9d6cac69eaecf89268525420dea5fdd55ac363c072bd682ba1ee31a7b"
+        },
+        "request.json": {
+          "bytes": 225,
+          "sha256": "5ed941cf7783d30626c6c8b989c8b93cb16607b5fa297b099809e2fd20a052f2"
+        }
+      },
+      "after": {
+        "receipt.json": {
+          "bytes": 598,
+          "sha256": "f9171277f17fc976d335ab1be85aedf43d36b531e0c17bbea17f144d6cd5d6b9"
+        },
+        "report.json": {
+          "bytes": 105201,
+          "sha256": "3ec1d044a17a9cfae635b5f72b903b02b54620996194a13b5f331c624cc39faf"
+        },
+        "request.json": {
+          "bytes": 225,
+          "sha256": "5ed941cf7783d30626c6c8b989c8b93cb16607b5fa297b099809e2fd20a052f2"
+        }
+      }
+    }
+  ],
+  "preserved_checks": [
+    "Strict software-version identity",
+    "Exact request/circuit/export identity checks",
+    "Exact seeded histograms and decisions",
+    "Existing shot/time ceilings",
+    "Existing probability-only 1e-12 roundoff allowance"
+  ],
+  "local_replay": {
+    "phase": "REGRESSION_MATCHED",
+    "diffuser": "REGRESSION_MATCHED",
+    "diffuser-native": "REGRESSION_MATCHED",
+    "placement-verify": "PLACEMENT_RECEIPT_VERIFIED",
+    "placement-identities": "PLACEMENT_REPLAY_IDENTITIES_VERIFIED",
+    "placement-replay": "PLACEMENT_REPLAY_MATCHED"
+  },
+  "placement_replay": {
+    "replayed_trials": 8,
+    "completed_replay_trials": 8,
+    "matched_histograms": 8,
+    "changed_histograms": 0,
+    "changed_cell_evaluations": 0,
+    "completed_model_pairs": 1,
+    "changed_model_decisions": 0,
+    "verified_exports": 4
+  },
+  "verification_limits": [
+    "Classical simulation of a dated public IBM snapshot; no QPU submission.",
+    "Hosted CI must run on the committed repair before its outcome is known.",
+    "One overlapping local phase worker exited with Windows native code 0xC0000005. Unchanged-input isolated replay passed; the crash cause is unverified.",
+    "C: disk space was insufficient for a dependency download; verification caches and temporary environment were moved to E:."
+  ],
+  "broader_verification": {
+    "recorded_utc": "2026-11-15T22:06:24.680224+00:00",
+    "tests_in_each_maintained_root": 724,
+    "passed_in_each_root": 590,
+    "skipped_in_each_root": 134,
+    "python": "3.12.15",
+    "active_authored_files_compared": 345,
+    "byte_mismatches": 0,
+    "excluded": "Historical recovery archives, Git metadata, virtual environments and generated build outputs."
+  }
+}
