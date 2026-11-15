@@ -41,6 +41,8 @@ class QiskitAdapterTests(unittest.TestCase):
         result = run_local_statevector(3, ("011", "101"), iterations=1, shots=256, seed=7)
         self.assertEqual(set(result["counts"]), {"011", "101"})
         self.assertEqual(result["observed_success_fraction"], 1.0)
+        self.assertEqual(result["measurement"]["ideal_validity"], "GUARANTEED")
+        self.assertEqual(result["measurement"]["ideal_outcome"], "MULTIPLE")
         self.assertFalse(result["quantum_hardware_used"])
         self.assertFalse(result["provider_job_submitted"])
 
@@ -78,6 +80,8 @@ class QiskitAdapterTests(unittest.TestCase):
         self.assertFalse(result["provider_job_submitted"])
 
         unamplified = run_austin_circuit_local_statevector(iterations=0, shots=256, seed=7)
+        self.assertEqual(unamplified["measurement"]["ideal_validity"], "PROBABILISTIC")
+        self.assertEqual(unamplified["measurement"]["ideal_possible_outcomes"], 8)
         self.assertGreater(len(unamplified["counts"]), len(unamplified["verified_candidates"]))
         self.assertEqual(unamplified["verified_candidates"], ["011", "101"])
         self.assertEqual(

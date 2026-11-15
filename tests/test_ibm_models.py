@@ -237,6 +237,8 @@ class SnapshotComparisonTests(unittest.TestCase):
         self.assertFalse(report["quantum_hardware_used"])
         self.assertEqual(report["classical"]["solutions"], ["011", "101"])
         self.assertEqual(report["ideal"]["verified_shots"], 64)
+        self.assertEqual(report["ideal"]["theoretical_success_probability"], 1.0)
+        self.assertEqual(report["ideal"]["measurement"]["ideal_outcome"], "MULTIPLE")
         self.assertEqual(set(report["models"]), {"manila", "jakarta", "torino"})
         for model, expected_method in (
             ("manila", "density_matrix"), ("jakarta", "density_matrix"), ("torino", "matrix_product_state"),
@@ -251,6 +253,8 @@ class SnapshotComparisonTests(unittest.TestCase):
                 self.assertEqual(compilation["status"], "VERIFIED_IDEAL_MEASUREMENT_DISTRIBUTION")
                 self.assertGreater(compilation["compiled"]["two_qubit_gates"], 0)
                 simulation = details["simulation"]
+                self.assertEqual(simulation["measurement"]["source"], "NOISE_MODEL_SIMULATION")
+                self.assertNotIn("ideal_validity", simulation["measurement"])
                 self.assertEqual(simulation["method"], expected_method)
                 self.assertIn("measure", simulation["noise_instructions"])
                 self.assertLessEqual(simulation["simulated_qubits"], report["limits"]["active_qubits"])

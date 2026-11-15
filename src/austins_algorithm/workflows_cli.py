@@ -957,7 +957,7 @@ def _compare(args: argparse.Namespace) -> dict:
     if args.problem == "mod4-range" and not args.ibm_model:
         raise ValueError("--problem mod4-range requires --ibm-model")
     if args.ibm_model:
-        if any(value is not None for value in device_fields) or args.wait_timeout_seconds is not None:
+        if any(value is not None for value in device_fields) or args.wait_timeout_seconds is not None or args.qpu_preflight:
             raise ValueError("--ibm-model is a local workflow and cannot be combined with physical job options")
         if args.noise_probability is not None:
             raise ValueError("--ibm-model uses snapshot noise and does not accept --noise-probability")
@@ -985,9 +985,9 @@ def _compare(args: argparse.Namespace) -> dict:
     from .device_experiment import IBMHardwareRun, run_austin_device_comparison
 
     hardware = None
-    if any(value is not None for value in device_fields) or args.wait_timeout_seconds is not None:
+    if any(value is not None for value in device_fields) or args.wait_timeout_seconds is not None or args.qpu_preflight:
         if any(value is None for value in device_fields):
-            raise ValueError("a physical job requires --backend, --account, --instance and --max-execution-seconds")
+            raise ValueError("a physical job or preflight requires --backend, --account, --instance and --max-execution-seconds")
         hardware = IBMHardwareRun(
             backend_name=args.backend,
             account_name=args.account,
@@ -999,6 +999,7 @@ def _compare(args: argparse.Namespace) -> dict:
         shots=args.shots, seed=args.seed,
         noise_probability=0.02 if args.noise_probability is None else args.noise_probability,
         hardware=hardware,
+        qpu_preflight_only=args.qpu_preflight,
     )
 
 
@@ -1531,11 +1532,13 @@ def main(argv: list[str]) -> None:
                                 help="offline snapshot simulation with the ibm package extra")
     compare_parser.add_argument("--native-qasm", action="store_true",
                                 help="try Qiskit's native OpenQASM importer with --ibm-model")
-    compare_parser.add_argument("--backend", help="submit one physical job on this named IBM backend")
+    compare_parser.add_argument("--backend", help="named IBM target for a physical job or preflight")
     compare_parser.add_argument("--account", help="name of the locally configured IBM account")
     compare_parser.add_argument("--instance", help="IBM service instance for the physical job")
     compare_parser.add_argument("--max-execution-seconds", type=int, help="provider QPU execution time limit")
     compare_parser.add_argument("--wait-timeout-seconds", type=int, help="local wait deadline for the physical job")
+    compare_parser.add_argument("--qpu-preflight", action="store_true",
+                                help="inspect the authenticated target and compile without submitting any job")
     compare_parser.set_defaults(handler=_compare)
 
     args = parser.parse_args(argv)
@@ -1549,6 +1552,8 @@ def main(argv: list[str]) -> None:
         print(json.dumps(result, sort_keys=True, separators=(",", ":"), allow_nan=False))
     else:
         print(json.dumps(result, indent=2, allow_nan=False))
+    if args.workflow == "compare" and args.qpu_preflight and result["hardware"]["status"] != "TARGET_COMPILED_AND_VERIFIED":
+        parser.exit(1)
     if args.workflow in ("constraint-regression", "diffuser-regression") and result["status"] != "REGRESSION_MATCHED":
         parser.exit(1)
     if args.workflow == "diffuser-benchmark" and result["status"] != "BENCHMARK_COMPLETED":

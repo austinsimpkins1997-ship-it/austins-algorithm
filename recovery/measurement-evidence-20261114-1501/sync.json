@@ -1,0 +1,92 @@
+[
+  {
+    "file": "README.md",
+    "bytes": 33807,
+    "sha256": "d3ebe0ddf69f68b6fb02ff1322a36dffb8c9344c014ea9602dbb1005550117f9"
+  },
+  {
+    "file": "CHANGELOG.md",
+    "bytes": 79618,
+    "sha256": "083970c156846f3c2748a138b6b86718d148b5d50155200c845b1c4987b88c54"
+  },
+  {
+    "file": "GETTING_STARTED.md",
+    "bytes": 7113,
+    "sha256": "f6a54b04b2624bfa414fa682dcba9705a4093a5770381823daabfe9f5dff12df"
+  },
+  {
+    "file": "WORKBENCH.md",
+    "bytes": 14587,
+    "sha256": "df14bcee89ccfcd50cd8b3e3ff7982d16b24abba5ab53367af87a39c2815ffdd"
+  },
+  {
+    "file": "src/austins_algorithm/__main__.py",
+    "bytes": 8324,
+    "sha256": "96c11b2e8628d3ffae474345a2d084b0ac881e8c36ebb4167498e39680ca0be1"
+  },
+  {
+    "file": "tests/test_core.py",
+    "bytes": 5929,
+    "sha256": "86175e9ccb10188ac550c201d66526438529b8f7ebe4189e8e027b103a69fefe"
+  },
+  {
+    "file": "src/austins_algorithm/workbench.py",
+    "bytes": 83527,
+    "sha256": "1efd11439b0639107fa9c223d420f8b5f98511cf43ab92d1c104c4e5317f4b5b"
+  },
+  {
+    "file": "src/austins_algorithm/workbench_assistant.py",
+    "bytes": 11584,
+    "sha256": "b7f415c51325806292b70e286ea2afd2ffd6dbfeb53eae1979e56f8e73b0f66b"
+  },
+  {
+    "file": "tests/test_workbench_assistant.py",
+    "bytes": 3355,
+    "sha256": "3661ce7107df05e8130569e9661d5c8345e9abbc68b492e1ca75d82f86793e8c"
+  },
+  {
+    "file": "src/austins_algorithm/qiskit_adapter.py",
+    "bytes": 11685,
+    "sha256": "88283f0c18004cb8bc8356589d53247cccb0dba4f4a79e174985cd0d695e4a9d"
+  },
+  {
+    "file": "src/austins_algorithm/cirq_adapter.py",
+    "bytes": 3188,
+    "sha256": "2b3ddf2f753ab5e2ad675950138a2c95ed23c7175e895c10385de27f2cba1c7a"
+  },
+  {
+    "file": "src/austins_algorithm/device_experiment.py",
+    "bytes": 20440,
+    "sha256": "800ded4464d2591f77ac9e08bbadba28e9e885ff7dec3b8203eb57cfdbb38d9f"
+  },
+  {
+    "file": "tests/test_qiskit_adapter.py",
+    "bytes": 4357,
+    "sha256": "63a51ec27bcb9168d1b5783f957bd906759b4e18c2f87c6a01fb948b8b32bcab"
+  },
+  {
+    "file": "tests/test_cirq_adapter.py",
+    "bytes": 1339,
+    "sha256": "2495266b58413c000b554baf5aec3ceee5c7fba03d11fed394881cd3cce6222b"
+  },
+  {
+    "file": "tests/test_device_experiment.py",
+    "bytes": 16638,
+    "sha256": "ac5b7604dba440785c15df31bfbd4da4224fa10082520fab738980c5e99a7ee7"
+  },
+  {
+    "file": "src/austins_algorithm/measurement.py",
+    "bytes": 1312,
+    "sha256": "04adcbf20d41d7575672e68f69953a13ecea196581c6219d8626825c4543746f"
+  },
+  {
+    "file": "src/austins_algorithm/ibm_models.py",
+    "bytes": 57782,
+    "sha256": "027999106e78e4b7b122149583f0e8658d1d3d4c08731d46e23a4e9fff549f0e"
+  },
+  {
+    "file": "tests/test_ibm_models.py",
+    "bytes": 25021,
+    "sha256": "026e21bacac1387447de49fb2547e4c9c7f50da27197ca5fe4c54ea7b0d6a4ba"
+  }
+]

@@ -1,0 +1,38 @@
+{
+  "source": "https://github.com/lucide-icons/lucide",
+  "revision": "55782beff3a0133df79c417eb68f96e8f19e2404",
+  "icons": {
+    "play": {
+      "upstream_name": "play",
+      "sha256": "d7c34786135922a92b6896f6c2384ceeb0346afbf6041dc79982011411409833"
+    },
+    "save": {
+      "upstream_name": "save",
+      "sha256": "ee9d56a7fec4b20dd6689546d41f68219ea8cbd67f99bd17a1bdaff5be6edb53"
+    },
+    "folder-open": {
+      "upstream_name": "folder-open",
+      "sha256": "ee57452b40e71df310214091dd9da1941a397c83197b8ff8d7ae66dd4242578b"
+    },
+    "download": {
+      "upstream_name": "download",
+      "sha256": "3daeee13ded5a3afa2198b1bb4e2262d163922f97d96ac6ff9953e8ed4fe039d"
+    },
+    "chevron-left": {
+      "upstream_name": "chevron-left",
+      "sha256": "83b0681aa38bf55e9d52a1e4b4cced624abe1fe7678ecafda133a574f1161d93"
+    },
+    "chevron-right": {
+      "upstream_name": "chevron-right",
+      "sha256": "2758143d7b2434e4aa7307dfd34405c87909ff4052f21b5f3f40d45224b4f19b"
+    },
+    "boxes": {
+      "upstream_name": "boxes",
+      "sha256": "7e301f6c38337389f5a96675d14cb9d8ef8a613329e99c3dfcf7c635bdd1faae"
+    },
+    "circle-help": {
+      "upstream_name": "circle-question-mark",
+      "sha256": "8cfdf0cbb7a743e2fa0efe5d7f90c31729dc071057d7f95f2363bfb773997f7e"
+    }
+  }
+}

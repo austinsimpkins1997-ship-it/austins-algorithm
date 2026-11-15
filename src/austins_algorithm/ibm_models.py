@@ -20,6 +20,7 @@ from .compilation import (
 )
 from .core import austin_predicate, theoretical_success_probability
 from .device_experiment import austin_classical_baseline, summarize_austin_counts, summarize_search_counts
+from .measurement import ideal_grover_outcomes
 from .qiskit_adapter import build_austin_circuit
 
 if TYPE_CHECKING:
@@ -950,6 +951,13 @@ def run_ibm_snapshot_comparison(
     ideal.update(
         execution_mode="SIMULATOR",
         method="qiskit_statevector_sampler",
+        theoretical_success_probability=theoretical_success_probability(3, 2, 1),
+        measurement={
+            "source": "IDEAL_SIMULATION",
+            "sampled": True,
+            "seed_scope": "LOCAL_SAMPLING",
+            **ideal_grover_outcomes(3, 2, 1),
+        },
         sample_seconds=ideal_sampled - ideal_started,
         verify_seconds=ideal_verified - ideal_sampled,
         wall_seconds=ideal_verified - ideal_started,
@@ -970,6 +978,13 @@ def run_ibm_snapshot_comparison(
         timings = models[name]["timing_seconds"]
         timings["load_backend"] = load_seconds
         timings["wall"] += load_seconds
+        simulation = models[name]["simulation"]
+        if simulation is not None:
+            simulation["measurement"] = {
+                "source": "NOISE_MODEL_SIMULATION",
+                "sampled": True,
+                "seed_scope": "LOCAL_SAMPLING",
+            }
 
     return {
         "status": "COMPLETED" if all(value["status"] == "COMPLETED" for value in models.values()) else "PARTIAL",

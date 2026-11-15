@@ -6,3 +6,8 @@ examples/smoke-regression/baseline/* text eol=lf
 examples/diffuser-smoke-regression/baseline/* text eol=lf
 examples/diffuser-smoke-regression/baseline-native/* text eol=lf
 examples/placement-smoke-regression/baseline/* text eol=lf
+
+# Preserve the exact supplied brief bytes and generated offline artifact.
+future-reader/MASTER_PROMPT.txt -text whitespace=cr-at-eol
+future-reader/fixtures/brief-*.txt -text whitespace=cr-at-eol
+future-reader/future-reader.html -text

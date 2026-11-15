@@ -1,0 +1,157 @@
+{
+  "archive": "E:\\Austins-Algorithm\\austins-algorithm\\recovery\\decision-review-20261114-124458",
+  "workspace": "C:\\Users\\Austin\\Documents\\ChatGPT\\New project\\ChronoRealm Whole 4\\projects\\quantum-practicality\\packages\\austins-algorithm",
+  "mirror": "E:\\Austins-Algorithm\\austins-algorithm",
+  "files": [
+    {
+      "root": "package",
+      "path": "CHANGELOG.md",
+      "bytes": 78361,
+      "sha256": "C822C64C17A1FD568D4A7168EB030D73A4D1C837F87760C83EAB8D1A62807AC2"
+    },
+    {
+      "root": "package",
+      "path": "README.md",
+      "bytes": 32042,
+      "sha256": "1A82EC39234CE5F6471BDF50B368DEA9231D01DE1B8396C73A130AAB9C59FE59"
+    },
+    {
+      "root": "package",
+      "path": "ROADMAP.md",
+      "bytes": 55767,
+      "sha256": "E050CC820C0D3F383FD58BF3A890503907006A57B99F519FBEDF971A946468BD"
+    },
+    {
+      "root": "package",
+      "path": "WORKBENCH.md",
+      "bytes": 14202,
+      "sha256": "3165CCA8290B0F7AACECB3C49545CF9229014045A1F8CCB309405FE213BFCD1C"
+    },
+    {
+      "root": "package",
+      "path": "src/austins_algorithm/__main__.py",
+      "bytes": 7937,
+      "sha256": "C12B078162078564463030D62924C5BB3B613F6C45C868622FA414F445EB1841"
+    },
+    {
+      "root": "package",
+      "path": "src/austins_algorithm/decision_review.py",
+      "bytes": 30888,
+      "sha256": "A318D1500B3E8EEEAE1E559BF5A64E2647F034CFDDC032DFAB5E050F7362FB22"
+    },
+    {
+      "root": "package",
+      "path": "src/austins_algorithm/decision_review_cli.py",
+      "bytes": 3328,
+      "sha256": "2D985EEB8CFB067F31DEBA0BFFDE1E679569ACAD50530CD6A2DA14E1B5C63138"
+    },
+    {
+      "root": "package",
+      "path": "src/austins_algorithm/decision_review_dimensional.py",
+      "bytes": 16893,
+      "sha256": "89C8CCB0087D08788A55A9691127AB58FF71BD5BA4A9E38B0EDAD174204D25BD"
+    },
+    {
+      "root": "package",
+      "path": "src/austins_algorithm/decision_review_panel.py",
+      "bytes": 47487,
+      "sha256": "8D61BE527C60ECF32D1E34F3AED6F7B0B078003B02CB8584EFC0CEF379E319EF"
+    },
+    {
+      "root": "package",
+      "path": "src/austins_algorithm/decision_review_policy.py",
+      "bytes": 5323,
+      "sha256": "170553A0D5835DF5071DCE858BBA1E2CC7F9F6B1F752118772AFA9A0F0B069C2"
+    },
+    {
+      "root": "package",
+      "path": "src/austins_algorithm/decision_review_practice.py",
+      "bytes": 12584,
+      "sha256": "B441D14C497035F31AB4945BB20F3D619186C115C48F03D294060648ED78BB64"
+    },
+    {
+      "root": "package",
+      "path": "src/austins_algorithm/decision_review_project.py",
+      "bytes": 13132,
+      "sha256": "DE351689741BF512F53962717D02950A0BC32D42F748C265D9C6C2FDCBCB4F79"
+    },
+    {
+      "root": "package",
+      "path": "src/austins_algorithm/decision_review_replays.py",
+      "bytes": 20249,
+      "sha256": "A1F19FD232B2A5A4DB7EFCEA7149F60A7D6BDD95BBCC6977A2A9A501B7F27996"
+    },
+    {
+      "root": "package",
+      "path": "src/austins_algorithm/desktop.py",
+      "bytes": 5469,
+      "sha256": "71296C6D23FB8F6B3468AA67D5086F155CD6676F86311D68EDC1A27817043259"
+    },
+    {
+      "root": "package",
+      "path": "src/austins_algorithm/workbench.py",
+      "bytes": 82860,
+      "sha256": "5C3C9364CCBAE7C718A35A32F7E54FCAF4868E6F4E0E0450EE21366DB6C0BFE4"
+    },
+    {
+      "root": "package",
+      "path": "src/austins_algorithm/workbench_project.py",
+      "bytes": 31356,
+      "sha256": "3309EE2CFF61CA64FEFFCCAF3E14EF8D977A5FA9E10B65205B68CB5D4A3DADF3"
+    },
+    {
+      "root": "package",
+      "path": "src/austins_algorithm/workbench_release.py",
+      "bytes": 108,
+      "sha256": "57CC87C97CFBAC39B0F89099476B41847E4A7F2BE448F5800B38E6260D66E886"
+    },
+    {
+      "root": "package",
+      "path": "tests/test_decision_review.py",
+      "bytes": 10105,
+      "sha256": "6F5ECD4BDD67ED9589F3DD2983CC8CC6327DFCB1589BF1503C019336DFC00708"
+    },
+    {
+      "root": "package",
+      "path": "tests/test_decision_review_dimensional.py",
+      "bytes": 6841,
+      "sha256": "B8AC5309C2E6CA90E6150DBFF1A1C91848D075C52EBE960B6CA011B81956D6E3"
+    },
+    {
+      "root": "package",
+      "path": "tests/test_decision_review_integration.py",
+      "bytes": 9917,
+      "sha256": "47EC0806224EF4D8B78812E27ADB9A9F3F49AE2EFBEAAFE36219D07B2F3298FA"
+    },
+    {
+      "root": "package",
+      "path": "tests/test_decision_review_panel.py",
+      "bytes": 4739,
+      "sha256": "EBCA3313A4421CF232E4BCAAC32B7C6DBDFE0CEDF2BC455D32778EE42A646AE3"
+    },
+    {
+      "root": "package",
+      "path": "tests/test_decision_review_replays.py",
+      "bytes": 5054,
+      "sha256": "7C62C70DDABEB32E3E11B6874E4E5D2ED61D1B59EA4158CD22BBD400EFE17830"
+    },
+    {
+      "root": "package",
+      "path": "tools/stage_workbench_release.py",
+      "bytes": 5793,
+      "sha256": "94D09A51528C8949A2CD707770E4E32D7D8A215F6EC4ABE7D676A72F4A80D5A2"
+    },
+    {
+      "root": "companion",
+      "path": "CHANGELOG.md",
+      "bytes": 2364,
+      "sha256": "821D43063B07FD839D3EFED476C63879A8384471626B399F738B9E3A713E24E6"
+    },
+    {
+      "root": "companion",
+      "path": "future_reader/live_failover.py",
+      "bytes": 22287,
+      "sha256": "E17EEE2B9496397D1BFAF681F98A5C2723F6D605B4AB799E2A6A5B6AAD625F1C"
+    }
+  ]
+}

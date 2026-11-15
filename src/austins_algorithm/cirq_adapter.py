@@ -6,6 +6,8 @@ import math
 from collections import Counter
 from typing import Any
 
+from .measurement import ideal_grover_outcomes
+
 
 def classical_solutions() -> tuple[str, ...]:
     """Return the q2q1q0 display strings satisfying q0=1 and q1!=q2."""
@@ -45,16 +47,31 @@ def run_local(*, iterations: int = 1, shots: int = 2048, seed: int = 20261109) -
     circuit = build_austin_circuit(iterations=iterations)
     result = cirq.Simulator(seed=seed).run(circuit, repetitions=shots)
     counts = Counter("".join(str(int(bit)) for bit in row) for row in result.measurements["answer"])
-    theta = math.asin(math.sqrt(len(classical_solutions()) / 8))
+    if sum(counts.values()) != shots:
+        raise RuntimeError("sampler returned an unexpected shot total")
+    solutions = classical_solutions()
+    verified_candidates = [bits for bits in solutions if bits in counts]
+    verified_shots = sum(counts[bits] for bits in verified_candidates)
+    theta = math.asin(math.sqrt(len(solutions) / 8))
     return {
         "status": "LOCAL_IDEAL_CIRQ_SIMULATION",
+        "execution_mode": "SIMULATOR",
         "predicate": "q0 == 1 and q1 != q2",
         "bit_order": "output strings are q2 q1 q0",
         "iterations": iterations,
         "theoretical_success_probability": math.sin((2 * iterations + 1) * theta) ** 2,
+        "measurement": {
+            "source": "IDEAL_SIMULATION",
+            "sampled": True,
+            "seed_scope": "LOCAL_SAMPLING",
+            **ideal_grover_outcomes(3, len(solutions), iterations),
+        },
         "shots": shots,
         "seed": seed,
         "counts": dict(sorted(counts.items())),
+        "verified_candidates": verified_candidates,
+        "verified_shots": verified_shots,
+        "observed_success_fraction": verified_shots / shots,
         "quantum_hardware_used": False,
         "provider_job_submitted": False,
     }

@@ -20,6 +20,51 @@ from austins_algorithm import (  # noqa: E402
 
 
 class CoreTests(unittest.TestCase):
+    def test_cli_distinguishes_circuit_certainty_from_sampled_outcomes(self):
+        def run_cli(*args):
+            environment = {**os.environ, "PYTHONPATH": str(PACKAGE_ROOT / "src")}
+            process = subprocess.run(
+                [sys.executable, "-m", "austins_algorithm", "--shots", "1", *args],
+                env=environment, capture_output=True, text=True, check=True,
+            )
+            return json.loads(process.stdout)
+
+        first = run_cli("--seed", "1")
+        second = run_cli("--seed", "2")
+        self.assertEqual(first["measurement"], {
+            "source": "IDEAL_SIMULATION", "sampled": True, "seed_scope": "LOCAL_SAMPLING",
+            "ideal_validity": "GUARANTEED", "ideal_outcome": "MULTIPLE", "ideal_possible_outcomes": 2,
+        })
+        self.assertEqual(first["measurement"], second["measurement"])
+        self.assertEqual(first["observed_success_fraction"], 1)
+        self.assertEqual(second["observed_success_fraction"], 1)
+        self.assertEqual(first["sample_counts"], {"011": 1})
+        self.assertEqual(second["sample_counts"], {"101": 1})
+
+        sample_only = run_cli("--qubits", "2", "--marked", "00", "--iterations", "0", "--seed", "1")
+        self.assertEqual(sample_only["measurement"]["ideal_validity"], "PROBABILISTIC")
+        self.assertAlmostEqual(sample_only["statevector_success_probability"], 0.25)
+        self.assertEqual(sample_only["observed_success_fraction"], 1)
+
+    def test_ideal_outcome_support_classifies_overshoot_and_exact_hits(self):
+        from austins_algorithm.measurement import ideal_grover_outcomes
+
+        for marked_count, rounds, validity, outcome, support in (
+            (1, 1, "GUARANTEED", "SINGLE", 1),
+            (1, 4, "GUARANTEED", "SINGLE", 1),
+            (1, 2, "PROBABILISTIC", "MULTIPLE", 4),
+            (2, 16, "PROBABILISTIC", "MULTIPLE", 4),
+            (3, 1, "IMPOSSIBLE", "SINGLE", 1),
+            (0, 1, "IMPOSSIBLE", "MULTIPLE", 4),
+            (4, 1, "GUARANTEED", "MULTIPLE", 4),
+        ):
+            with self.subTest(marked_count=marked_count, rounds=rounds):
+                result = ideal_grover_outcomes(2, marked_count, rounds)
+                self.assertEqual(
+                    (result["ideal_validity"], result["ideal_outcome"], result["ideal_possible_outcomes"]),
+                    (validity, outcome, support),
+                )
+
     def test_builtin_predicate_and_one_iteration_match_exact_solution_set(self):
         result = run_austin_search(3, austin_predicate, shots=128, seed=7)
         self.assertEqual(result["solution_examples"], ["011", "101"])

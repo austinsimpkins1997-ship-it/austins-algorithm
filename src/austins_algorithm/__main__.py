@@ -5,9 +5,47 @@ import json
 import sys
 
 from .core import AustinAlgorithmError, austin_predicate, run_austin_search, validate_marked_states
+from .measurement import ideal_grover_outcomes
 
 
 def main() -> None:
+    if len(sys.argv) > 1 and sys.argv[1] == "decision-review":
+        from .decision_review_cli import main as review_main
+
+        raise SystemExit(review_main(sys.argv[2:]))
+    if len(sys.argv) > 1 and sys.argv[1] == "future-reader":
+        try:
+            from future_reader.cli import main as reader_main
+        except ModuleNotFoundError as error:
+            if error.name != "future_reader":
+                raise
+            raise SystemExit("Future Reader is a separate optional package. Use the bundled Workbench or install Future Reader.") from error
+        raise SystemExit(reader_main(sys.argv[2:]))
+    if len(sys.argv) > 1 and sys.argv[1] == "workbench-export-verify":
+        from .workbench_project import verify_export
+
+        verify_parser = argparse.ArgumentParser(
+            prog="austins-algorithm workbench-export-verify",
+            description="Verify an exported Workbench ZIP without extracting or running its code.",
+        )
+        verify_parser.add_argument("archive")
+        args = verify_parser.parse_args(sys.argv[2:])
+        try:
+            receipt = verify_export(args.archive)
+        except (ValueError, OSError, RuntimeError) as exc:
+            verify_parser.error(str(exc))
+        print(json.dumps(receipt, indent=2, allow_nan=False))
+        return
+    if len(sys.argv) > 1 and sys.argv[1] == "optimize":
+        from .optimization_cli import main as optimization_main
+
+        optimization_main(sys.argv[2:])
+        return
+    if len(sys.argv) > 1 and sys.argv[1] == "workbench":
+        from .desktop import main as desktop_main
+
+        desktop_main(sys.argv[2:])
+        return
     if len(sys.argv) > 1 and sys.argv[1] in {
         "compile", "search", "constraint", "constraint-classical", "constraint-sweep", "constraint-cover", "compare",
         "witness-schedule", "unknown-count-plan", "unknown-count-select", "unknown-count-snapshot-select",
@@ -33,7 +71,7 @@ def main() -> None:
         return
     parser = argparse.ArgumentParser(description="Run a local ideal simulation of Grover search.")
     parser.epilog = (
-        "Additional commands: compile, search, constraint, constraint-classical, "
+        "Additional commands: optimize, workbench, decision-review, future-reader, workbench-export-verify, compile, search, constraint, constraint-classical, "
         "constraint-sweep, constraint-cover, compare, witness-schedule, unknown-count-plan, unknown-count-select, "
         "unknown-count-snapshot-select, unknown-count-snapshot-profile-export, unknown-count-snapshot-profile-verify, "
         "unknown-count-snapshot-profile-compare, unknown-count-snapshot-layout-plan, snapshot-calibration-compare, "
@@ -59,7 +97,7 @@ def main() -> None:
     parser.add_argument("--marked", nargs="+", help="explicit MSB-first marked bitstrings")
     parser.add_argument("--iterations", type=int)
     parser.add_argument("--shots", type=int, default=2048)
-    parser.add_argument("--seed", type=int, default=20261109)
+    parser.add_argument("--seed", type=int, default=20261109, help="seed for repeatable local shot sampling")
     parser.add_argument(
         "--trace-amplitudes",
         action="store_true",
@@ -113,6 +151,14 @@ def main() -> None:
         )
     except AustinAlgorithmError as exc:
         parser.error(str(exc))
+    result["measurement"] = {
+        "source": "IDEAL_SIMULATION",
+        "sampled": True,
+        "seed_scope": "LOCAL_SAMPLING",
+        **ideal_grover_outcomes(
+            result["qubits"], result["solution_count_known_by_classical_enumeration"], result["iterations"],
+        ),
+    }
     print(json.dumps(result, indent=2))
 
 

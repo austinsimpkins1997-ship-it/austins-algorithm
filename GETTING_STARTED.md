@@ -24,6 +24,8 @@ python3 -m venv .venv
 
 The program prints a report. In the example, the answers are `011` and `101`. The report says **classical ideal simulation** because a regular computer did the work. It is not a quantum-computer result.
 
+Try adding `--shots 1 --seed 1`, then change the seed to `2`. Each simulated measurement gives one answer. Both answers are valid, and before measurement each has a 50% ideal chance. The `measurement` section reports `GUARANTEED` for validity and `MULTIPLE` for the possible outputs. Reusing a seed repeats the local random choices. A hardware run draws its own measurements and can also experience noise.
+
 ## 2. Try a rule of your own
 
 Save this as `my_search.py` in the package folder. This rule accepts four-bit answers that start with `11`:

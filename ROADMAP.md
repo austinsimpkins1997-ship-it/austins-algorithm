@@ -1,5 +1,25 @@
 # Roadmap and evidence still needed
 
+## Current priorities
+
+Reviewed November 14, 2026. The Python package is 0.1.0 and the Windows
+Workbench release is 0.2.5-alpha. Use the fresh exact reference for changing
+inputs. Preparation is worth testing where an unchanged reviewed case repeats
+enough to pay for setup and validation.
+
+| Evidence window | Finding | Decision and next check |
+| --- | --- | --- |
+| Past · November 14 local CPU pilot | Both copies matched 128 prepared and fresh reports. For 32 unchanged requests, preparation saved 42–45% of local processing time. Revision churn and rechecking each request erased the gain. | Use the measured input pattern and full cost when deciding whether to reuse a prepared answer. |
+| Current · November 14 Workbench and benchmark | The paired receipt view replays coverage and shows tied minima, approval and safety holds. The benchmark on Windows CPython 3.12 uses a high-resolution elapsed clock and reports its resolution separately from the lookup deadline. | Re-run the same named fixtures before distribution. Compare elapsed time only within the same timing scope, inputs and environment. |
+| Next · operator study | The read-only paired review and recording workflow are ready. Real comparative timings remain pending. | Austin runs matched cases over 2–4 weeks. Keep equivalent coverage, holds and approval, then compare active times including evidence refresh, setup, and retries. |
+| Later · capacity and wider compatibility | The exact bounded solver, oracle audits and release artifacts answer different bounded questions. | For larger cases, name the case, output guarantee and resource cap first. Compare an alternative with the exact reference where feasible. Add frozen receipt-view verification to hosted staging, and evaluate QPU cost only against an approved named device and a matched classical baseline. |
+
+For each change, retain the previous evidence, record the source and environment,
+and run the corresponding local tests in both copies. Review any unexpected
+semantic change before interpreting the timing. Repeat the cycle after SDK,
+interpreter, fixture, receipt schema, or environment changes that affect it.
+Keep operator observations and machine benchmarks in their owning records.
+
 ## What exists now
 
 - A project-specific, three-qubit Grover circuit for `q0 == 1 and q1 != q2`, implemented in Qiskit and Cirq.
@@ -280,8 +300,16 @@
 
 143. **Keep controlled worker tests portable.** Scope the benchmark subprocess replacement to its own module, preserve independent host-metadata calls and exercise that separation explicitly on Windows and Linux. Inspect all run #9 matrix failures and retain the pre-fix reproduction. See [saved benchmark verification](CONSTRAINT_WORKFLOW.md#verify-saved-checkpoint-benchmark-records).
 
+144. **Minimum-cost search and desktop Workbench.** Add bounded integer objectives, an independent exact minimum, budgeted Grover simulation, and an audited reversible cost-threshold circuit. Deliver a native Windows executable with interactive stage inspection, saved projects, generated replay code, and full export. See [the Workbench guide](WORKBENCH.md).
+
+148. **Decision Review.** Compare one plan across several named scenarios. Preserve evidence holds, dependency changes, rejected cheaper choices, operator disposition, offline fault traces and practice records in a separately replayable project. Start with the public-office tabletop and compare prepared lookup with fresh exact review. See [the Decision Review guide](WORKBENCH.md#decision-review).
+
+**Rehearsal and recovery receipt pilot.** Inspect both local owner receipts in
+Decision Review. Recompute bounded coverage and show the recorded holds and
+pending approvals alongside the scope and source pins. See [Pilot receipts](WORKBENCH.md#pilot-receipts).
+
 ## Remaining evidence
 
 - Extend regression coverage to additional supported simulator/OS combinations when a named environment is available. Keep checkpoint records and package artifacts bound to their exact revisions; local checks do not replace hosted verification or physical-device evidence.
 - Run one authorized physical experiment with a named backend, record its actual job and measured results, and compare its hit rate and full cost with the local references.
-- Keep hosted verification tied to its exact committed revision. [Run #8](https://github.com/austinsimpkins1997-ship-it/austins-algorithm/actions/runs/43249759269) passed its ten jobs. [Run #9](https://github.com/austinsimpkins1997-ship-it/austins-algorithm/actions/runs/43286454985) for `10533c88b96ddca98045904095a5d0203900ac9c` passed Manila and failed the nine Ubuntu matrix jobs through the shared test mock. The #143 local repair passes both maintained copies and WSL checks; hosted verification after the next authorized push remains pending.
+- Keep hosted verification tied to the committed revision. [Run #10](https://github.com/austinsimpkins1997-ship-it/austins-algorithm/actions/runs/43300577324) passed all ten jobs for the #143 CI repair at `33eab1190c31188c322951a78cc6b7f4e620c0fa`. Desktop #144 adds local Windows executable evidence. A managed organizational deployment requires its own signing, distribution, and accessibility validation.

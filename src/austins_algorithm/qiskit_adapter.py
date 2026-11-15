@@ -12,6 +12,7 @@ from collections.abc import Iterable
 from typing import Any
 
 from .core import austin_predicate
+from .measurement import ideal_grover_outcomes
 
 
 MAX_LOCAL_SIMULATION_QUBITS = 16
@@ -183,6 +184,12 @@ def run_austin_circuit_local_statevector(
         "marked_count": len(marked_states),
         "iterations": iterations,
         "theoretical_success_probability": theoretical_success_probability(3, len(marked_states), iterations),
+        "measurement": {
+            "source": "IDEAL_SIMULATION",
+            "sampled": True,
+            "seed_scope": "LOCAL_SAMPLING",
+            **ideal_grover_outcomes(3, len(marked_states), iterations),
+        },
         "shots": shots,
         "seed": seed,
         "counts": dict(sorted(counts.items())),
@@ -224,11 +231,18 @@ def run_local_statevector(
     successful = sum(count for state, count in counts.items() if state in marked)
     return {
         "status": "LOCAL_IDEAL_STATEVECTOR_SIMULATION",
+        "execution_mode": "SIMULATOR",
         "n_qubits": n_qubits,
         "marked_states": list(states),
         "marked_count": len(states),
         "iterations": iterations,
         "theoretical_success_probability": theoretical_success_probability(n_qubits, len(states), iterations),
+        "measurement": {
+            "source": "IDEAL_SIMULATION",
+            "sampled": True,
+            "seed_scope": "LOCAL_SAMPLING",
+            **ideal_grover_outcomes(n_qubits, len(states), iterations),
+        },
         "shots": shots,
         "seed": seed,
         "counts": dict(sorted(counts.items())),

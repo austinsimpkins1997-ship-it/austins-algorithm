@@ -4,6 +4,86 @@ Austin's Algorithm package version is 0.1.0. These records cover the published G
 
 ## Current changes
 
+### 2026-11-15 12:16:09 -05:00 — E-drive currency audit and installed launcher refresh
+
+- Inventory the accessible ordinary files in both maintained package folders and SHA-256 compare all 270 active source, documentation, test, example, tool and configuration files. Verify the current standalone Workbench executable in both copies.
+- Refresh E's editable installation offline to register its missing Workbench launcher. Preserve the prior package metadata and launchers, retain the editable source binding, and verify installed dependency versions remain unchanged.
+- Keep older builds, recovery records, environment files and Git metadata in their owning locations. Record the complete inventory, comparison boundary and repair evidence in app-local audit records.
+
+### 2026-11-15 11:45:51 -05:00 — current capability overview and README refresh
+
+- Reorganize the README around installation, the desktop journey, a complete capability map, command examples, source limits, and the current documentation index.
+- Identify Workbench 0.2.6-alpha, Python library 0.1.0, and the weighted export wire label separately. Cover Focus, Decision Review, pilot receipts, planning, calibration continuity, verified exports, the optional Future Reader companion, and the dedicated IBM workflow.
+- Correct Future Reader navigation and explain optional dependency groups, including the separate IBM extra. Date prior test and build evidence and identify the local executable path.
+- Verify documented local command entry points, file links and section anchors, then synchronize README and changelog bytes in both maintained copies. This documentation refresh follows the recorded application build.
+
+### 2026-11-15 11:10:49 -05:00 — explicit focus and resumption
+
+- Workbench 0.2.6-alpha adds an optional Focus control to the weighted-search and Decision Review journeys. Record a goal and next action, park competing requests, and pause with a checkpoint when a priority interruption arrives.
+- Compare the resumed checkpoint with current applied inputs. Require explicit review before binding a resumed session to changed problem settings or review evidence. Keep prior basis digests and user actions in bounded history.
+- Include focus metadata in existing project save/load and verified complete exports, with a standalone `focus.json` and readable report section. Preserve earlier project and archive entry points.
+- Exercise hidden Tk controls, changed-input recovery, project replacement, invalid and bounded records, both project formats and archives, and unchanged optimizer output. The focus record describes user choices. Human attention, learning gains and productivity effects remain unmeasured.
+
+### 2026-11-14 16:04:37 -05:00 — decision benchmark timing and roadmap
+
+- Measure prepared and fresh Decision Review operations with a high-resolution elapsed clock. Report its resolution alongside the lookup deadline clock. Windows CPython 3.12 can distinguish operation times that the deadline clock previously rounded to zero.
+- Record which workloads benefit from preparation, the pending operator outcome, and the next compatibility checks.
+
+### 2026-11-14 15:56:45 -05:00 — rehearsal and recovery receipt pilot
+
+- Workbench 0.2.5-alpha adds a read-only Decision Review tab for pinned rehearsal and recovery receipts.
+- Verify receipt identity and independently replay minimum coverage. Expose ties, missing checks and pending operator approvals without changing the current project, stored evidence, or action authority.
+- Add the matching `decision-review receipts` command for local paired review.
+
+### 2026-11-14 15:04:50 -05:00 — quantum measurement and noise
+
+- Separate guaranteed ideal validity from the number of possible measurements in CPU CLI, Qiskit and Cirq reports. The one-round Austin example can return either of two valid strings.
+- Label ideal simulator, snapshot noise model, synthetic noise model and physical device counts by source. Scope each local sampling seed to the simulator. Hardware preflight has no measurement result.
+- Explain ideal gate evolution, seeded sampling and exact classical verification in the desktop Workbench, Assistant and getting-started guide. Preserve project and archive replay formats.
+- In both copies, pass 119 focused tests, verify earlier weighted exports, build verified Python packages, and pass the hidden Windows executable smoke checks. Device checks use offline simulations and mocked provider responses.
+
+### 2026-11-14 12:56:18 -05:00 — hidden Workbench checks
+
+- Keep Decision Review test windows and the automated Workbench smoke check off the desktop. The smoke check also keeps its Assistant window hidden and verifies both window states.
+- Include the Dimensional Design browser replay test fixture in the source distribution so the importer can be tested from a packaged checkout.
+
+### 2026-11-14 12:45:57 -05:00 — Decision Review in the Windows Workbench
+
+- **#148** Add a Decision Review screen, local CLI and a public-office tabletop preset. Compare one exact selection against up to eight scenarios and preserve reasons for blocked or excluded alternatives.
+- Record Dimensional Design interfaces, check dependencies, revision holds and reviewer decisions. Preserve participation, authority, consent, funding and delivery as attributed evidence.
+- Add offline Decision Containment reconciliation and a Stasis Beam counterexample inspector. Add Learning Blocks practice with a prediction, hints, fresh independent and transfer tasks, and delayed review.
+- Add separate project save, reopen, export, offline verification and digest-bound prepared lookups with deadline checks. Workbench release is 0.2.4-alpha.
+- Version the Decision Review project and export formats at 2. Restore both version 1 draft project shapes on open and replay their exports against the original archive members and manifest.
+- Fix Future Reader's launcher identification in Windows virtual environments so the existing disposable worker recovery check can exercise process loss and replacement.
+
+### 2026-11-13 17:36:50 -05:00 — cross-checkout export verification
+
+- **#147** Release Workbench 0.2.3-alpha. The verifier recognizes LF and CRLF forms of trusted replay modules and license text after verifying each member against its original manifest bytes.
+- Add a regression for equivalent checkout line endings and a rehashed archive containing changed executable source. Preserve the existing export schema.
+
+### 2026-11-13 17:26:32 -05:00 — local worker recovery and release preparation
+
+- **#146** Add a live local worker recovery check to Workbench 0.2.2-alpha. A replacement resumes the SQLite checkpoint after the original process exits.
+- Add named IBM profile preflight and verify the compiled circuit before a provider submission. Preserve the explicit hardware, shot, and time-budget controls.
+- Add commit-bound release staging and a tag-triggered GitHub prerelease workflow. Preserve the weighted project format.
+- Include the Future Reader 0.1.1 timing and pruning evidence in the portable handoff.
+
+### 2026-11-13 17:03:26 -05:00 — Future Reader integration
+
+- **#145** Add a native Future Reader page to the Workbench and build it into the Windows 0.2.1-alpha executable. Include route preview, custom input, confirmation, restore, timing comparison, scoped certification, and the simulated recovery exercise.
+- Add the optional `future-reader` CLI dispatch and bundle the offline HTML as a separate export. Keep the weighted project and its replay format compatible with 0.2.0-alpha.
+- Verify the native workflow and standalone checkpoint replay with the rebuilt executable in both maintained locations. The 3.12 SDK suites passed 658 checks with four skips and the clean 3.10 suites passed 412 checks with 250 skips in each copy. Verify the archived weighted export against the current engine.
+
+### 2026-11-13 13:29:08 -05:00 — weighted search and Windows Workbench
+
+- **#144** Add bounded weighted Boolean optimization, exact classical minima, and seeded stepwise Grover simulation with one shared shot and query budget.
+- Add a reversible threshold circuit, independent phase audit, and weighted sensor-kit benchmark for ideal simulation and dated Jakarta.
+- Deliver Workbench 0.2.0-alpha as a standalone Windows x64 application with editable examples, a state grid, phase controls, manual and automatic measurement, project save and reopen, and generated replay code.
+- Add a plain-language Overview, a direct Optimize action, and an offline, rule-based AI Assistant that explains the active simulation.
+- Export a complete ZIP with project, settings, exact reference, traces, measurements, CSV, HTML, portable Python and a SHA-256 manifest. Add an offline verifier for received archives.
+- Preserve the Python engine version used by existing checkpoints and receipts. Record hosted success of the #143 repair in run #10.
+- Verify the Windows SDK and standard-library suites in both copies and the WSL standard-library suite in the workspace. Check both source distributions and wheels. Exercise each executable through Optimize, manual and automatic simulation, save and reopen, contextual help, and export. Independently replay both exported runs.
+
 ### 2026-11-12 15:22:13 -05:00 — local CI repair
 
 - **#143** Isolate the controlled benchmark worker subprocess binding in the test fixture. Keep the shared standard-library `subprocess` module available to Linux platform metadata collection. Production algorithm and benchmark code are unchanged; package version stays 0.1.0 (alpha).
