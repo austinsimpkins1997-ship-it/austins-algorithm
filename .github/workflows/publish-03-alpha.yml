@@ -1,0 +1,99 @@
+name: publish-03-alpha
+
+on:
+  workflow_run:
+    workflows: [tests]
+    types: [completed]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: publish-03-alpha
+  cancel-in-progress: false
+
+jobs:
+  build:
+    if: >-
+      github.repository == 'austinsimpkins1997-ship-it/austins-algorithm' &&
+      ((github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/main') ||
+       (github.event.workflow_run.conclusion == 'success' &&
+        github.event.workflow_run.head_branch == 'main' &&
+        contains(github.event.workflow_run.head_commit.message, '[release 0.3.0a1]')))
+    runs-on: windows-2025
+    timeout-minutes: 25
+    outputs:
+      commit: ${{ steps.commit.outputs.sha }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.event.workflow_run.head_sha || github.sha }}
+          persist-credentials: false
+      - id: commit
+        shell: pwsh
+        run: |
+          "sha=$(git rev-parse HEAD)" >> $env:GITHUB_OUTPUT
+      - uses: astral-sh/setup-uv@c771a70e6277c0a99b617c7a806ffedaca235ff9 # v9.0.0
+        with:
+          version: '0.13.0'
+      - name: Build, verify, and package the pinned alpha
+        shell: pwsh
+        env:
+          UV_CACHE_DIR: ${{ github.workspace }}/.build/release-cache
+        run: |
+          uv venv --python 3.12 .build/release-env
+          if ($LASTEXITCODE) { exit $LASTEXITCODE }
+          uv pip install --python .build/release-env/Scripts/python.exe -r tools/workbench-build-requirements.txt
+          if ($LASTEXITCODE) { exit $LASTEXITCODE }
+          # Warm the isolated build backend cache; the final wheel is rebuilt from its verified sdist.
+          uv build --python .build/release-env/Scripts/python.exe --out-dir .build/warm
+          if ($LASTEXITCODE) { exit $LASTEXITCODE }
+          .build/release-env/Scripts/python.exe -B tools/build_verified_package.py --directory .build/github-verified --cache-dir $env:UV_CACHE_DIR
+          if ($LASTEXITCODE) { exit $LASTEXITCODE }
+          uv build future-reader --python .build/release-env/Scripts/python.exe --out-dir .build/companion-dist
+          if ($LASTEXITCODE) { exit $LASTEXITCODE }
+          uv pip install --python .build/release-env/Scripts/python.exe (Get-ChildItem .build/github-verified/wheel/*.whl).FullName (Get-ChildItem .build/companion-dist/*.whl).FullName
+          if ($LASTEXITCODE) { exit $LASTEXITCODE }
+          .build/release-env/Scripts/python.exe -I -B -m unittest discover -s tests -v
+          if ($LASTEXITCODE) { exit $LASTEXITCODE }
+          .build/release-env/Scripts/python.exe -B tools/build_workbench.py --directory .build/github-native
+          if ($LASTEXITCODE) { exit $LASTEXITCODE }
+          .build/release-env/Scripts/python.exe -B tools/prepare_github_release.py --native .build/github-native/dist --verified .build/github-verified --companion .build/companion-dist --output .build/github-release
+          if ($LASTEXITCODE) { exit $LASTEXITCODE }
+      - uses: actions/upload-artifact@v4
+        with:
+          name: algorithm-03-alpha-release
+          path: .build/github-release/*
+          if-no-files-found: error
+          retention-days: 30
+
+  publish:
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: algorithm-03-alpha-release
+          path: release-assets
+      - name: Publish one alpha release without overwriting existing assets
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          RELEASE_COMMIT: ${{ needs.build.outputs.commit }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd release-assets
+          sha256sum --check SHA256SUMS.txt
+          if gh release view workbench-v0.3.0-alpha >/dev/null 2>&1; then
+            echo 'Release already exists; refusing to replace or overwrite it.' >&2
+            exit 1
+          fi
+          gh release create workbench-v0.3.0-alpha \
+            --target "$RELEASE_COMMIT" --prerelease --latest=false \
+            --title "Austin's Algorithm Workbench 0.3.0-alpha" \
+            --notes-file RELEASE-NOTES.md \
+            ./*.exe ./*.zip ./*.whl ./*.tar.gz ./SHA256SUMS.txt ./release-evidence.json ./RELEASE-NOTES.md

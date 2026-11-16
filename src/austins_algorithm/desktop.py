@@ -75,6 +75,26 @@ def _decision_smoke(app, directory):
             "baseline": panel.current_practice["evidence"]["baseline"], "weighted_session_preserved": True}
 
 
+def _planning_smoke(app,directory):
+    import time
+    from .planning_jobs import JobStore,verify_export
+    app.show_page('Planning')
+    panel=app.planning
+    panel.store.close();panel.store=JobStore(directory/'planning-jobs')
+    try:
+        panel.start();deadline=time.monotonic()+25
+        while panel.active() and time.monotonic()<deadline:
+            app.root.update();time.sleep(.05)
+        view=panel.poll()
+        if view['status']!='OPTIMAL':raise RuntimeError('Native Planning worker did not establish the bounded optimum')
+        project=directory/'planning-smoke.planning.json';archive=directory/'planning-smoke.zip'
+        panel.save(project);panel.open(project)
+        # Reopen the persisted result explicitly; opening a project never runs it.
+        panel.selected_job.set(panel.jobs['values'][-1]);panel.open_job();panel.export(archive)
+        return {'status':'PASS','overview':view,'export':verify_export(archive),'window_hidden':app.root.state()=='withdrawn'}
+    finally:panel.close()
+
+
 def _receipt_smoke(panel, files):
     rehearsal, rehearsal_pin, recovery, recovery_pin = files
     preceding_project = panel.project
@@ -104,6 +124,12 @@ def _record_startup_error(exc: Exception) -> Path | None:
 
 def main(argv: list[str] | None = None) -> None:
     argv = sys.argv[1:] if argv is None else argv
+    if argv and argv[0] == "--planning-worker":
+        if len(argv) != 4:
+            raise SystemExit(2)
+        from .planning_jobs import worker
+        worker(*argv[1:])
+        return
     if argv and argv[0] == "--future-reader-worker":
         if len(argv) != 5 or argv[1] != "_worker":
             raise SystemExit(2)
@@ -147,6 +173,7 @@ def main(argv: list[str] | None = None) -> None:
         if args.smoke is not None:
             args.smoke.mkdir(parents=True, exist_ok=True)
             status = app.smoke(args.smoke)
+            status['planning'] = _planning_smoke(app,args.smoke)
             status["focus"] = _focus_smoke(app, args.smoke)
             status["decision_review"] = _decision_smoke(app, args.smoke)
             if args.smoke_receipts:

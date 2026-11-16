@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "chronorealm-austins-algorithm"
-version = "0.2.6a1"
+version = "0.3.0a1"
 description = "Local quantum-search experiments, bounded optimization, and decision-review workbench"
 readme = "README.md"
 requires-python = ">=3.10"
@@ -30,6 +30,7 @@ classifiers = [
 dependencies = []
 
 [project.optional-dependencies]
+planning = ["scipy>=1.11,<2"]
 future-reader = ["chronorealm-future-reader==0.1.2"]
 qiskit = ["qiskit>=2.0,<3"]
 qasm = ["qiskit>=2.0,<3", "qiskit-qasm3-import>=0.6,<1"]

@@ -1,6 +1,6 @@
 # Changelog
 
-Austin's Algorithm package version is 0.2.6a1. These records cover the published Git history and the local implementation milestones in [the roadmap](ROADMAP.md). Local times use the UTC offset shown.
+Austin's Algorithm package version is 0.3.0a1. These records cover the published Git history and the local implementation milestones in [the roadmap](ROADMAP.md). Local times use the UTC offset shown.
 
 ## Change-record attribution and signatures
 
@@ -13,6 +13,33 @@ Editorial signatures are textual attestations by the record editor. Git signatur
 New records should state the actual date with offset, editor name and role, source or verification evidence, and editorial signature. Use UNKNOWN for missing original attribution. Keep earlier entries and their provenance when recording a correction. Local observations, simulations, device measurements and published releases retain separate statuses.
 
 ## Current changes
+
+### 2026-11-16T08:22:29-05:00 — Planning 0.3, managed execution and shared result contracts
+
+> Change record `CR-03-d531808193`
+>
+> Recorded change date — 2026-11-16T08:22:29-05:00 (America/New_York).
+>
+> Original implementer or scoped editor — Codex (AI assistant), implementation and verification editor acting on Austin's request.
+>
+> Record review date — 2026-11-16T08:22:29-05:00.
+>
+> Review editor — Codex (AI assistant).
+>
+> Editorial signature — `Codex / 2026-11-16T08:22:29-05:00 / CR-03-d531808193`.
+>
+> Source basis — Current source, the 0.3 test/benchmark/build receipts and the separately signed installed-release evidence. Editorial attribution is distinct from local cryptographic integrity signing and Windows publisher trust.
+>
+> Change-text SHA-256 — `d531808193fbc5163f5056e0226fe937eea08aaf7f322718b2e713555e4f87bf`.
+
+- Introduce a separate versioned planning model for 1–128 Boolean choices and 4,096 CNF clauses. Add bounded integer branch-and-bound, disjoint-clause lower bounds, independent witness/cost validation, explicit budget outcomes and untrusted-checkpoint proof limits. Preserve existing quantum teaching limits and exact small references.
+- Add optional SciPy MILP with independently checked integer witnesses and separately labeled numerical optimality. Adopt the existing IBM snapshot comparison through the experimental adapter interface without creating a provider connection.
+- Add a persistent managed-job lifecycle for planning, existing weighted simulation and named offline IBM snapshot tasks. Keep local HMAC integrity keys outside exported data, pin engine sources, limit concurrency/attempts/storage, preserve atomic checkpoints, expose failures, terminate owned worker trees and require explicit recovery/resumption.
+- Add the native Planning page, readable shared overview, versioned Python/CLI request contracts, legacy input migration, project save/load and complete committed-evidence exports with independent candidate checks and fresh replay code. Keep Decision Review approval holds and specialized calibration formats intact.
+- Add a reproducible synthetic benchmark, a caller-reported matched operator recorder and printable worksheet. No operator observations, productivity benefit, QPU performance or production acceptance are fabricated.
+- Add source-copy/wheel admission checking and a manually triggered hosted artifact workflow. Carry this component through the existing signed ChronoRealm release closure; exact source, artifact, installed verification and recovery outcomes belong to the dated release evidence.
+- Verify ordinary and failure paths, record failed attempts and supported corrections, rebuild version 0.3.0-alpha / Python 0.3.0a1, refresh simulator receipts by execution, update both maintained copies, and retain earlier history. Publication and representative operator acceptance are separate actions/evidence.
+
 
 ### 2026-11-15 17:01:16 -0500 — repair Manila smoke baselines after the package-version update
 

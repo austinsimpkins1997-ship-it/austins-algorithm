@@ -9,7 +9,7 @@ authors:
   - family-names: Middlebrooks
     given-names: Chandler
     affiliation: ChronoRealm
-version: 0.2.6a1
+version: 0.3.0a1
 license: Apache-2.0
 keywords:
   - quantum computing

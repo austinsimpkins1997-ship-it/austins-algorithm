@@ -2,25 +2,25 @@
 
 **A local workbench and Python toolkit for quantum-search experiments, bounded optimization, and evidence-based decision review.**
 
-**Workbench 0.2.6-alpha** · **Python package 0.2.6a1** · **Python 3.10+** · **[Apache-2.0](LICENSE)**
+**Workbench 0.3.0-alpha** · **Python package 0.3.0a1** · **Python 3.10+** · **[Apache-2.0](LICENSE)**
 
-Created by **Austin Gregory Simpkins and Chandler Middlebrooks / ChronoRealm**. Current source reviewed **November 15, 2026**.
+Created by **Austin Gregory Simpkins and Chandler Middlebrooks / ChronoRealm**. Current source reviewed **November 16, 2026**.
 
 Start with a small search problem, inspect each simulated step, compare a candidate with an exact classical answer, and save the evidence. For a decision involving several operating conditions, use Decision Review to compare plans, inspect missing checks, and rehearse recovery. The Windows application brings these workflows together with instructions, visualization, project files, and a clear Export action.
 
-[Quick start](#quick-start) · [Capabilities](#capabilities) · [Workbench](#use-the-workbench) · [CLI and Python](#use-the-cli-and-python-api) · [Verification](#verification-and-current-status) · [Documentation](#documentation)
+[Quick start](#quick-start) · [Capabilities](#capabilities) · [Workbench](#use-the-workbench) · [CLI and Python](#use-the-cli-and-python-api) · [Verification](#version-03-update-and-evidence-boundary) · [Documentation](#documentation)
 
 ## Current release and record ownership
 
 | Item | Current implementation or record |
 |---|---|
-| Python distribution | `chronorealm-austins-algorithm` **0.2.6a1** |
-| Windows desktop | Workbench **0.2.6-alpha** |
+| Python distribution | `chronorealm-austins-algorithm` **0.3.0a1** |
+| Windows desktop | Workbench **0.3.0-alpha** |
 | Optional Python side system | `chronorealm-future-reader` **0.1.2** |
 | Existing weighted file formats | Application label **0.2.0-alpha**, replay-engine label **0.1.0** |
 | Declared project authors | Austin Gregory Simpkins and Chandler Middlebrooks / ChronoRealm |
 | Documentation editor | Codex, an AI assistant working on Austin's request |
-| Review date | November 15, 2026, using America/New_York for displayed local times |
+| Review date | November 16, 2026, using America/New_York for displayed local times |
 | Change attribution and signatures | Per-entry editor, date basis, editorial signature, source and content hash in the changelog |
 
 Project authorship follows the package and citation metadata. An entry's implementer follows that entry's evidence. Editorial signatures identify the record editor and review time. Cryptographic Git verification, artifact signing and hashes retain their own meanings. Historical implementers and original dates remain `UNKNOWN` where a record supplies insufficient detail. [Timestamped and attributed history](CHANGELOG.md)
@@ -46,30 +46,35 @@ On macOS or Linux, create the environment with `python3 -m venv .venv` and use `
 
 ### Open the existing Windows build
 
-Both maintained local copies have the verified November 15 Workbench build at this package-relative path.
+The 0.3 Workbench build is delivered to both maintained copies at this package-relative path. The dated release verification records its actual checks and installed-payload status.
 
 ```powershell
-& ".\.build\package-current-20261115\desktop\dist\AustinsAlgorithmWorkbench.exe"
+& ".\.build\release-0.3.0a1\AustinsAlgorithmWorkbench.exe"
 ```
 
 This is a local build location. A fresh Git checkout needs the source installation above or its own executable build. The Windows executable bundles its Python runtime, Workbench assets, and Future Reader companion. It remains unsigned. Build instructions describe the required tools, output directory, and verification. [Build and check release artifacts](CONTRIBUTING.md#build-and-check-release-artifacts)
 
 ## Install the current Python distributions
 
-The Python release is `0.2.6a1`, matching the Workbench's `0.2.6-alpha` feature set using Python's alpha-version notation. The base wheel includes the main runtime, UI assets and offline HTML companion. The optional Python Future Reader controller is distributed alongside it as `chronorealm-future-reader` 0.1.2.
+The Python release is `0.3.0a1`, matching the Workbench's `0.3.0-alpha` feature set using Python's alpha-version notation. The base wheel includes the main runtime, UI assets and offline HTML companion. The optional Python Future Reader controller is distributed alongside it as `chronorealm-future-reader` 0.1.2.
 
 After placing both wheels in one directory, install the complete local Workbench functionality from that directory.
 
 ```powershell
-python -m pip install --no-index --find-links PATH-TO-WHEELS "chronorealm-austins-algorithm[future-reader]==0.2.6a1"
+python -m pip install --no-index --find-links PATH-TO-WHEELS "chronorealm-austins-algorithm[future-reader]==0.3.0a1"
 ```
 
-Installing the base wheel alone supports the CPU, optimization, Decision Review, Focus and export paths. The `[future-reader]` extra adds the native practice controller. Qiskit, IBM and Cirq still use their separate extras. Existing weighted archives retain their 0.2.0-alpha application and 0.1.0 replay-engine labels. These are file-format compatibility values. Installed library metadata reports 0.2.6a1.
+Installing the base wheel alone supports the CPU, optimization, Decision Review, Focus and export paths. The `[future-reader]` extra adds the native practice controller. Qiskit, IBM and Cirq still use their separate extras. Existing weighted archives retain their 0.2.0-alpha application and 0.1.0 replay-engine labels. These are file-format compatibility values. Installed library metadata reports 0.3.0a1.
 
 ## Capabilities
 
 | Area | What you can do | Guide |
 |---|---|---|
+| Practical Planning | Solve weighted CNF plans with 1–128 Boolean choices, integer costs, independent witness checks, budgeted branch-and-bound and an optional numerical SciPy backend. Keep feasible answers distinct from established finite-model optima. | [Planning](PLANNING.md) |
+| Managed jobs | Use the same persistent isolated worker controls for Planning, existing weighted simulation and named offline IBM snapshot tasks. Start, stop, recover, inspect attempts, and explicitly resume supported planning checkpoints. | [Job controls and limits](PLANNING.md) |
+| Shared results and integration | Review the same versioned overview through Python, CLI, desktop and exports. Load legacy weighted inputs without expanding teaching-simulator limits. | [Portable v1 API](PLANNING.md#python-and-cli-use-the-same-contracts) |
+| Full planning export | Save projects and export committed inputs, result, checkpoint, attempts, worker logs, requirements, summary, integrity manifest and fresh replay code. Verify without executing supplied code. | [Planning workflow](PLANNING.md) |
+| Benchmark and operator pilot | Measure synthetic matched small-reference and larger analytical cases, including the managed lifecycle. Separately record real caller-reported operator observations with mandatory-check and matched-input holds. | [Benchmark and pilot](PLANNING.md#matched-benchmark-and-operator-pilot) |
 | Grover search | Run the original three-qubit example or a small caller-defined predicate. Inspect ideal probabilities, seeded samples, verified answers, and amplitude traces. | [Getting started](GETTING_STARTED.md) |
 | Step-by-step visualization | Inspect preparation, oracle phase marking, diffusion, round counts, amplitudes, and measurement. Explore different round choices and compare ideal probabilities with sampled counts. | [Workbench](WORKBENCH.md) |
 | Weighted optimization | Define Boolean constraints and nonnegative additive costs. Compute the exact minimum, run a bounded simulated search, or preview a planned attempt. | [Weighted examples](examples/benchmark_weighted_search.py) |
@@ -202,7 +207,19 @@ Specific commands can impose narrower bounds. Statevector memory grows exponenti
 
 Decision Review records supplied evidence and human responsibilities. Its results remain proposals subject to the receiving operation's current authority and evidence checks. Focus records describe user-entered task choices. Human attention, learning, productivity, and operational reliability require their own observations.
 
-## Verification and current status
+## Version 0.3 update and evidence boundary
+
+The new **Planning** page separates practical classical optimization from quantum teaching. The portable branch-and-bound engine supports up to **128 choices** and **4,096 CNF clauses**, with explicit node/time ceilings and an independent literal-by-literal answer checker. The existing eight-variable weighted quantum workflow, 16-qubit CPU statevector ceiling, historical file formats, Decision Review holds and optional provider permissions remain separate.
+
+Managed jobs now cover Planning, the existing weighted simulation and one named offline IBM snapshot task. Persistent attempts, local integrity-protected checkpoints, source-change holds, bounded concurrency and explicit recovery make interruption visible. Existing calibration-study checkpoint formats retain their own specialized continuation interfaces; they have not been silently migrated. The desktop, CLI and Python API expose the same planning result and overview, and the export retains everything recorded for fresh replay except the private local integrity key.
+
+The local benchmark uses synthetic inputs and analytical/exhaustive references. Operator observation tooling and the printable worksheet are implemented, but **no real operator benefit is established**. Optional SciPy MILP reports numerical solver status separately from exact finite-model optimality. The stable planning v1 contract does not make the older quantum adapter interface stable; the new offline IBM adapter adopts that existing experimental contract.
+
+Verification so far: the full E: suite completed **736 tests: 602 passed and 134 skipped**; the affected planning/UI checks passed after the Windows atomic-file and Tk cleanup corrections. The [matched synthetic benchmark](examples/planning-benchmark-20261116.json) records all measured stages and comparison limits. The final delivery receipt records the workspace, installed artifact and recovery outcomes separately.
+
+Use [the complete Planning guide and first session](PLANNING.md), [the matched benchmark](tools/benchmark_planning.py), and [the release-copy and wheel checker](tools/check_release_03.py). Final build, source-copy parity, signed installed inventory and recovery outcomes are recorded under `.build/upgrade-03-20261116/` and the F: release work directory. The earlier November 15 verification totals and executable digest below are historical evidence for **0.2.6a1**, not the 0.3 binary. Physical-device measurements, real-user usability/accessibility acceptance and organizational production acceptance remain unverified.
+
+## Historical November 15 delivery verification
 
 The software evidence includes the November 15, 2026 local Python-package delivery and the later Manila baseline repair described below. These are the recorded results for the tested revisions, with skipped cases counted separately.
 
@@ -221,7 +238,7 @@ The software evidence includes the November 15, 2026 local Python-package delive
 
 Local delivery evidence is under `.build/package-current-20261115/verification.json`, `installed-verification.json`, and `distributions-current/build-result.json`. These generated files are available in the maintained local folders. A fresh checkout should build and verify its own artifacts using the contribution guide. Earlier test matrices, benchmark timings, CI runs and builds keep their original date and revision in the changelog and owning guides. [Change history](CHANGELOG.md) · [Build verification](CONTRIBUTING.md#build-and-check-release-artifacts)
 
-The Python library version is **0.2.6a1**, desktop release **0.2.6-alpha**, and optional companion **0.1.2**. The weighted archive's application label **0.2.0-alpha** and replay-engine label **0.1.0** are file-format compatibility values. Decision Review has its own versioned project and archive formats. The current verifier preserves the exact known older package-version source variant while rejecting other rehashed source changes.
+That November 15 delivery used Python library **0.2.6a1**, desktop **0.2.6-alpha**, and optional companion **0.1.2**. The current release is **0.3.0a1 / 0.3.0-alpha**. The weighted archive's application label **0.2.0-alpha** and replay-engine label **0.1.0** are file-format compatibility values. Decision Review has its own versioned project and archive formats. The current verifier preserves the exact known older package-version source variant while rejecting other rehashed source changes.
 
 Full-suite results above used Python 3.12.15. The earlier system Python 3.14 attempt encountered a missing `secrets` standard-library module. Other operating-system and SDK combinations retain their separate dated evidence. A test result carries its tested scope and environment.
 
@@ -241,7 +258,7 @@ Both maintained source copies passed the full suite after this repair: **724 tes
 
 The six packaged commands passed locally: phase-cover regression, both diffuser regressions, placement receipt verification, placement identity checking and placement replay. Placement replay matched **8/8 histograms**, with no changed cell evaluations or model decisions. A new dependency-free release guard checks all four baseline versions and SDK pins, and legacy timing tests now construct their missing-timing condition explicitly. The earlier full-suite totals above retain their original revision; this repair has its own verification record.
 
-[Dated baseline identities, comparisons and limits](examples/smoke-regression/BASELINE_REFRESH_2026-11-15.json) · [Failed historical run](https://github.com/austinsimpkins1997-ship-it/austins-algorithm/actions/runs/43763164723). Local logs and recovery files are under `.build/manila-repair-20261115/`. Hosted success on the repair remains pending until a new commit runs in GitHub Actions. The Python package remains **0.2.6a1** and the Workbench remains **0.2.6-alpha**; this patch changes simulator evidence, tests and documentation rather than the application runtime.
+[Dated baseline identities, comparisons and limits](examples/smoke-regression/BASELINE_REFRESH_2026-11-15.json) · [Failed historical run](https://github.com/austinsimpkins1997-ship-it/austins-algorithm/actions/runs/43763164723). Local logs and recovery files are under `.build/manila-repair-20261115/`. At the November 15 record cutoff, hosted confirmation was pending. The follow-up [GitHub run 43768634823](https://github.com/austinsimpkins1997-ship-it/austins-algorithm/actions/runs/43768634823) passed for commit 7419bc7. That repair concerned **0.2.6a1 / 0.2.6-alpha**; the new **0.3.0a1 / 0.3.0-alpha** update has separate local verification and awaits its own publication.
 
 For a future package-version update, run the release guard and regenerate and compare the pinned smoke baselines before publishing. Do not edit old version labels to manufacture a match. Preserve the old receipts and verify the packaged source archive, including every mandatory replay command.
 

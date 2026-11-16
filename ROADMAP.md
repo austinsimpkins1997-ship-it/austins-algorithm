@@ -1,5 +1,9 @@
 # Roadmap and evidence still needed
 
+## 0.3 implementation update — November 16, 2026
+
+Practical Planning, managed jobs, shared summaries, portable planning v1, matched benchmark and operator-recording tools are implemented. Specialized calibration checkpoint formats remain separate. Real operator benefit and production acceptance require observed workflows. Source, binary, installed inventory, signing and rollback are separately verified by the component release closure. See [Planning](PLANNING.md).
+
 ## Current priorities
 
 Reviewed November 15, 2026. The Python package is 0.2.6a1 and the Windows

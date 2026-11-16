@@ -259,7 +259,8 @@ class WorkbenchProjectTests(unittest.TestCase):
         with ZipFile(current) as archive:
             files = {name: archive.read(name) for name in archive.namelist()}
         name = "austins_algorithm/__init__.py"
-        files[name] = files[name].replace(b'__version__ = "0.2.6a1"', b'__version__ = "0.1.0"')
+        from austins_algorithm import __version__
+        files[name] = files[name].replace(('__version__ = "'+__version__+'"').encode('ascii'), b'__version__ = "0.1.0"')
 
         def legacy_archive(path):
             manifest = json.loads(files["manifest.json"])

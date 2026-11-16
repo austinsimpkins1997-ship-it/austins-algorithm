@@ -2,7 +2,7 @@
   "schema_version": 1,
   "software_versions": {
     "python": "3.12.15",
-    "austins_algorithm": "0.2.6a1",
+    "austins_algorithm": "0.3.0a1",
     "qiskit": "2.6.2",
     "qiskit-aer": "0.18.2",
     "qiskit-ibm-runtime": "0.51.0",
@@ -16,8 +16,8 @@
       "sha256": "f943dd13eb57ea4dea1753bd803f5574a7171c6924fc1ba569c000a562450471"
     },
     "report.json": {
-      "bytes": 21787,
-      "sha256": "f2435548f2b05a8bdf5b287511ad84340067e4f3a7d87cc8a634d7fcf4742f63"
+      "bytes": 21766,
+      "sha256": "0909dcf87ae529d007258b444c71426e2121f713cfeb7348bcd149e25e0cf58f"
     },
     "selected.qasm": {
       "bytes": 842,

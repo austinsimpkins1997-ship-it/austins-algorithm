@@ -17,6 +17,7 @@ from pprint import pformat
 import stat
 from tempfile import NamedTemporaryFile
 from typing import Any
+from . import __version__ as _PACKAGE_VERSION
 from zipfile import BadZipFile, ZIP_DEFLATED, ZIP_STORED, ZipFile
 
 # Preserve the established replay engine contract independently of wheel releases.
@@ -55,8 +56,9 @@ def _matches_export_member(name: str, raw: bytes, expected: bytes) -> bool:
         if actual_text == expected_text:
             return True
         if name == "austins_algorithm/__init__.py":
-            legacy_text = expected_text.replace(b'__version__ = "0.2.6a1"', b'__version__ = "0.1.0"')
-            return actual_text == legacy_text
+            current_line = ('__version__ = "'+_PACKAGE_VERSION+'"').encode('ascii')
+            return any(actual_text == expected_text.replace(current_line, ('__version__ = "'+old+'"').encode('ascii'))
+                       for old in ('0.1.0','0.2.6a1'))
     return False
 
 

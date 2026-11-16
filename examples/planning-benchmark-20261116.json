@@ -1,0 +1,102 @@
+{
+  "evidence_kind": "SYNTHETIC_LOCAL_MACHINE_BENCHMARK",
+  "recorded_utc": "2026-11-16T13:28:31.075477+00:00",
+  "python": "3.12.15",
+  "platform": "Windows-11-10.0.26200-SP0",
+  "cases": [
+    {
+      "variables": 4,
+      "problem_sha256": "d9ddcce531ee850b8714dec2fe2d0c6c42798a6e5fc4bfde67200fb55e17bbfe",
+      "status": "OPTIMAL",
+      "verified_cost": 4,
+      "expected_cost_source": "Analytical minimum for disjoint positive pairs; separate from the general solver",
+      "nodes": 5,
+      "stages_seconds": {
+        "input_checks": 4.549999721348286e-05,
+        "solve": 0.00020210002548992634,
+        "verification": 1.680001150816679e-05
+      },
+      "baseline": {
+        "method": "existing exhaustive exact reference",
+        "solve_seconds": 7.71000050008297e-05,
+        "assignments_checked": 16
+      }
+    },
+    {
+      "variables": 8,
+      "problem_sha256": "b4a11ed58468fe0c2587b52becb8793c78ce2fc9315568cdc420766e35b50bf4",
+      "status": "OPTIMAL",
+      "verified_cost": 10,
+      "expected_cost_source": "Analytical minimum for disjoint positive pairs; separate from the general solver",
+      "nodes": 9,
+      "stages_seconds": {
+        "input_checks": 2.2599997464567423e-05,
+        "solve": 0.00015969999367371202,
+        "verification": 2.3200002033263445e-05
+      },
+      "baseline": {
+        "method": "existing exhaustive exact reference",
+        "solve_seconds": 0.000632300041615963,
+        "assignments_checked": 256
+      }
+    },
+    {
+      "variables": 24,
+      "problem_sha256": "768117a2c44848febf934dc1a1fe210aae5a7f84d68329ef10c635a20a72fd57",
+      "status": "OPTIMAL",
+      "verified_cost": 34,
+      "expected_cost_source": "Analytical minimum for disjoint positive pairs; separate from the general solver",
+      "nodes": 25,
+      "stages_seconds": {
+        "input_checks": 5.3800002206116915e-05,
+        "solve": 0.0005858000367879868,
+        "verification": 5.809997674077749e-05
+      },
+      "baseline": null
+    },
+    {
+      "variables": 64,
+      "problem_sha256": "c71350046e0a65b2008dd8bc1d3f40de43dfdaf2bbee119a62f9632c9ea3db33",
+      "status": "OPTIMAL",
+      "verified_cost": 98,
+      "expected_cost_source": "Analytical minimum for disjoint positive pairs; separate from the general solver",
+      "nodes": 65,
+      "stages_seconds": {
+        "input_checks": 0.0001259999698959291,
+        "solve": 0.004669499990995973,
+        "verification": 0.00013620004756376147
+      },
+      "baseline": null
+    },
+    {
+      "variables": 128,
+      "problem_sha256": "17f3b7d3fd3d26e91d5035c615be5cb6da12ca40f45d4e54af8812415a444dc9",
+      "status": "OPTIMAL",
+      "verified_cost": 199,
+      "expected_cost_source": "Analytical minimum for disjoint positive pairs; separate from the general solver",
+      "nodes": 129,
+      "stages_seconds": {
+        "input_checks": 0.0002308000111952424,
+        "solve": 0.02918940002564341,
+        "verification": 0.0002682000049389899
+      },
+      "baseline": null
+    }
+  ],
+  "managed_path_seconds": {
+    "setup": 0.0034351000213064253,
+    "first_budgeted_attempt_wall": 0.13324369996553287,
+    "resume_and_verification_wall": 0.1331740000168793,
+    "export_and_integrity_check": 0.004155999980866909
+  },
+  "operator_observations": 0,
+  "operator_benefit": "NOT_MEASURED",
+  "device_cost": "NOT_APPLICABLE_NO_QPU",
+  "external_evidence_refresh": "NOT_EXERCISED_SYNTHETIC_PINNED_INPUTS",
+  "retries": "None; deliberate budget pause/resume measured separately",
+  "limitations": [
+    "Single local run per size; timings are descriptive, not a general speedup.",
+    "Large cases use a structured analytical reference; exhaustive baseline only runs at <=8 variables.",
+    "No human productivity, quantum advantage or production reliability claim."
+  ]
+}

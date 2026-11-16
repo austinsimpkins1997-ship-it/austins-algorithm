@@ -266,3 +266,8 @@ requests. Human attention, absorption, productivity and learning effects require
 user evaluation. Focus does not change solver outcomes, evidence checks,
 approval status or action authority. Normal errors and held checks stay visible
 in their existing screens.
+
+
+## Planning 0.3
+
+The native Planning page adds larger classical plans, isolated jobs, shared summaries, project files and complete evidence export. Use [Planning](PLANNING.md) for the first session, exact limits, CLI/API, recovery semantics and operator worksheet. Weighted quantum simulation and Decision Review keep their existing formats and boundaries.

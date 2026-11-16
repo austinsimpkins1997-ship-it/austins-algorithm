@@ -322,17 +322,17 @@ class Workbench:
         nav.grid(row=0, column=0, rowspan=3, sticky="ns")
         nav.grid_propagate(False)
         nav.columnconfigure(0, weight=1)
-        nav.rowconfigure(10, weight=1)
+        nav.rowconfigure(11, weight=1)
         brand = self._label(nav, " Austin’s", "Brand", image=self._icon("boxes"), compound="left")
         brand.grid(row=0, column=0, sticky="w", padx=6)
         self._label(nav, "Algorithm", "Brand").grid(row=1, column=0, sticky="w", padx=6)
         self._label(nav, "WORKBENCH", "NavMuted").grid(row=2, column=0, sticky="w", padx=6, pady=(5, 25))
-        for row, name in enumerate(("Overview", "Build", "Simulate", "Results", "Decision Review", "Future Reader", "Guide"), start=3):
+        for row, name in enumerate(("Overview", "Build", "Simulate", "Results", "Planning", "Decision Review", "Future Reader", "Guide"), start=3):
             item = self._button(nav, name, lambda page=name: self.show_page(page), style="Nav.TButton")
             item.grid(row=row, column=0, sticky="ew", pady=2)
             self.nav_buttons[name] = item
         self._label(nav, f"Ideal simulator\n{DESKTOP_VERSION}", "NavMuted", justify="left").grid(
-            row=11, column=0, sticky="sw", padx=6,
+            row=12, column=0, sticky="sw", padx=6,
         )
 
         top = ttk.Frame(self.root, style="Top.TFrame", padding=(16, 8))
@@ -363,6 +363,7 @@ class Workbench:
         for name, builder in (
             ("Overview", self._overview_page), ("Build", self._build_page), ("Simulate", self._simulation_page),
             ("Results", self._results_page), ("Decision Review", self._decision_review_page),
+            ("Planning", self._planning_page),
             ("Future Reader", self._future_reader_page), ("Guide", self._guide_page),
         ):
             frame = ttk.Frame(self.content, style="Surface.TFrame")
@@ -381,6 +382,11 @@ class Workbench:
 
     def _future_reader_page(self, page) -> None:
         self.future_reader = FutureReaderPanel(self, page)
+
+    def _planning_page(self, page) -> None:
+        from .planning_panel import PlanningPanel
+        self.planning = PlanningPanel(page)
+        self.planning.pack(fill="both", expand=True)
 
     def _focus_project(self) -> dict:
         if self.current_page == "Decision Review":
@@ -480,6 +486,9 @@ class Workbench:
             value.set(overview[key])
 
     def open_assistant(self, *, show: bool = True) -> None:
+        if self.current_page == "Planning":
+            self.planning.safe(self.planning.explain)
+            return
         if self.current_page == "Decision Review":
             self.decision_review.open_help()
             return
@@ -1085,6 +1094,9 @@ class Workbench:
         self.set_message(f"Loaded example {name}. Review its rules or open Simulate.")
 
     def new(self) -> None:
+        if self.current_page == "Planning":
+            self.planning.safe(self.planning.new)
+            return
         if self.current_page == "Decision Review":
             self.decision_review.new()
             return
@@ -1094,6 +1106,8 @@ class Workbench:
             self.show_page("Build", apply_draft=False)
 
     def open(self, path: str | Path | None = None) -> bool:
+        if self.current_page == "Planning":
+            return self.planning.safe(lambda: self.planning.open(path))
         if self.current_page == "Decision Review":
             return self.decision_review.open(path)
         self.stop_auto()
@@ -1131,6 +1145,8 @@ class Workbench:
         return (clean.strip() or "Austin-project") + suffix
 
     def save(self, path: str | Path | None = None, *, save_as: bool = False) -> bool:
+        if self.current_page == "Planning":
+            return self.planning.safe(lambda: self.planning.save(path))
         if self.current_page == "Decision Review":
             return self.decision_review.save(path, save_as=save_as)
         return self._save_weighted(path, save_as=save_as)
@@ -1177,6 +1193,8 @@ class Workbench:
         return True
 
     def export(self, path: str | Path | None = None) -> dict | None:
+        if self.current_page == "Planning":
+            return self.planning.safe(lambda: self.planning.export(path))
         if self.current_page == "Decision Review":
             return self.decision_review.export(path)
         self.stop_auto()
@@ -1207,6 +1225,7 @@ class Workbench:
     def close(self) -> None:
         self.stop_auto()
         if self.decision_review.confirm_discard() and self._confirm_discard():
+            self.planning.close()
             self.future_reader.close()
             self.root.destroy()
 
