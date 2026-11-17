@@ -211,7 +211,7 @@
                         "x"
                       ],
                       "simulated_qubits": 4,
-                      "aer_experiment_seconds": 0.0012459,
+                      "aer_experiment_seconds": 0.0012022,
                       "verified_hit_rate_wilson_95": [
                         0.30064184258240184,
                         0.9544127391902995
@@ -231,12 +231,12 @@
                       "verified_hit_rate": 0.75
                     },
                     "timing_seconds": {
-                      "sample": 0.05573530000401661,
-                      "submit": 7.020001066848636e-05,
-                      "result_wait": 0.055664799991063774,
-                      "verify": 8.680002065375447e-05,
-                      "count_format": 4.950002767145634e-05,
-                      "count_verify": 2.9699993319809437e-05
+                      "sample": 0.1202078000005713,
+                      "submit": 8.780000007391209e-05,
+                      "result_wait": 0.12011970000003203,
+                      "verify": 9.049999971466605e-05,
+                      "count_format": 5.049999981565634e-05,
+                      "count_verify": 3.1800000215298496e-05
                     }
                   },
                   {
@@ -254,7 +254,7 @@
                         "x"
                       ],
                       "simulated_qubits": 4,
-                      "aer_experiment_seconds": 0.0012271,
+                      "aer_experiment_seconds": 0.0012882,
                       "verified_hit_rate_wilson_95": [
                         0.15003898915214947,
                         0.8499610108478506
@@ -273,12 +273,12 @@
                       "verified_hit_rate": 0.5
                     },
                     "timing_seconds": {
-                      "sample": 0.05322679999517277,
-                      "submit": 6.319995736703277e-05,
-                      "result_wait": 0.05316260003019124,
-                      "verify": 7.830001413822174e-05,
-                      "count_format": 4.349998198449612e-05,
-                      "count_verify": 2.7500034775584936e-05
+                      "sample": 0.0550333999999566,
+                      "submit": 6.089999988034833e-05,
+                      "result_wait": 0.05497190000005503,
+                      "verify": 9.359999967273325e-05,
+                      "count_format": 5.030000011174707e-05,
+                      "count_verify": 3.4300000152143184e-05
                     }
                   }
                 ],
@@ -444,7 +444,7 @@
                         "x"
                       ],
                       "simulated_qubits": 4,
-                      "aer_experiment_seconds": 0.0020415,
+                      "aer_experiment_seconds": 0.0021597,
                       "verified_hit_rate_wilson_95": [
                         0.30064184258240184,
                         0.9544127391902995
@@ -464,12 +464,12 @@
                       "verified_hit_rate": 0.75
                     },
                     "timing_seconds": {
-                      "sample": 0.05347869999241084,
-                      "submit": 6.799999391660094e-05,
-                      "result_wait": 0.05341039999620989,
-                      "verify": 8.670001989230514e-05,
-                      "count_format": 4.640000406652689e-05,
-                      "count_verify": 3.2400013878941536e-05
+                      "sample": 0.054345999999895866,
+                      "submit": 7.819999973435188e-05,
+                      "result_wait": 0.054267600000457605,
+                      "verify": 8.789999992586672e-05,
+                      "count_format": 4.850000004807953e-05,
+                      "count_verify": 3.130000004603062e-05
                     }
                   },
                   {
@@ -487,7 +487,7 @@
                         "x"
                       ],
                       "simulated_qubits": 4,
-                      "aer_experiment_seconds": 0.0020961,
+                      "aer_experiment_seconds": 0.002143,
                       "verified_hit_rate_wilson_95": [
                         0.15003898915214947,
                         0.8499610108478506
@@ -506,12 +506,12 @@
                       "verified_hit_rate": 0.5
                     },
                     "timing_seconds": {
-                      "sample": 0.05317520000971854,
-                      "submit": 5.979998968541622e-05,
-                      "result_wait": 0.05311510001774877,
-                      "verify": 8.460000390186906e-05,
-                      "count_format": 4.640000406652689e-05,
-                      "count_verify": 3.0800001695752144e-05
+                      "sample": 0.05435959999977058,
+                      "submit": 6.620000021939632e-05,
+                      "result_wait": 0.054293199999847275,
+                      "verify": 8.770000022195745e-05,
+                      "count_format": 4.910000006930204e-05,
+                      "count_verify": 3.0299999707494862e-05
                     }
                   }
                 ],
@@ -688,7 +688,7 @@
                         "x"
                       ],
                       "simulated_qubits": 4,
-                      "aer_experiment_seconds": 0.0013735,
+                      "aer_experiment_seconds": 0.0013926,
                       "verified_hit_rate_wilson_95": [
                         0.04558726080970055,
                         0.6993581574175981
@@ -707,12 +707,12 @@
                       "verified_hit_rate": 0.25
                     },
                     "timing_seconds": {
-                      "sample": 0.05359429999953136,
-                      "submit": 7.150002056732774e-05,
-                      "result_wait": 0.053522500034887344,
-                      "verify": 9.379995753988624e-05,
-                      "count_format": 5.140004213899374e-05,
-                      "count_verify": 3.339996328577399e-05
+                      "sample": 0.05361319999974512,
+                      "submit": 7.000000005064066e-05,
+                      "result_wait": 0.053542900000138616,
+                      "verify": 9.43000004554051e-05,
+                      "count_format": 5.160000000614673e-05,
+                      "count_verify": 3.5400000342633575e-05
                     }
                   },
                   {
@@ -730,7 +730,7 @@
                         "x"
                       ],
                       "simulated_qubits": 4,
-                      "aer_experiment_seconds": 0.0015088,
+                      "aer_experiment_seconds": 0.0013735,
                       "verified_hit_rate_wilson_95": [
                         0.15003898915214947,
                         0.8499610108478506
@@ -748,12 +748,12 @@
                       "verified_hit_rate": 0.5
                     },
                     "timing_seconds": {
-                      "sample": 0.05289719998836517,
-                      "submit": 6.3000014051795e-05,
-                      "result_wait": 0.05283389997202903,
-                      "verify": 8.010002784430981e-05,
-                      "count_format": 4.509999416768551e-05,
-                      "count_verify": 2.7900037821382284e-05
+                      "sample": 0.05364519999966433,
+                      "submit": 6.990000019868603e-05,
+                      "result_wait": 0.05357499999990978,
+                      "verify": 8.509999952366343e-05,
+                      "count_format": 4.529999932856299e-05,
+                      "count_verify": 3.199999991920777e-05
                     }
                   }
                 ],
@@ -919,7 +919,7 @@
                         "x"
                       ],
                       "simulated_qubits": 4,
-                      "aer_experiment_seconds": 0.0022205,
+                      "aer_experiment_seconds": 0.0023122,
                       "verified_hit_rate_wilson_95": [
                         0.15003898915214947,
                         0.8499610108478506
@@ -940,12 +940,12 @@
                       "verified_hit_rate": 0.5
                     },
                     "timing_seconds": {
-                      "sample": 0.05412889999570325,
-                      "submit": 8.690002141520381e-05,
-                      "result_wait": 0.0540416999720037,
-                      "verify": 9.04000480659306e-05,
-                      "count_format": 5.000003147870302e-05,
-                      "count_verify": 3.260001540184021e-05
+                      "sample": 0.05655449999994744,
+                      "submit": 7.48999991628807e-05,
+                      "result_wait": 0.0564793000003192,
+                      "verify": 9.240000053978292e-05,
+                      "count_format": 5.0999999984924216e-05,
+                      "count_verify": 3.3400000575056765e-05
                     }
                   },
                   {
@@ -963,7 +963,7 @@
                         "x"
                       ],
                       "simulated_qubits": 4,
-                      "aer_experiment_seconds": 0.0022398,
+                      "aer_experiment_seconds": 0.002275,
                       "verified_hit_rate_wilson_95": [
                         0.0,
                         0.4898908364545973
@@ -980,12 +980,12 @@
                       "verified_hit_rate": 0.0
                     },
                     "timing_seconds": {
-                      "sample": 0.055018599960021675,
-                      "submit": 6.0399994254112244e-05,
-                      "result_wait": 0.054957899963483214,
-                      "verify": 0.00010140001541003585,
-                      "count_format": 5.6699966080486774e-05,
-                      "count_verify": 3.850000211969018e-05
+                      "sample": 0.05391020000024582,
+                      "submit": 6.720000055793207e-05,
+                      "result_wait": 0.05384279999998398,
+                      "verify": 8.230000003095483e-05,
+                      "count_format": 4.510000053414842e-05,
+                      "count_verify": 2.949999998236308e-05
                     }
                   }
                 ],
@@ -1011,7 +1011,7 @@
     "local_cancellation_unconfirmed": false,
     "provider_job_submitted": false,
     "quantum_hardware_used": false,
-    "wall_seconds": 2.9030905999825336
+    "wall_seconds": 2.8807176999998774
   },
   "snapshots": {
     "manila": {

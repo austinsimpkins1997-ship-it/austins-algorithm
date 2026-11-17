@@ -1,6 +1,6 @@
 # Changelog
 
-Austin's Algorithm package version is 0.3.0a1. These records cover the published Git history and the local implementation milestones in [the roadmap](ROADMAP.md). Local times use the UTC offset shown.
+Austin's Algorithm package version is 0.3.1a1. These records cover the published Git history and the local implementation milestones in [the roadmap](ROADMAP.md). Local times use the UTC offset shown.
 
 ## Change-record attribution and signatures
 
@@ -13,6 +13,29 @@ Editorial signatures are textual attestations by the record editor. Git signatur
 New records should state the actual date with offset, editor name and role, source or verification evidence, and editorial signature. Use UNKNOWN for missing original attribution. Keep earlier entries and their provenance when recording a correction. Local observations, simulations, device measurements and published releases retain separate statuses.
 
 ## Current changes
+
+### 2026-11-17T11:36:57.086800+00:00 — Security Lab and bounded search/circuit sequencing (0.3.1 alpha)
+
+> Change record `CR-031-b4830a46b6`
+>
+> Recorded change date — 2026-11-17T11:36:57.086800+00:00 (UTC observation clock).
+>
+> Original implementer or scoped editor — Codex (AI assistant), acting on Austin’s request.
+>
+> Review editor — Codex (AI assistant).
+>
+> Editorial signature — `Codex / 2026-11-17T11:36:57.086800+00:00 / CR-031-b4830a46b6`.
+>
+> Source basis — Current scoped source, primary-source review, and dated local test/build/release receipts under `.build/security-20261117/`; production and quantum advantage remain unverified.
+>
+> Change-text SHA-256 — `b4830a46b6cf9d01d2e7b3061add18c6af99fe92bee7c977501b0aeb003a6c9d`.
+
+- Add an offline Security Lab page, strict input schema, named synthetic policy fixtures and visible counterexample traces. No live target, password/hash input, adversary executor or production enforcement is introduced.
+- Reuse the existing Planning API for an explicitly illustrative defense-selection model and isolated JobStore workers for run/stop/recovery/export. Preserve source-change holds and independent result/authority distinctions.
+- Add bounded public teaching-oracle sequencing, finite round comparison, fresh-seed independent verification, optional Qiskit/OpenQASM circuit export and CPU preprocessing/candidate-verification accounting. Quantum cracking advantage remains NOT DEMONSTRATED; no infinite or absolute resource/accuracy claim is made.
+- Add a representative twelve-primary-source decision review spanning ATT&CK, D3FEND, ASVS, NIST identity/zero-trust/PQC, Caldera, Atomic Red Team, storage guidance and Grover theory. These are influence/reference decisions, not an exhaustive strongest-model ranking.
+- Update current metadata, documentation and legacy 0.3 export compatibility. Verify both maintained copies, rebuild affected artifacts and record actual tests, signed installed inventory and recovery separately in the dated delivery evidence. This new local alpha is not automatically published to GitHub.
+
 
 ### 2026-11-16T08:22:29-05:00 — Planning 0.3, managed execution and shared result contracts
 

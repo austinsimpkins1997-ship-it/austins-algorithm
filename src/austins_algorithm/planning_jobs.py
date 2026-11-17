@@ -89,7 +89,7 @@ def _lock(directory):
 def _engine_pin():
     directory=Path(__file__).parent
     return {"engine":planning.ENGINE_VERSION,"sources":{name:sha256((directory/name).read_bytes()).hexdigest() if (directory/name).is_file() else None
-            for name in ('planning.py','planning_jobs.py','optimization.py')}}
+            for name in ('planning.py','planning_jobs.py','optimization.py','core.py','grover_search.py','security_rehearsal.py','search_sequence.py','workbench_assets/security_sources.json')}}
 
 
 def _terminate(process):
@@ -165,6 +165,9 @@ class JobStore:
             if not isinstance(payload,dict) or set(payload)!={'model','shots','seed'} or payload['model'] not in ('manila','jakarta','torino'):
                 raise ValueError('Snapshot tasks require model, shots and seed')
             planning.integer(payload['shots'],1,4096,'Shots');planning.integer(payload['seed'],0,2**31-1,'Seed')
+        elif kind=='security-rehearsal':
+            from .security_rehearsal import document
+            payload=document(payload)
         else:raise ValueError('Unknown managed task kind')
         return self._create(payload,limits,'existing-workflow',kind)
 
@@ -306,7 +309,7 @@ def worker(root,job_id,token):
                     checkpoint=record["checkpoint"] if record["attempts"][-1]["resume"] else None,
                     _trusted_checkpoint=True,stop=lambda:(directory/"stop").exists(),progress=progress)
             else:
-                result=execute_task(record['workload_kind'],record['problem'])
+                result=execute_task(record['workload_kind'],record['problem'],stop=lambda:(directory/'stop').exists())
             record.update(result=result,checkpoint=result["checkpoint"],
                 state="COMPLETED" if result.get('task_completed') or result["optimality"]=="EXACT_FINITE_MODEL" else "PAUSED",error=None)
         except Exception as exc:
@@ -336,6 +339,18 @@ def export_job(store,job_id,path):
         '<h1>What happened?</h1><pre>'+escape(planning.format_overview(job_overview(record)))+'</pre><p>Read-only recorded evidence. Verify the manifest and rerun the pinned replay before relying on an independently reproduced optimum.</p></html>').encode('utf-8')
     if record.get('workload_kind','planning')!='planning':
         payloads['replay.py']=b'import json\nfrom pathlib import Path\nfrom austins_algorithm.planning_jobs import execute_task\np=json.loads(Path(__file__).with_name("project.json").read_text(encoding="utf-8"))\nprint(json.dumps(execute_task(p["workload_kind"],p["problem"]),indent=2))\n'
+    if record.get('workload_kind')=='security-rehearsal':
+        from .security_rehearsal import summary
+        source_review=(Path(__file__).parent/'workbench_assets/security_sources.json').read_bytes()
+        expected=record['engine_pin']['sources'].get('workbench_assets/security_sources.json')
+        if sha256(source_review).hexdigest()!=expected:
+            raise ValueError('Security source review changed; use the retained original package to export this pinned job')
+        report=(record.get('result') or {}).get('report')
+        if report:
+            payloads['security-report.json']=planning.canonical(report)
+            payloads['sequence-report.json']=planning.canonical(report.get('sequence'))
+            payloads['report.html']=('<!doctype html><html lang="en"><meta charset="utf-8"><title>Security Lab review</title><meta name="viewport" content="width=device-width,initial-scale=1"><style>body{font:18px system-ui;max-width:60em;margin:2em auto;padding:1em}pre{white-space:pre-wrap;overflow-wrap:anywhere}</style><h1>Security Lab: what happened?</h1><pre>'+escape(summary(report))+'</pre><p>Read-only synthetic evidence. Full traces are in security-report.json; no production protection or practical quantum advantage is established.</p></html>').encode('utf-8')
+        payloads['sources.json']=source_review
     for log in store.directory(job_id).glob("worker-*.log"):
         if log.is_symlink() or log.stat().st_size > 1_000_000:
             raise ValueError("Worker log is linked or exceeds export limit")
@@ -375,15 +390,18 @@ def verify_export(path):
         if project['problem']!=job['problem']:
             raise ValueError("Export project differs from job")
         if job.get('workload_kind','planning')=='planning':planning.problem_from_document(project['problem'])
+        if job.get('workload_kind')=='security-rehearsal':
+            from .security_rehearsal import document
+            document(project['problem'])
         if job.get('workload_kind','planning')=='planning' and job.get('result') and job['result'].get('problem_sha256')!=planning.fingerprint(job['problem']):
             raise ValueError('Exported result belongs to another model')
         if job.get('workload_kind','planning')=='planning' and job['result'] and job['result']['bits'] is not None:
             if not planning.verify_candidate(job['problem'],job['result']['bits'],job['result']['cost'])['valid']:
                 raise ValueError("Exported candidate is invalid")
-    return {'status':'PLANNING_EXPORT_VERIFIED','members':len(entries),'optimality_independently_replayed':False,'action_authority':False}
+    return {'status':'PLANNING_EXPORT_VERIFIED','members':len(entries),'optimality_independently_replayed':False,'result_claims_independently_replayed':False,'action_authority':False}
 
 
-def execute_task(kind,payload):
+def execute_task(kind,payload,*,stop=lambda:False):
     if kind=='weighted-simulation':
         from .optimization import SearchSession
         session=SearchSession(payload,seed=7,max_shots=16,max_queries=64,max_rounds=4)
@@ -393,8 +411,11 @@ def execute_task(kind,payload):
         from .snapshot_adapter import IBMSnapshotAdapter
         report=IBMSnapshotAdapter().submit(ExperimentRequest(WorkloadArtifact('chronorealm.austin-snapshot/1',{'model':payload['model']},logical_width=3),
             requested_execution_mode='SIMULATOR',shots=payload['shots'],seed=payload['seed'])).result_payload
+    elif kind=='security-rehearsal':
+        from .security_rehearsal import run
+        report=run(payload,stop=stop)
     else:raise ValueError('Unknown task kind')
-    return {'task_completed':True,'task_kind':kind,'report':report,'checkpoint':None,'optimality':'NOT_APPLICABLE',
+    return {'task_completed':report.get('status')!='CANCELLED','task_kind':kind,'report':report,'checkpoint':None,'optimality':'NOT_APPLICABLE',
             'execution_mode':'SIMULATOR','action_authority':False}
 
 

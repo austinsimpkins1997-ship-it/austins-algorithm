@@ -174,6 +174,22 @@ def main(argv: list[str] | None = None) -> None:
             args.smoke.mkdir(parents=True, exist_ok=True)
             status = app.smoke(args.smoke)
             status['planning'] = _planning_smoke(app,args.smoke)
+            app.show_page('Security Lab')
+            panel=app.security
+            from .planning_jobs import JobStore,verify_export
+            panel.store.close();panel.store=JobStore(args.smoke/'security-jobs')
+            panel.start()
+            import time
+            deadline=time.monotonic()+30
+            while panel.active() and time.monotonic()<deadline:
+                root.update();time.sleep(.02)
+            record=panel.store.poll(panel.job_id)
+            if record['state']!='COMPLETED' or record['result']['report']['status']!='MODEL_CHECKS_PASSED':
+                raise RuntimeError('Security Lab worker did not complete its named synthetic checks')
+            security_path=args.smoke/'security.security.json';security_export=args.smoke/'security.zip'
+            panel.save(security_path);panel.export(security_export);panel.open(security_path)
+            verify_export(security_export)
+            status['security_lab']={'named_model_checks':'PASS','job_save_open_export':'PASS','quantum_advantage':'NOT_DEMONSTRATED','network_used':False}
             status["focus"] = _focus_smoke(app, args.smoke)
             status["decision_review"] = _decision_smoke(app, args.smoke)
             if args.smoke_receipts:

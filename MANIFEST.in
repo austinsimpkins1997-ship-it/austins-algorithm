@@ -4,6 +4,7 @@ include IBM_MODEL_RESEARCH.md
 include CONSTRAINT_WORKFLOW.md
 include WORKBENCH.md
 include PLANNING.md examples/planning_equipment.json
+include SECURITY_LAB.md examples/security_rehearsal.json examples/BASELINE_REFRESH_2026-11-17.json
 include examples/planning-benchmark-20261116.json examples/BASELINE_REFRESH_2026-11-16.json
 include IBM_HARDWARE.md
 recursive-include src/austins_algorithm/workbench_assets *.ico *.svg *.png *.txt *.json *.html

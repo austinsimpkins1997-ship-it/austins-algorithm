@@ -2,9 +2,9 @@
 
 **A local workbench and Python toolkit for quantum-search experiments, bounded optimization, and evidence-based decision review.**
 
-**Workbench 0.3.0-alpha** · **Python package 0.3.0a1** · **Python 3.10+** · **[Apache-2.0](LICENSE)**
+**Workbench 0.3.1-alpha** · **Python package 0.3.1a1** · **Python 3.10+** · **[Apache-2.0](LICENSE)**
 
-Created by **Austin Gregory Simpkins and Chandler Middlebrooks / ChronoRealm**. Current source reviewed **November 16, 2026**.
+Created by **Austin Gregory Simpkins and Chandler Middlebrooks / ChronoRealm**. Current source reviewed **November 17, 2026**.
 
 Start with a small search problem, inspect each simulated step, compare a candidate with an exact classical answer, and save the evidence. For a decision involving several operating conditions, use Decision Review to compare plans, inspect missing checks, and rehearse recovery. The Windows application brings these workflows together with instructions, visualization, project files, and a clear Export action.
 
@@ -14,13 +14,13 @@ Start with a small search problem, inspect each simulated step, compare a candid
 
 | Item | Current implementation or record |
 |---|---|
-| Python distribution | `chronorealm-austins-algorithm` **0.3.0a1** |
-| Windows desktop | Workbench **0.3.0-alpha** |
+| Python distribution | `chronorealm-austins-algorithm` **0.3.1a1** |
+| Windows desktop | Workbench **0.3.1-alpha** |
 | Optional Python side system | `chronorealm-future-reader` **0.1.2** |
 | Existing weighted file formats | Application label **0.2.0-alpha**, replay-engine label **0.1.0** |
 | Declared project authors | Austin Gregory Simpkins and Chandler Middlebrooks / ChronoRealm |
 | Documentation editor | Codex, an AI assistant working on Austin's request |
-| Review date | November 16, 2026, using America/New_York for displayed local times |
+| Review date | November 17, 2026, using America/New_York for displayed local times |
 | Change attribution and signatures | Per-entry editor, date basis, editorial signature, source and content hash in the changelog |
 
 Project authorship follows the package and citation metadata. An entry's implementer follows that entry's evidence. Editorial signatures identify the record editor and review time. Cryptographic Git verification, artifact signing and hashes retain their own meanings. Historical implementers and original dates remain `UNKNOWN` where a record supplies insufficient detail. [Timestamped and attributed history](CHANGELOG.md)
@@ -49,22 +49,22 @@ On macOS or Linux, create the environment with `python3 -m venv .venv` and use `
 The 0.3 Workbench build is delivered to both maintained copies at this package-relative path. The dated release verification records its actual checks and installed-payload status.
 
 ```powershell
-& ".\.build\release-0.3.0a1\AustinsAlgorithmWorkbench.exe"
+& ".\.build\release-0.3.1a1\AustinsAlgorithmWorkbench.exe"
 ```
 
 This is a local build location. A fresh Git checkout needs the source installation above or its own executable build. The Windows executable bundles its Python runtime, Workbench assets, and Future Reader companion. It remains unsigned. Build instructions describe the required tools, output directory, and verification. [Build and check release artifacts](CONTRIBUTING.md#build-and-check-release-artifacts)
 
 ## Install the current Python distributions
 
-The Python release is `0.3.0a1`, matching the Workbench's `0.3.0-alpha` feature set using Python's alpha-version notation. The base wheel includes the main runtime, UI assets and offline HTML companion. The optional Python Future Reader controller is distributed alongside it as `chronorealm-future-reader` 0.1.2.
+The Python release is `0.3.1a1`, matching the Workbench's `0.3.1-alpha` feature set using Python's alpha-version notation. The base wheel includes the main runtime, UI assets and offline HTML companion. The optional Python Future Reader controller is distributed alongside it as `chronorealm-future-reader` 0.1.2.
 
 After placing both wheels in one directory, install the complete local Workbench functionality from that directory.
 
 ```powershell
-python -m pip install --no-index --find-links PATH-TO-WHEELS "chronorealm-austins-algorithm[future-reader]==0.3.0a1"
+python -m pip install --no-index --find-links PATH-TO-WHEELS "chronorealm-austins-algorithm[future-reader]==0.3.1a1"
 ```
 
-Installing the base wheel alone supports the CPU, optimization, Decision Review, Focus and export paths. The `[future-reader]` extra adds the native practice controller. Qiskit, IBM and Cirq still use their separate extras. Existing weighted archives retain their 0.2.0-alpha application and 0.1.0 replay-engine labels. These are file-format compatibility values. Installed library metadata reports 0.3.0a1.
+Installing the base wheel alone supports the CPU, optimization, Decision Review, Focus and export paths. The `[future-reader]` extra adds the native practice controller. Qiskit, IBM and Cirq still use their separate extras. Existing weighted archives retain their 0.2.0-alpha application and 0.1.0 replay-engine labels. These are file-format compatibility values. Installed library metadata reports 0.3.1a1.
 
 ## Capabilities
 
@@ -215,9 +215,19 @@ Managed jobs now cover Planning, the existing weighted simulation and one named 
 
 The local benchmark uses synthetic inputs and analytical/exhaustive references. Operator observation tooling and the printable worksheet are implemented, but **no real operator benefit is established**. Optional SciPy MILP reports numerical solver status separately from exact finite-model optimality. The stable planning v1 contract does not make the older quantum adapter interface stable; the new offline IBM adapter adopts that existing experimental contract.
 
-Verification so far: the full E: suite completed **736 tests: 602 passed and 134 skipped**; the affected planning/UI checks passed after the Windows atomic-file and Tk cleanup corrections. The [matched synthetic benchmark](examples/planning-benchmark-20261116.json) records all measured stages and comparison limits. The final delivery receipt records the workspace, installed artifact and recovery outcomes separately.
+Historical November 16 verification for 0.3.0: the full E: suite completed **736 tests: 602 passed and 134 skipped**; the affected planning/UI checks passed after the Windows atomic-file and Tk cleanup corrections. The [matched synthetic benchmark](examples/planning-benchmark-20261116.json) records all measured stages and comparison limits. The final delivery receipt records the workspace, installed artifact and recovery outcomes separately.
 
 Use [the complete Planning guide and first session](PLANNING.md), [the matched benchmark](tools/benchmark_planning.py), and [the release-copy and wheel checker](tools/check_release_03.py). Final build, source-copy parity, signed installed inventory and recovery outcomes are recorded under `.build/upgrade-03-20261116/` and the F: release work directory. The earlier November 15 verification totals and executable digest below are historical evidence for **0.2.6a1**, not the 0.3 binary. Physical-device measurements, real-user usability/accessibility acceptance and organizational production acceptance remain unverified.
+
+## Security Lab and bounded sequencing — November 17, 2026
+
+**0.3.1-alpha / Python 0.3.1a1** adds a native Security Lab page, CLI and isolated managed job for named synthetic authentication-policy fixtures. Inspect account retry limits, shared modeled login/reset/OTP budgets, restart persistence, expiry and unrelated-user behavior. All accounts and attempt outcomes are synthetic; this is not an authentication service, live test runner or password/hash cracker.
+
+The lab reuses the existing Planning solver for an illustrative defense-selection model and the existing Austin three-bit oracle for bounded sequencing. It orders preparation, oracle/diffusion, measurement, independent verification and evidence capture; compares finite round counts; selects using declared ideal probabilities; and checks a fresh seed. Optional Qiskit exports the public teaching circuit as OpenQASM. CPU oracle preprocessing, samples and elapsed time are recorded. **Quantum cracking advantage is NOT DEMONSTRATED.** No infinite resource, universal optimum, cryptographic break or physical-QPU result is claimed.
+
+Verification on November 17: **749 tests ran in each maintained source copy: 615 passed and 134 skipped**. The 13 new Security Lab/sequence checks passed in the SDK-enabled environment. Four existing simulator baseline requests were freshly executed and semantically compared after the package-version change; these remain classical simulations. Final executable, installed inventory and recovery evidence are recorded separately under `.build/security-20261117/`.
+
+A representative twelve-source review distinguishes adversary taxonomies, defensive requirements, emulation platforms and quantum theory. Caldera/Atomic Red Team are research references, not installed executors. Live defenses must be enforced and independently tested at their own service boundaries. Source changes hold existing pinned jobs; retain old evidence and create a new job. See [Security Lab setup, first session, research decisions and limits](SECURITY_LAB.md). This local update has not been published as a new GitHub release; the published 0.3.0 alpha keeps its own source and evidence.
 
 ## Historical November 15 delivery verification
 
@@ -238,7 +248,7 @@ The software evidence includes the November 15, 2026 local Python-package delive
 
 Local delivery evidence is under `.build/package-current-20261115/verification.json`, `installed-verification.json`, and `distributions-current/build-result.json`. These generated files are available in the maintained local folders. A fresh checkout should build and verify its own artifacts using the contribution guide. Earlier test matrices, benchmark timings, CI runs and builds keep their original date and revision in the changelog and owning guides. [Change history](CHANGELOG.md) · [Build verification](CONTRIBUTING.md#build-and-check-release-artifacts)
 
-That November 15 delivery used Python library **0.2.6a1**, desktop **0.2.6-alpha**, and optional companion **0.1.2**. The current release is **0.3.0a1 / 0.3.0-alpha**. The weighted archive's application label **0.2.0-alpha** and replay-engine label **0.1.0** are file-format compatibility values. Decision Review has its own versioned project and archive formats. The current verifier preserves the exact known older package-version source variant while rejecting other rehashed source changes.
+That November 15 delivery used Python library **0.2.6a1**, desktop **0.2.6-alpha**, and optional companion **0.1.2**. The current release is **0.3.1a1 / 0.3.1-alpha**. The weighted archive's application label **0.2.0-alpha** and replay-engine label **0.1.0** are file-format compatibility values. Decision Review has its own versioned project and archive formats. The current verifier preserves the exact known older package-version source variant while rejecting other rehashed source changes.
 
 Full-suite results above used Python 3.12.15. The earlier system Python 3.14 attempt encountered a missing `secrets` standard-library module. Other operating-system and SDK combinations retain their separate dated evidence. A test result carries its tested scope and environment.
 
@@ -258,7 +268,7 @@ Both maintained source copies passed the full suite after this repair: **724 tes
 
 The six packaged commands passed locally: phase-cover regression, both diffuser regressions, placement receipt verification, placement identity checking and placement replay. Placement replay matched **8/8 histograms**, with no changed cell evaluations or model decisions. A new dependency-free release guard checks all four baseline versions and SDK pins, and legacy timing tests now construct their missing-timing condition explicitly. The earlier full-suite totals above retain their original revision; this repair has its own verification record.
 
-[Dated baseline identities, comparisons and limits](examples/smoke-regression/BASELINE_REFRESH_2026-11-15.json) · [Failed historical run](https://github.com/austinsimpkins1997-ship-it/austins-algorithm/actions/runs/43763164723). Local logs and recovery files are under `.build/manila-repair-20261115/`. At the November 15 record cutoff, hosted confirmation was pending. The follow-up [GitHub run 43768634823](https://github.com/austinsimpkins1997-ship-it/austins-algorithm/actions/runs/43768634823) passed for commit 7419bc7. That repair concerned **0.2.6a1 / 0.2.6-alpha**; the new **0.3.0a1 / 0.3.0-alpha** update has separate local verification and awaits its own publication.
+[Dated baseline identities, comparisons and limits](examples/smoke-regression/BASELINE_REFRESH_2026-11-15.json) · [Failed historical run](https://github.com/austinsimpkins1997-ship-it/austins-algorithm/actions/runs/43763164723). Local logs and recovery files are under `.build/manila-repair-20261115/`. At the November 15 record cutoff, hosted confirmation was pending. The follow-up [GitHub run 43768634823](https://github.com/austinsimpkins1997-ship-it/austins-algorithm/actions/runs/43768634823) passed for commit 7419bc7. That repair concerned **0.2.6a1 / 0.2.6-alpha**; the new **0.3.1a1 / 0.3.1-alpha** update has separate local verification and awaits its own publication.
 
 For a future package-version update, run the release guard and regenerate and compare the pinned smoke baselines before publishing. Do not edit old version labels to manufacture a match. Preserve the old receipts and verify the packaged source archive, including every mandatory replay command.
 
@@ -289,3 +299,5 @@ Austin's Algorithm is ChronoRealm's project and example name. Its quantum search
 This source review is dated `2026-11-15T16:07:39-05:00` in America/New_York. The record editor is **Codex (AI assistant)**, acting on Austin's request. Editorial signature is `Codex / 2026-11-15T16:07:39-05:00 / whole-project README review`. The corresponding source and document byte hashes are recorded in the local `.build/docs-whole-20261115/verification.json` receipt. Project credits follow package and citation metadata. Original implementers remain UNKNOWN where the historical source supplies insufficient attribution.
 
 This source-documentation revision has its own review signature and integrity record. Artifact-embedded documentation follows the build revision recorded with that artifact. Software test counts above remain attributed to their retained executions.
+
+Current 0.3.1 update review: `2026-11-17T12:39:06.106302+00:00` (UTC observation clock). Editor and editorial signature: `Codex (AI assistant) / 2026-11-17T12:39:06.106302+00:00 / Security Lab and bounded sequencing`. Earlier documentation signatures retain their original revision scope. Final artifacts and local cryptographic integrity records are separate from Windows publisher trust.

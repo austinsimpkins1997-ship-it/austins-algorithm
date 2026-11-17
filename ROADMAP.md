@@ -317,3 +317,7 @@ pending approvals alongside the scope and source pins. See [Pilot receipts](WORK
 - Extend regression coverage to additional supported simulator/OS combinations when a named environment is available. Keep checkpoint records and package artifacts bound to their exact revisions; local checks do not replace hosted verification or physical-device evidence.
 - Run one authorized physical experiment with a named backend, record its actual job and measured results, and compare its hit rate and full cost with the local references.
 - Keep hosted verification tied to the committed revision. [Run #10](https://github.com/austinsimpkins1997-ship-it/austins-algorithm/actions/runs/43300577324) passed all ten jobs for the #143 CI repair at `33eab1190c31188c322951a78cc6b7f4e620c0fa`. Desktop #144 adds local Windows executable evidence. A managed organizational deployment requires its own signing, distribution, and accessibility validation.
+
+## Security rehearsal and sequencing — 2026-11-17
+
+Local 0.3.1 adds synthetic policy fixtures, failure traces, an illustrative Planning consumer and bounded toy-oracle sequencing. Actual source, build and install results are in dated delivery evidence. Further work requires separately owned real defensive enforcement, representative independent evaluation and measured total cost. Practical quantum cracking advantage and universal optimality remain unestablished.

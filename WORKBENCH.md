@@ -271,3 +271,7 @@ in their existing screens.
 ## Planning 0.3
 
 The native Planning page adds larger classical plans, isolated jobs, shared summaries, project files and complete evidence export. Use [Planning](PLANNING.md) for the first session, exact limits, CLI/API, recovery semantics and operator worksheet. Weighted quantum simulation and Decision Review keep their existing formats and boundaries.
+
+## Security Lab — local 0.3.1 alpha
+
+The native Security Lab page runs named synthetic policy checks and bounded public teaching-oracle sequences through isolated jobs. Save/open inputs, inspect failure traces, stop work, and export recorded evidence. Circuit QASM needs the optional Python Qiskit extra. No live targets, passwords/hashes, adversary executors or practical quantum cracking advantage are implemented. See [Security Lab](SECURITY_LAB.md).

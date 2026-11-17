@@ -1,0 +1,20 @@
+{
+  "schema_version": 1,
+  "evidence_kind": "PINNED_CLASSICAL_SIMULATOR_BASELINE_REFRESH",
+  "package_version": "0.3.1a1",
+  "completed_utc": "2026-11-17T11:37:59.373216+00:00",
+  "environment": {
+    "python": "3.12.15",
+    "austins_algorithm": "0.3.1a1",
+    "qiskit": "2.6.2",
+    "qiskit-aer": "0.18.2",
+    "qiskit-ibm-runtime": "0.51.0",
+    "qiskit-qasm3-import": "0.6.0",
+    "numpy": "2.5.4",
+    "scipy": "1.18.1"
+  },
+  "provider_job_submitted": false,
+  "quantum_hardware_used": false,
+  "method": "Freshly execute all four original requests; compare unchanged seeded histograms, circuit identities and decisions. Preserve earlier receipts in before.zip and original/; no manual relabeling.",
+  "details": "F:\\Austins-Algorithm-Security-20261117\\refresh-verification.json"
+}

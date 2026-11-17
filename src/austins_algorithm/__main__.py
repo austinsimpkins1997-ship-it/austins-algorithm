@@ -9,6 +9,10 @@ from .measurement import ideal_grover_outcomes
 
 
 def main() -> None:
+    if len(sys.argv) > 1 and sys.argv[1] == 'security-lab':
+        from .security_cli import main as security_main
+        security_main(sys.argv[2:])
+        return
     if len(sys.argv) > 1 and sys.argv[1] == "plan":
         from .planning_cli import main as planning_main
         planning_main(sys.argv[2:])

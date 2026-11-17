@@ -1,0 +1,105 @@
+{
+  "schema": "chronorealm.security-sources/1",
+  "review_date": "2026-11-17",
+  "editor": "Codex (AI assistant)",
+  "selection": "Representative primary sources relevant to authentication, adversary rehearsal and quantum search; not ALL models or a universal strongest ranking.",
+  "network_at_runtime": false,
+  "sources": [
+    {
+      "id": "ATTACK",
+      "name": "MITRE ATT&CK T1110",
+      "role": "Adversary behavior taxonomy",
+      "url": "https://attack.mitre.org/techniques/T1110/",
+      "decision": "Use named guessing/spraying/stuffing/offline categories as trace context; execute only synthetic admission fixtures.",
+      "limits": "Not a tool ranking or a measured detection rate."
+    },
+    {
+      "id": "D3FEND",
+      "name": "MITRE D3FEND",
+      "role": "Countermeasure knowledge graph",
+      "url": "https://d3fend.mitre.org/",
+      "decision": "Use defense vocabulary and explicit behavior-to-control mappings.",
+      "limits": "A mapping is not evidence a control is deployed or effective."
+    },
+    {
+      "id": "ASVS",
+      "name": "OWASP ASVS 5.0.0",
+      "role": "Application verification requirements",
+      "url": "https://asvs.owasp.org/",
+      "decision": "Use reviewable requirements and negative tests.",
+      "limits": "No ASVS certification or complete requirement coverage is claimed."
+    },
+    {
+      "id": "NIST63",
+      "name": "NIST SP 800-63B-4",
+      "role": "Authentication and authenticator lifecycle",
+      "url": "https://pages.nist.gov/800-63-4/sp800-63b.html",
+      "decision": "Model retry ceilings, recovery boundaries and source-specific requirements.",
+      "limits": "The lab is not an identity provider or a NIST conformance assessment."
+    },
+    {
+      "id": "CSF",
+      "name": "NIST CSF 2.0",
+      "role": "Govern, identify, protect, detect, respond, recover",
+      "url": "https://www.nist.gov/cyberframework",
+      "decision": "Keep ownership, response and recovery alongside protection.",
+      "limits": "Framework coverage does not measure implementation strength."
+    },
+    {
+      "id": "ZTA",
+      "name": "NIST SP 800-207",
+      "role": "Zero trust architecture",
+      "url": "https://csrc.nist.gov/pubs/sp/800/207/final",
+      "decision": "Keep planning proposals separate from enforcing authorization boundaries.",
+      "limits": "No network-wide enforcement or trust engine is installed."
+    },
+    {
+      "id": "CALDERA",
+      "name": "Apache Caldera (Incubating)",
+      "role": "Authorized adversary-emulation platform",
+      "url": "https://caldera.mitre.org/",
+      "decision": "Adopt bounded repeatable exercise and evidence patterns; research only.",
+      "limits": "No agents, payloads, adversary executors or live integrations are installed."
+    },
+    {
+      "id": "ATOMIC",
+      "name": "Atomic Red Team",
+      "role": "Small repeatable detection tests",
+      "url": "https://github.com/redcanaryco/atomic-red-team",
+      "decision": "Adopt small named fixtures and repair/retest discipline; research only.",
+      "limits": "No upstream test commands are imported or executed."
+    },
+    {
+      "id": "PQC",
+      "name": "NIST post-quantum cryptography",
+      "role": "Cryptographic migration standards",
+      "url": "https://csrc.nist.gov/projects/post-quantum-cryptography",
+      "decision": "Record quantum threat and migration separately from toy search.",
+      "limits": "No custom encryption, PQC integration or cryptanalytic implementation is added."
+    },
+    {
+      "id": "GROVER",
+      "name": "IBM Grover tutorial",
+      "role": "Oracle, diffusion and measurement construction",
+      "url": "https://quantum.cloud.ibm.com/docs/en/tutorials/grovers-algorithm",
+      "decision": "Reuse the existing public three-bit oracle and inspect optional QASM.",
+      "limits": "CPU simulation and query-model counts are not practical quantum advantage."
+    },
+    {
+      "id": "ZALKA",
+      "name": "Zalka, Grover search optimality",
+      "role": "Black-box query lower bound",
+      "url": "https://arxiv.org/abs/quant-ph/9711070",
+      "decision": "Respect finite oracle assumptions and the search lower bound.",
+      "limits": "More sequencing does not bypass complexity or create unbounded capability."
+    },
+    {
+      "id": "STORAGE",
+      "name": "OWASP password storage",
+      "role": "Memory-hard salted password verification",
+      "url": "https://cheatsheetseries.owasp.org/cheatsheets/Password_Storage_Cheat_Sheet.html",
+      "decision": "Research/reference checklist only; use established libraries for a future owning auth service.",
+      "limits": "This lab does not accept passwords or hashes or implement a password store."
+    }
+  ]
+}
