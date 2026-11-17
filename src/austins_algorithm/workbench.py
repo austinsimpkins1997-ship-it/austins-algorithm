@@ -1,6 +1,7 @@
 """Native desktop interface for weighted constraint search."""
 
 from __future__ import annotations
+from datetime import datetime
 
 from contextlib import suppress
 from pathlib import Path
@@ -468,6 +469,33 @@ class Workbench:
             "Simulate shows how a Grover search would evolve, one stage at a time.",
             "Card", wraplength=680,
         ).pack(anchor="w", pady=(3, 0))
+
+        self._button(note, "Run CPU comparison & export", self.practical_check).pack(anchor="w", pady=(7, 0))
+
+    def practical_check(self, parent=None):
+        """Small fixed CPU check, separate from the active project and QPU work."""
+        from .practical_evidence import benchmark, export_benchmark
+        supplied = parent is not None
+        if parent is None:
+            parent = filedialog.askdirectory(parent=self.root, title="Choose a parent for a NEW CPU evidence folder")
+            if not parent:
+                return None
+        destination = Path(parent) / ("practical-evidence-" + datetime.now().strftime("%Y%m%d-%H%M%S-%f"))
+        try:
+            result = benchmark()
+            summary = export_benchmark(destination, result)
+            self.message.set("CPU evidence exported. This fixed teaching example does not demonstrate quantum advantage.")
+            if not supplied:
+                messagebox.showinfo("CPU comparison exported", summary + "\n" + str(destination), parent=self.root)
+            return {"directory": str(destination), "all_verified": result['all_output_sets_verified'],
+                    "practical_quantum_advantage": result['practical_quantum_advantage']}
+        except (ValueError, OSError) as error:
+            self.message.set("CPU evidence check held: " + str(error))
+            if not supplied:
+                messagebox.showerror("CPU check held", str(error), parent=self.root)
+            else:
+                raise
+            return None
 
     def _assistant_context(self) -> dict:
         return {

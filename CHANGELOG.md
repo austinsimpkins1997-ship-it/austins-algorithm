@@ -1,6 +1,6 @@
 # Changelog
 
-Austin's Algorithm package version is 0.3.1a1. These records cover the published Git history and the local implementation milestones in [the roadmap](ROADMAP.md). Local times use the UTC offset shown.
+Austin's Algorithm package version is 0.3.2a1. These records cover the published Git history and the local implementation milestones in [the roadmap](ROADMAP.md). Local times use the UTC offset shown.
 
 ## Change-record attribution and signatures
 
@@ -13,6 +13,28 @@ Editorial signatures are textual attestations by the record editor. Git signatur
 New records should state the actual date with offset, editor name and role, source or verification evidence, and editorial signature. Use UNKNOWN for missing original attribution. Keep earlier entries and their provenance when recording a correction. Local observations, simulations, device measurements and published releases retain separate statuses.
 
 ## Current changes
+
+### 2026-11-17T14:19:58.529925+00:00 — Practical evidence, source review and provider accounting (0.3.2 alpha)
+
+> Change record `CR-032-0af36a1cdf`
+>
+> Recorded change date — 2026-11-17T14:19:58.529925+00:00 (UTC observation clock).
+>
+> Original implementer / review editor — Codex (AI assistant), acting on Austin’s request.
+>
+> Editorial signature — `Codex / 2026-11-17T14:19:58.529925+00:00 / CR-032-0af36a1cdf`.
+>
+> Source basis — Current scoped source, focused tests and the 23-source review; full release checks, local integrity signing and recovery are recorded in the dated delivery evidence.
+>
+> Change-text SHA-256 — `0af36a1cdf63893a5d8823562e05d957289129103e04e2d07d31917355645ac1`.
+
+- Add a bounded practical-check Python/CLI workflow and an Overview run/export button. Compare complete public teaching answer sets with direct classical construction, alternate execution order, retain failures, and export protocol, raw trials, source review, summary and checksums. This is CPU evidence, not a quantum speedup.
+- Add finite-sample 95% Wilson hit-rate intervals with explicit IID/noise limitations. Preserve missing, partial and unresolved device evidence separately.
+- Collect provider usage after noncompleted jobs, retain the original job ID, label actual/pending/estimated/unknown usage, and hold conflicting fields. Keep queue, client wall, usage and monetary cost distinct; do not resubmit or automatically cancel.
+- Review all 23 screenshot result entries, trace relevant secondary reports to primary papers/documentation, and record duplicate/redirect/unavailable links. Keep Tessa, quantum LLMs, large-circuit certificates and hardware marketing as separately scoped research rather than invented integrations.
+- Correct stale public-repository and capability/security text; update metadata, packaging, guides, README, native smoke and compatibility with unchanged legacy replay-module bytes. Existing hardware/identity permissions remain in force.
+- Record the completed 0.3.1 acceptance check separately: 749 tests per source (615 passed, 134 skipped), actual installed native workflows and bounded planning references. The fixed-toy CPU comparison favored direct construction. Physical advantage, operator benefit, trusted Windows publisher identity and production acceptance remain unverified. The unrelated legacy homophone journey remains open. Final 0.3.2 delivery checks and recovery are recorded separately; no new GitHub publication is inferred.
+
 
 ### 2026-11-17T11:36:57.086800+00:00 — Security Lab and bounded search/circuit sequencing (0.3.1 alpha)
 

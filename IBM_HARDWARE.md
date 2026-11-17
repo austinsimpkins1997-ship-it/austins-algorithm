@@ -31,3 +31,7 @@ To submit the one bounded job after selecting and authorizing its budget, use th
 The standard saved-profile path and IBM credential environment variables were checked for presence. No configured account was found. Offline target compilation, local comparison, and test-double runs for the physical submission boundary provide local evidence. Actual hardware counts, live backend availability, pricing for a selected instance, and physical execution times remain unverified.
 
 AWS Braket’s published free tier covers on-demand simulator time. Its pricing examples show separate physical task and shot charges. Azure Quantum publishes provider-specific pricing and directs operators to verify their workspace’s current terms. Neither route has an integration or a configured account in this experiment. [AWS Braket pricing](https://aws.amazon.com/braket/pricing/) · [Azure Quantum provider pricing](https://learn.microsoft.com/en-us/azure/quantum/pricing)
+
+## November 17 evidence-accounting update
+
+See [Practical evidence](PRACTICAL_EVIDENCE.md) for sampled hit-rate intervals, post-failure usage collection, overlapping clocks and dry-run limitations. The new local practical-check command does not submit a provider job. No configured IBM profile or credential settings were detected during the fresh November 17 check; physical advantage remains unverified.

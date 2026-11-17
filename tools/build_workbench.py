@@ -69,7 +69,7 @@ def main() -> None:
     command.extend(["--paths", str(reader), "--add-data",
                     f"{reader / 'future-reader.html'}:austins_algorithm/workbench_assets"])
     for module in ("__init__", "adapter_api", "local_adapter", "core", "constraints",
-                   "classical_constraint", "grover_search", "optimization", "planning", "planning_jobs", "security_rehearsal", "search_sequence"):
+                   "classical_constraint", "grover_search", "optimization", "planning", "planning_jobs", "security_rehearsal", "search_sequence", "device_experiment", "practical_evidence"):
         command.extend(["--add-data", f"{package / (module + '.py')}:austins_algorithm"])
     for optional in ("qiskit", "qiskit_aer", "qiskit_ibm_runtime", "numpy", "scipy", "matplotlib"):
         command.extend(["--exclude-module", optional])

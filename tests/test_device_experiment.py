@@ -348,6 +348,8 @@ class HardwareBoundaryTests(unittest.TestCase):
         self.result_error = TimeoutError()
         result = self._run()
         self.assertEqual(result["status"], "WAIT_TIMED_OUT")
+        self.assertEqual(result["provider_reported_qpu_seconds"], 1.25)
+        self.assertIn("fetch_usage_after_noncompletion", result["timing_seconds"])
         self.assertEqual(result["job_id"], "test-job")
         self.assertTrue(result["provider_job_submitted"])
         self.assertIsNone(result["quantum_hardware_used"])

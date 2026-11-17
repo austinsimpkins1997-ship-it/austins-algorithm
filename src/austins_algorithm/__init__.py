@@ -27,7 +27,7 @@ from .adapter_api import (
 )
 from .local_adapter import AustinCpuAdapter, PythonPredicateWorkload
 
-__version__ = "0.3.1a1"
+__version__ = "0.3.2a1"
 
 __all__ = [
     "ALGORITHM_NAME",

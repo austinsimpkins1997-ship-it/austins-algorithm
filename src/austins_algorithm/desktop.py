@@ -174,6 +174,9 @@ def main(argv: list[str] | None = None) -> None:
             args.smoke.mkdir(parents=True, exist_ok=True)
             status = app.smoke(args.smoke)
             status['planning'] = _planning_smoke(app,args.smoke)
+            status['practical_evidence'] = app.practical_check(args.smoke)
+            if not status['practical_evidence']['all_verified']:
+                raise RuntimeError('CPU comparison did not reproduce the full reference answer set')
             app.show_page('Security Lab')
             panel=app.security
             from .planning_jobs import JobStore,verify_export

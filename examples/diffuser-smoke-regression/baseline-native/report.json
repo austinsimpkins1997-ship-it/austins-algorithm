@@ -206,11 +206,11 @@
             "quantum_hardware_used": false
           },
           "compilation_timing_seconds": {
-            "compile_export_verify": 0.02898780000032275,
-            "transpile": 0.008521599999767204,
-            "openqasm_export": 0.0013961999993625795,
-            "openqasm_import": 0.008286100000077568,
-            "openqasm_verify": 0.0020537999998850864
+            "compile_export_verify": 0.010304599999471975,
+            "transpile": 0.00398979999954463,
+            "openqasm_export": 0.0007431000003634836,
+            "openqasm_import": 0.0010252000001855777,
+            "openqasm_verify": 0.0007378999998763902
           },
           "modeled_output": {
             "outcome_probabilities": {
@@ -258,7 +258,7 @@
                     "measure"
                   ],
                   "simulated_qubits": 5,
-                  "aer_experiment_seconds": 0.0001501,
+                  "aer_experiment_seconds": 8.13e-05,
                   "verified_hit_rate_wilson_95": [
                     0.5101091635454027,
                     1.0
@@ -277,12 +277,12 @@
                   "verified_hit_rate": 1.0
                 },
                 "timing_seconds": {
-                  "sample": 0.0009927999999490567,
-                  "submit": 6.549999943672447e-05,
-                  "result_wait": 0.0009258999998564832,
-                  "verify": 5.1500000154192094e-05,
-                  "count_format": 2.700000004551839e-05,
-                  "count_verify": 1.9699999938893598e-05
+                  "sample": 0.0005428000004030764,
+                  "submit": 4.290000015316764e-05,
+                  "result_wait": 0.0004992000003767316,
+                  "verify": 5.399999918154208e-05,
+                  "count_format": 2.049999966402538e-05,
+                  "count_verify": 3.0399999559449498e-05
                 }
               },
               {
@@ -295,7 +295,7 @@
                     "measure"
                   ],
                   "simulated_qubits": 5,
-                  "aer_experiment_seconds": 0.0001652,
+                  "aer_experiment_seconds": 8.04e-05,
                   "verified_hit_rate_wilson_95": [
                     0.15003898915214947,
                     0.8499610108478506
@@ -316,12 +316,12 @@
                   "verified_hit_rate": 0.5
                 },
                 "timing_seconds": {
-                  "sample": 0.0007777000000714906,
-                  "submit": 2.8299999939918052e-05,
-                  "result_wait": 0.0007483999997930368,
-                  "verify": 7.249999998748535e-05,
-                  "count_format": 3.280000055383425e-05,
-                  "count_verify": 3.4699999559961725e-05
+                  "sample": 0.0004625000001396984,
+                  "submit": 2.6300000172341242e-05,
+                  "result_wait": 0.00043540000024222536,
+                  "verify": 4.3199999709031545e-05,
+                  "count_format": 2.0399999812070746e-05,
+                  "count_verify": 2.0700000277429353e-05
                 }
               }
             ],
@@ -347,7 +347,7 @@
             ],
             "trace_real": 0.9999999907037739,
             "trace_imag": -8.672453798597532e-20,
-            "wall_seconds": 0.07270989999960875
+            "wall_seconds": 0.031018600000606966
           }
         },
         "clean-ancilla": {
@@ -501,11 +501,11 @@
             "quantum_hardware_used": false
           },
           "compilation_timing_seconds": {
-            "compile_export_verify": 0.019799300000158837,
-            "transpile": 0.007137000000511762,
-            "openqasm_export": 0.001354400000309397,
-            "openqasm_import": 0.0010656000004019006,
-            "openqasm_verify": 0.001630299999305862
+            "compile_export_verify": 0.009820500000387256,
+            "transpile": 0.003380799999831652,
+            "openqasm_export": 0.0008435999998255284,
+            "openqasm_import": 0.0006848000002719346,
+            "openqasm_verify": 0.0008772000001044944
           },
           "modeled_output": {
             "outcome_probabilities": {
@@ -553,7 +553,7 @@
                     "measure"
                   ],
                   "simulated_qubits": 5,
-                  "aer_experiment_seconds": 0.0001317,
+                  "aer_experiment_seconds": 7e-05,
                   "verified_hit_rate_wilson_95": [
                     0.04558726080970055,
                     0.6993581574175981
@@ -572,12 +572,12 @@
                   "verified_hit_rate": 0.25
                 },
                 "timing_seconds": {
-                  "sample": 0.0007682999994358397,
-                  "submit": 4.3000000005122274e-05,
-                  "result_wait": 0.0007242000001497217,
-                  "verify": 7.49000000723754e-05,
-                  "count_format": 3.550000019458821e-05,
-                  "count_verify": 3.440000000409782e-05
+                  "sample": 0.00044720000005327165,
+                  "submit": 2.6900000193563756e-05,
+                  "result_wait": 0.0004195000001345761,
+                  "verify": 3.600000036385609e-05,
+                  "count_format": 1.7300000763498247e-05,
+                  "count_verify": 1.6699999832781032e-05
                 }
               },
               {
@@ -590,7 +590,7 @@
                     "measure"
                   ],
                   "simulated_qubits": 5,
-                  "aer_experiment_seconds": 0.0001421,
+                  "aer_experiment_seconds": 6.58e-05,
                   "verified_hit_rate_wilson_95": [
                     0.15003898915214947,
                     0.8499610108478506
@@ -609,12 +609,12 @@
                   "verified_hit_rate": 0.5
                 },
                 "timing_seconds": {
-                  "sample": 0.0007670000004509347,
-                  "submit": 4.439999975147657e-05,
-                  "result_wait": 0.0007212000000436092,
-                  "verify": 7.189999996626284e-05,
-                  "count_format": 3.440000000409782e-05,
-                  "count_verify": 3.20999997711624e-05
+                  "sample": 0.0003462999993644189,
+                  "submit": 2.320000021427404e-05,
+                  "result_wait": 0.0003223999992769677,
+                  "verify": 3.220000053261174e-05,
+                  "count_format": 1.559999964229064e-05,
+                  "count_verify": 1.4500000361294951e-05
                 }
               }
             ],
@@ -640,7 +640,7 @@
             ],
             "trace_real": 0.9999999867196862,
             "trace_imag": -1.4410014079301227e-19,
-            "wall_seconds": 0.13025649999963207
+            "wall_seconds": 0.07403290000002016
           }
         }
       },
@@ -808,11 +808,11 @@
             "quantum_hardware_used": false
           },
           "compilation_timing_seconds": {
-            "compile_export_verify": 0.02260519999981625,
-            "transpile": 0.005830499999319727,
-            "openqasm_export": 0.002630400000271038,
-            "openqasm_import": 0.0017809000000852393,
-            "openqasm_verify": 0.0014572999998563319
+            "compile_export_verify": 0.014316199999484525,
+            "transpile": 0.004211299999951734,
+            "openqasm_export": 0.0012553999995361664,
+            "openqasm_import": 0.001118299999689043,
+            "openqasm_verify": 0.0011566000002858345
           },
           "modeled_output": {
             "outcome_probabilities": {
@@ -860,7 +860,7 @@
                     "measure"
                   ],
                   "simulated_qubits": 5,
-                  "aer_experiment_seconds": 0.0001567,
+                  "aer_experiment_seconds": 7.45e-05,
                   "verified_hit_rate_wilson_95": [
                     0.017876213095072896,
                     0.4041500267952385
@@ -884,12 +884,12 @@
                   "verified_hit_rate": 0.1
                 },
                 "timing_seconds": {
-                  "sample": 0.0008195000000341679,
-                  "submit": 4.73000000056345e-05,
-                  "result_wait": 0.0007709999999860884,
-                  "verify": 0.00025269999969168566,
-                  "count_format": 0.00012729999980365392,
-                  "count_verify": 0.0001098000002457411
+                  "sample": 0.0003432000003158464,
+                  "submit": 2.1899999410379678e-05,
+                  "result_wait": 0.0003206000001227949,
+                  "verify": 4.619999981514411e-05,
+                  "count_format": 2.0899999981338624e-05,
+                  "count_verify": 2.319999930477934e-05
                 }
               },
               {
@@ -902,7 +902,7 @@
                     "measure"
                   ],
                   "simulated_qubits": 5,
-                  "aer_experiment_seconds": 0.0001587,
+                  "aer_experiment_seconds": 7.54e-05,
                   "verified_hit_rate_wilson_95": [
                     0.236593090512564,
                     0.7634069094874361
@@ -926,12 +926,12 @@
                   "verified_hit_rate": 0.5
                 },
                 "timing_seconds": {
-                  "sample": 0.0008471000001009088,
-                  "submit": 0.00010660000043571927,
-                  "result_wait": 0.0007378000000244356,
-                  "verify": 9.109999973588856e-05,
-                  "count_format": 4.2100000428035855e-05,
-                  "count_verify": 4.369999987829942e-05
+                  "sample": 0.0003386999997019302,
+                  "submit": 2.029999996011611e-05,
+                  "result_wait": 0.00031769999986863695,
+                  "verify": 4.160000025876798e-05,
+                  "count_format": 1.849999989644857e-05,
+                  "count_verify": 2.1100000594742596e-05
                 }
               }
             ],
@@ -957,7 +957,7 @@
             ],
             "trace_real": 0.9999999840636093,
             "trace_imag": -5.727973975493749e-19,
-            "wall_seconds": 0.07704829999966023
+            "wall_seconds": 0.03344490000017686
           }
         },
         "clean-ancilla": {
@@ -1111,11 +1111,11 @@
             "quantum_hardware_used": false
           },
           "compilation_timing_seconds": {
-            "compile_export_verify": 0.021639300000060757,
-            "transpile": 0.004350700000031793,
-            "openqasm_export": 0.0026069000005009,
-            "openqasm_import": 0.0020839999997406267,
-            "openqasm_verify": 0.0030933999996705097
+            "compile_export_verify": 0.013554000000112865,
+            "transpile": 0.0034845999998651678,
+            "openqasm_export": 0.0011904000002687098,
+            "openqasm_import": 0.000991799999610521,
+            "openqasm_verify": 0.0011322000000291155
           },
           "modeled_output": {
             "outcome_probabilities": {
@@ -1163,7 +1163,7 @@
                     "measure"
                   ],
                   "simulated_qubits": 5,
-                  "aer_experiment_seconds": 0.0001567,
+                  "aer_experiment_seconds": 7.98e-05,
                   "verified_hit_rate_wilson_95": [
                     0.16818032970623614,
                     0.6873262302663417
@@ -1191,12 +1191,12 @@
                   "verified_hit_rate": 0.4
                 },
                 "timing_seconds": {
-                  "sample": 0.0007395000002361485,
-                  "submit": 4.42000000475673e-05,
-                  "result_wait": 0.0006941000001461362,
-                  "verify": 0.00010399999973742524,
-                  "count_format": 4.55999997939216e-05,
-                  "count_verify": 5.330000021785963e-05
+                  "sample": 0.00039849999939178815,
+                  "submit": 1.9799999790848233e-05,
+                  "result_wait": 0.00037799999972776277,
+                  "verify": 5.310000051395036e-05,
+                  "count_format": 2.3399999918183312e-05,
+                  "count_verify": 2.7600000066740904e-05
                 }
               },
               {
@@ -1209,7 +1209,7 @@
                     "measure"
                   ],
                   "simulated_qubits": 5,
-                  "aer_experiment_seconds": 8.25e-05,
+                  "aer_experiment_seconds": 7.54e-05,
                   "verified_hit_rate_wilson_95": [
                     0.10779126740630099,
                     0.6032218525388546
@@ -1232,12 +1232,12 @@
                   "verified_hit_rate": 0.3
                 },
                 "timing_seconds": {
-                  "sample": 0.0009824999997363193,
-                  "submit": 4.9900000703928526e-05,
-                  "result_wait": 0.0009311999992860365,
-                  "verify": 9.310000041296007e-05,
-                  "count_format": 4.340000032243552e-05,
-                  "count_verify": 4.3199999709031545e-05
+                  "sample": 0.00035320000006322516,
+                  "submit": 2.2500000341096893e-05,
+                  "result_wait": 0.0003299999998489511,
+                  "verify": 4.459999945538584e-05,
+                  "count_format": 2.0400000721565448e-05,
+                  "count_verify": 2.209999911428895e-05
                 }
               }
             ],
@@ -1263,7 +1263,7 @@
             ],
             "trace_real": 0.99999997343937,
             "trace_imag": 9.000751359336117e-21,
-            "wall_seconds": 0.07792820000031497
+            "wall_seconds": 0.032656800000040676
           }
         }
       },
@@ -1431,11 +1431,11 @@
             "quantum_hardware_used": false
           },
           "compilation_timing_seconds": {
-            "compile_export_verify": 0.017968900000596477,
-            "transpile": 0.006728399999701651,
-            "openqasm_export": 0.0009874000006675487,
-            "openqasm_import": 0.0009304999994128593,
-            "openqasm_verify": 0.0013549000004786649
+            "compile_export_verify": 0.00925569999981235,
+            "transpile": 0.003235099999983504,
+            "openqasm_export": 0.0007535000004281756,
+            "openqasm_import": 0.0008050999995248276,
+            "openqasm_verify": 0.0007277000004251022
           },
           "modeled_output": {
             "outcome_probabilities": {
@@ -1483,7 +1483,7 @@
                     "measure"
                   ],
                   "simulated_qubits": 5,
-                  "aer_experiment_seconds": 8.44e-05,
+                  "aer_experiment_seconds": 6.64e-05,
                   "verified_hit_rate_wilson_95": [
                     0.15003898915214947,
                     0.8499610108478506
@@ -1504,12 +1504,12 @@
                   "verified_hit_rate": 0.5
                 },
                 "timing_seconds": {
-                  "sample": 0.0008401000004596426,
-                  "submit": 4.749999970954377e-05,
-                  "result_wait": 0.0007915000005596085,
-                  "verify": 6.909999956405954e-05,
-                  "count_format": 3.219999962311704e-05,
-                  "count_verify": 3.110000034212135e-05
+                  "sample": 0.0003429000007599825,
+                  "submit": 2.049999966402538e-05,
+                  "result_wait": 0.00032170000031328527,
+                  "verify": 3.440000000409782e-05,
+                  "count_format": 1.52000002344721e-05,
+                  "count_verify": 1.720000000204891e-05
                 }
               },
               {
@@ -1522,7 +1522,7 @@
                     "measure"
                   ],
                   "simulated_qubits": 5,
-                  "aer_experiment_seconds": 0.0001324,
+                  "aer_experiment_seconds": 6.48e-05,
                   "verified_hit_rate_wilson_95": [
                     0.04558726080970055,
                     0.6993581574175981
@@ -1542,12 +1542,12 @@
                   "verified_hit_rate": 0.25
                 },
                 "timing_seconds": {
-                  "sample": 0.0006920999994690646,
-                  "submit": 4.1200000850949436e-05,
-                  "result_wait": 0.0006497999993371195,
-                  "verify": 7.270000060088933e-05,
-                  "count_format": 3.399999968678458e-05,
-                  "count_verify": 3.330000072310213e-05
+                  "sample": 0.0003250999998272164,
+                  "submit": 2.010000025620684e-05,
+                  "result_wait": 0.0003042999996978324,
+                  "verify": 3.330000072310213e-05,
+                  "count_format": 1.5700000403739978e-05,
+                  "count_verify": 1.5800000255694613e-05
                 }
               }
             ],
@@ -1573,7 +1573,7 @@
             ],
             "trace_real": 0.9999999946878715,
             "trace_imag": 5.428116031709113e-19,
-            "wall_seconds": 0.04974029999993945
+            "wall_seconds": 0.030394299999898067
           }
         },
         "clean-ancilla": {
@@ -1727,11 +1727,11 @@
             "quantum_hardware_used": false
           },
           "compilation_timing_seconds": {
-            "compile_export_verify": 0.013938300000518211,
-            "transpile": 0.005550000000766886,
-            "openqasm_export": 0.0008520999999745982,
-            "openqasm_import": 0.0006905000000188011,
-            "openqasm_verify": 0.0008658999995532213
+            "compile_export_verify": 0.009238099999492988,
+            "transpile": 0.0031899000005068956,
+            "openqasm_export": 0.0007400000004054164,
+            "openqasm_import": 0.0006225999995876919,
+            "openqasm_verify": 0.0007312000007004826
           },
           "modeled_output": {
             "outcome_probabilities": {
@@ -1779,7 +1779,7 @@
                     "measure"
                   ],
                   "simulated_qubits": 5,
-                  "aer_experiment_seconds": 7e-05,
+                  "aer_experiment_seconds": 6.56e-05,
                   "verified_hit_rate_wilson_95": [
                     0.15003898915214947,
                     0.8499610108478506
@@ -1799,12 +1799,12 @@
                   "verified_hit_rate": 0.5
                 },
                 "timing_seconds": {
-                  "sample": 0.0004546999998638057,
-                  "submit": 4.660000013245735e-05,
-                  "result_wait": 0.00040669999998499407,
-                  "verify": 3.910000032192329e-05,
-                  "count_format": 1.7999999727180693e-05,
-                  "count_verify": 1.8200000340584666e-05
+                  "sample": 0.0003378999999767984,
+                  "submit": 2.0500000573520083e-05,
+                  "result_wait": 0.0003166999995301012,
+                  "verify": 3.20999997711624e-05,
+                  "count_format": 1.4799999917158857e-05,
+                  "count_verify": 1.5499999790336005e-05
                 }
               },
               {
@@ -1817,7 +1817,7 @@
                     "measure"
                   ],
                   "simulated_qubits": 5,
-                  "aer_experiment_seconds": 0.0001292,
+                  "aer_experiment_seconds": 6.76e-05,
                   "verified_hit_rate_wilson_95": [
                     0.15003898915214947,
                     0.8499610108478506
@@ -1836,12 +1836,12 @@
                   "verified_hit_rate": 0.5
                 },
                 "timing_seconds": {
-                  "sample": 0.0006862000000182888,
-                  "submit": 2.6900000193563756e-05,
-                  "result_wait": 0.0006585999999515479,
-                  "verify": 3.819999983534217e-05,
-                  "count_format": 1.8200000340584666e-05,
-                  "count_verify": 1.6699999832781032e-05
+                  "sample": 0.0003446000000622007,
+                  "submit": 2.1300000298651867e-05,
+                  "result_wait": 0.0003225999998903717,
+                  "verify": 3.1800000215298496e-05,
+                  "count_format": 1.4700000065204222e-05,
+                  "count_verify": 1.500000053056283e-05
                 }
               }
             ],
@@ -1867,7 +1867,7 @@
             ],
             "trace_real": 0.9999999946878704,
             "trace_imag": -1.0452945413758583e-19,
-            "wall_seconds": 0.07053829999949812
+            "wall_seconds": 0.030292400000689668
           }
         }
       },
@@ -2035,11 +2035,11 @@
             "quantum_hardware_used": false
           },
           "compilation_timing_seconds": {
-            "compile_export_verify": 0.024806599999465107,
-            "transpile": 0.007118200000149955,
-            "openqasm_export": 0.0014723000003868947,
-            "openqasm_import": 0.0018584999997983687,
-            "openqasm_verify": 0.0032845999994606245
+            "compile_export_verify": 0.013198199999351345,
+            "transpile": 0.00340539999979228,
+            "openqasm_export": 0.001325899999756075,
+            "openqasm_import": 0.0010325000002922025,
+            "openqasm_verify": 0.001158199999736098
           },
           "modeled_output": {
             "outcome_probabilities": {
@@ -2087,7 +2087,7 @@
                     "measure"
                   ],
                   "simulated_qubits": 5,
-                  "aer_experiment_seconds": 7.87e-05,
+                  "aer_experiment_seconds": 7.58e-05,
                   "verified_hit_rate_wilson_95": [
                     0.017876213095072896,
                     0.4041500267952385
@@ -2110,12 +2110,12 @@
                   "verified_hit_rate": 0.1
                 },
                 "timing_seconds": {
-                  "sample": 0.0003956000000471249,
-                  "submit": 2.320000021427404e-05,
-                  "result_wait": 0.00037169999995967373,
-                  "verify": 6.230000053619733e-05,
-                  "count_format": 2.7800000680144876e-05,
-                  "count_verify": 3.190000006725313e-05
+                  "sample": 0.0003470999999990454,
+                  "submit": 2.049999966402538e-05,
+                  "result_wait": 0.00032589999955234816,
+                  "verify": 5.469999996421393e-05,
+                  "count_format": 2.6000000616477337e-05,
+                  "count_verify": 2.5099999220401514e-05
                 }
               },
               {
@@ -2128,7 +2128,7 @@
                     "measure"
                   ],
                   "simulated_qubits": 5,
-                  "aer_experiment_seconds": 0.0001547,
+                  "aer_experiment_seconds": 7.53e-05,
                   "verified_hit_rate_wilson_95": [
                     0.05668215145437519,
                     0.5098375284633583
@@ -2152,12 +2152,12 @@
                   "verified_hit_rate": 0.2
                 },
                 "timing_seconds": {
-                  "sample": 0.0007275999996636529,
-                  "submit": 3.910000032192329e-05,
-                  "result_wait": 0.0006875999997646431,
-                  "verify": 4.42000000475673e-05,
-                  "count_format": 2.0000000404252205e-05,
-                  "count_verify": 2.1599999854515772e-05
+                  "sample": 0.0003524999992805533,
+                  "submit": 2.7100000806967728e-05,
+                  "result_wait": 0.00032479999936185777,
+                  "verify": 3.670000023703324e-05,
+                  "count_format": 1.680000059423037e-05,
+                  "count_verify": 1.7999999727180693e-05
                 }
               }
             ],
@@ -2183,7 +2183,7 @@
             ],
             "trace_real": 0.9999999880477037,
             "trace_imag": 1.2501486490378833e-19,
-            "wall_seconds": 0.07630609999978333
+            "wall_seconds": 0.03317760000027192
           }
         },
         "clean-ancilla": {
@@ -2337,11 +2337,11 @@
             "quantum_hardware_used": false
           },
           "compilation_timing_seconds": {
-            "compile_export_verify": 0.034905600000456616,
-            "transpile": 0.008260900000095717,
-            "openqasm_export": 0.0027312000001984416,
-            "openqasm_import": 0.002406699999482953,
-            "openqasm_verify": 0.003217499999664142
+            "compile_export_verify": 0.013746299999183975,
+            "transpile": 0.0036842999998043524,
+            "openqasm_export": 0.0012358000003587222,
+            "openqasm_import": 0.0009687000001576962,
+            "openqasm_verify": 0.0011318999995637569
           },
           "modeled_output": {
             "outcome_probabilities": {
@@ -2389,7 +2389,7 @@
                     "measure"
                   ],
                   "simulated_qubits": 5,
-                  "aer_experiment_seconds": 7.95e-05,
+                  "aer_experiment_seconds": 7.39e-05,
                   "verified_hit_rate_wilson_95": [
                     0.10779126740630099,
                     0.6032218525388546
@@ -2414,12 +2414,12 @@
                   "verified_hit_rate": 0.3
                 },
                 "timing_seconds": {
-                  "sample": 0.000409399999625748,
-                  "submit": 2.049999966402538e-05,
-                  "result_wait": 0.00038839999979245476,
-                  "verify": 0.00010540000039327424,
-                  "count_format": 4.86999997519888e-05,
-                  "count_verify": 4.960000023856992e-05
+                  "sample": 0.00033399999938410474,
+                  "submit": 1.559999964229064e-05,
+                  "result_wait": 0.0003178999995725462,
+                  "verify": 3.580000065994682e-05,
+                  "count_format": 1.609999981155852e-05,
+                  "count_verify": 1.810000048863003e-05
                 }
               },
               {
@@ -2432,7 +2432,7 @@
                     "measure"
                   ],
                   "simulated_qubits": 5,
-                  "aer_experiment_seconds": 0.0001602,
+                  "aer_experiment_seconds": 7.66e-05,
                   "verified_hit_rate_wilson_95": [
                     0.05668215145437519,
                     0.5098375284633583
@@ -2456,12 +2456,12 @@
                   "verified_hit_rate": 0.2
                 },
                 "timing_seconds": {
-                  "sample": 0.0007331999995585647,
-                  "submit": 4.369999987829942e-05,
-                  "result_wait": 0.0006882999996378203,
-                  "verify": 8.799999977782136e-05,
-                  "count_format": 4.020000051241368e-05,
-                  "count_verify": 4.269999953976367e-05
+                  "sample": 0.00035010000010515796,
+                  "submit": 1.320000046689529e-05,
+                  "result_wait": 0.0003364000003784895,
+                  "verify": 5.129999954078812e-05,
+                  "count_format": 2.320000021427404e-05,
+                  "count_verify": 2.5999999706982635e-05
                 }
               }
             ],
@@ -2487,7 +2487,7 @@
             ],
             "trace_real": 0.9999999907037697,
             "trace_imag": 7.051703595233086e-22,
-            "wall_seconds": 0.07572080000045389
+            "wall_seconds": 0.03350010000031034
           }
         }
       },
@@ -2505,15 +2505,15 @@
   "provider_job_submitted": false,
   "quantum_hardware_used": false,
   "timing_seconds": {
-    "noise_model_setup": 0.15404800000032992,
-    "state_preparation": 0.6302483999988908,
-    "sampling": 0.013316400002622686,
-    "probability_evaluation": 0.005029099999774189,
-    "compile_export_verify": 0.184651000001395,
-    "transpile": 0.053497300000344694,
-    "openqasm_export": 0.014030900001671398,
-    "openqasm_import": 0.019102799999018316,
-    "openqasm_verify": 0.016957699997874442
+    "noise_model_setup": 0.05617359999996552,
+    "state_preparation": 0.29851760000201466,
+    "sampling": 0.006813699998019729,
+    "probability_evaluation": 0.0020641999999497784,
+    "compile_export_verify": 0.09343359999729728,
+    "transpile": 0.028581199999280216,
+    "openqasm_export": 0.008087700000942277,
+    "openqasm_import": 0.007248999999319494,
+    "openqasm_verify": 0.007652900000721274
   },
   "result_kind": "MODELED_PROBABILITIES_WITH_WITNESS_VALIDATION",
   "modeled_witness_target": {
@@ -2578,7 +2578,7 @@
     "planned_shots": 112,
     "planned_nominal_two_qubit_gate_executions": 11088
   },
-  "wall_seconds": 1.0550441000004867,
+  "wall_seconds": 0.4827594999997018,
   "witness_replay": {
     "status": "DIFFUSER_REPLAY_VERIFIED",
     "replay_request": "E:\\Austins-Algorithm\\austins-algorithm\\examples\\diffuser-smoke-regression\\baseline-native\\request.json",

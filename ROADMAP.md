@@ -321,3 +321,7 @@ pending approvals alongside the scope and source pins. See [Pilot receipts](WORK
 ## Security rehearsal and sequencing — 2026-11-17
 
 Local 0.3.1 adds synthetic policy fixtures, failure traces, an illustrative Planning consumer and bounded toy-oracle sequencing. Actual source, build and install results are in dated delivery evidence. Further work requires separately owned real defensive enforcement, representative independent evaluation and measured total cost. Practical quantum cracking advantage and universal optimality remain unestablished.
+
+## November 17: Practical evidence 0.3.2
+
+Added matched public-toy CPU comparison/export, finite-shot intervals and explicit post-failure provider-usage reporting. The 23-source review documents adopted practices, unavailable links and research-only methods. Practical advantage and human/deployment production acceptance remain unestablished. See PRACTICAL_EVIDENCE.md and the signed local delivery record.

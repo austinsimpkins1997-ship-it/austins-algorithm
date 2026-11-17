@@ -267,11 +267,21 @@ def _seconds_between(timestamps: Mapping[str, Any], before: str, after: str) -> 
 
 def _provider_metrics(job: Any) -> dict[str, Any]:
     metrics = job.metrics()
+    if not isinstance(metrics, Mapping):
+        raise ValueError("Provider metrics must be a mapping")
     usage = metrics.get("usage", {})
     timestamps = metrics.get("timestamps", {})
-    quantum_seconds = usage.get("qpu_charge_time_seconds", usage.get("quantum_seconds"))
+    if not isinstance(usage, Mapping):
+        usage = {}
+    if not isinstance(timestamps, Mapping):
+        timestamps = {}
+    status = usage.get("status")
+    # Do not hide conflicting fields behind a preferred spelling.
+    charge, legacy = usage.get("qpu_charge_time_seconds"), usage.get("quantum_seconds")
+    conflict = charge is not None and legacy is not None and charge != legacy
+    quantum_seconds = charge if charge is not None else legacy
     if (
-        usage.get("status") == "pending"
+        status != "completed" or conflict
         or isinstance(quantum_seconds, bool)
         or not isinstance(quantum_seconds, (float, int))
         or not math.isfinite(quantum_seconds)
@@ -280,6 +290,9 @@ def _provider_metrics(job: Any) -> dict[str, Any]:
         quantum_seconds = None
     return {
         "provider_reported_qpu_seconds": quantum_seconds,
+        "provider_usage_status": status if status in ("completed", "pending", "estimated") else "UNKNOWN",
+        "provider_usage_conflict": conflict,
+        "provider_usage_source": "job.metrics().usage; provider report, not a local estimate or monetary bill",
         "provider_reported_queue_seconds": _seconds_between(timestamps, "created", "running"),
         "provider_reported_running_seconds": _seconds_between(timestamps, "running", "finished"),
     }
@@ -313,6 +326,8 @@ def _run_ibm_hardware(
         "timing_seconds": {},
     }
     timings = report["timing_seconds"]
+    job = None
+    usage_attempted = False
     stage = "load_runtime"
     stage_started = started
     try:
@@ -419,6 +434,7 @@ def _run_ibm_hardware(
         stage = "fetch_usage"
         stage_started = perf_counter()
         try:
+            usage_attempted = True
             report.update(_provider_metrics(job))
         except Exception as exc:
             # Provider exceptions may embed account details. Record only their class.
@@ -434,6 +450,15 @@ def _run_ibm_hardware(
         report.update(failed_stage=stage, error_type=type(exc).__name__)
         return report
     finally:
+        # A failed/canceled/timed-out job may still consume provider resources.
+        # Preserve its ID and fetch usage once; never resubmit or auto-cancel.
+        if job is not None and not usage_attempted:
+            usage_started = perf_counter()
+            try:
+                report.update(_provider_metrics(job))
+            except Exception as exc:
+                report["usage_error_type"] = type(exc).__name__
+            timings["fetch_usage_after_noncompletion"] = perf_counter() - usage_started
         finished = perf_counter()
         timings.setdefault(stage, finished - stage_started)
         timings["wall"] = finished - started
@@ -480,7 +505,7 @@ def run_austin_device_comparison(
         if hardware is not None
         else {"status": "NOT_REQUESTED", "provider_job_submitted": False, "quantum_hardware_used": False}
     )
-    return {
+    report = {
         "circuit": "AUSTIN_3Q_TWO_CZ_CONSTRAINT_SEARCH",
         "basis_order": "q2 q1 q0",
         "qiskit_version": qiskit_version,
@@ -493,3 +518,10 @@ def run_austin_device_comparison(
         "hardware": physical,
         "wall_seconds": perf_counter() - started,
     }
+    from .practical_evidence import comparison_accounting, sampling_evidence
+    # Keep legacy shared receipt schemas unchanged. New uncertainty annotations
+    # belong to this explicit physical-comparison workflow.
+    for observed in (ideal, noisy, physical):
+        observed.update(sampling_evidence(observed))
+    report["practical_evidence"] = comparison_accounting(report)
+    return report

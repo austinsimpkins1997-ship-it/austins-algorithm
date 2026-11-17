@@ -1,0 +1,218 @@
+{
+  "schema": "chronorealm.quantum-source-review/1",
+  "reviewed_at": "2026-11-17",
+  "editor": "Codex (AI assistant)",
+  "scope": "All 23 original search-result links represented by the supplied screenshot; bounded relevant sections, primary abstracts/methods and API guidance, not reproduction of all studies.",
+  "sources": [
+    {
+      "id": "S01",
+      "title": "Tessa news",
+      "url": "https://www.techradar.com/pro/a-major-breakthrough-has-claimed-to-set-a-world-record-for-encoding-data-onto-a-quantum-computer-and-crucially-reading-it-back-again",
+      "kind": "secondary",
+      "inspection": "READ",
+      "primary_or_replacement": "https://arxiv.org/abs/2611.18440v1",
+      "decision": "Record encoding, decoding, basis/shot overhead and reconstruction errors separately; no Tessa implementation or memory advantage claimed."
+    },
+    {
+      "id": "S02",
+      "title": "IBM workload usage",
+      "url": "https://quantum.cloud.ibm.com/docs/en/ibm-quantum-compute/estimate-job-run-time",
+      "kind": "official documentation",
+      "inspection": "READ",
+      "primary_or_replacement": null,
+      "decision": "Implement explicit provider usage status; do not equate scheduling time or estimates with actual billing or money."
+    },
+    {
+      "id": "S03",
+      "title": "Trusted quantum computation",
+      "url": "https://www.ibm.com/quantum/blog/quantum-advantage",
+      "kind": "vendor research announcement",
+      "inspection": "READ",
+      "primary_or_replacement": "https://arxiv.org/abs/2607.25941",
+      "decision": "Retain validation assumptions and domain. Structured hard-circuit certificates do not transfer to this search solver."
+    },
+    {
+      "id": "S04",
+      "title": "Assessing QML advantage, dated PDF",
+      "url": "https://assets-eu.researchsquare.com/files/rs-9311359/v1_covered_f37eb343-e0a8-4081-8d4d-fa3b611ab59d.pdf?c=1778254002",
+      "kind": "review preprint",
+      "inspection": "ABSTRACT_AND_METHOD_SCOPE_READ",
+      "primary_or_replacement": "https://doi.org/10.21203/rs.3.rs-9311359/v1",
+      "decision": "Separate scaling, prediction quality and total-resource comparisons. This review is not independent experimental data."
+    },
+    {
+      "id": "S05",
+      "title": "Monitor or cancel a job",
+      "url": "https://quantum.cloud.ibm.com/docs/en/ibm-quantum-compute/monitor-job",
+      "kind": "official documentation",
+      "inspection": "READ",
+      "primary_or_replacement": null,
+      "decision": "Preserve original job IDs, distinguish client timeout from provider cancellation, and fetch usage on noncompletion without resubmission."
+    },
+    {
+      "id": "S06",
+      "title": "Legacy IBM Cloud cost page",
+      "url": "https://cloud.ibm.com/docs/quantum-computing?topic=quantum-computing-view-cost",
+      "kind": "official documentation",
+      "inspection": "REDIRECT_TO_GENERAL_GUIDES",
+      "primary_or_replacement": "https://quantum.cloud.ibm.com/docs/en/ibm-quantum-compute/estimate-job-run-time",
+      "decision": "Use current usage guidance instead; do not treat a redirect as a verified pricing quote."
+    },
+    {
+      "id": "S07",
+      "title": "Legacy workload usage URL",
+      "url": "https://docs.quantum.ibm.com/guides/estimate-job-run-time",
+      "kind": "official documentation",
+      "inspection": "REDIRECT_TO_S02",
+      "primary_or_replacement": null,
+      "decision": "Same underlying source as S02, not independent corroboration."
+    },
+    {
+      "id": "S08",
+      "title": "IBM and Algorithmiq announcement",
+      "url": "https://newsroom.ibm.com/2026-07-30-ibm-and-algorithmiq-demonstrate-quantum-advantage,-establishing-a-framework-for-trusted-quantum-computation-beyond-classical-verification",
+      "kind": "vendor announcement",
+      "inspection": "READ",
+      "primary_or_replacement": "https://arxiv.org/abs/2607.25998",
+      "decision": "Noise manipulation and observable validation are workload-specific. Research-only; no new material simulator or certified mitigation."
+    },
+    {
+      "id": "S09",
+      "title": "Quantum Advantage Tracker",
+      "url": "https://www.ibm.com/quantum/blog/quantum-advantage-tracker",
+      "kind": "vendor research announcement",
+      "inspection": "READ",
+      "primary_or_replacement": "https://quantum-advantage-tracker.github.io/",
+      "decision": "Preserve dated strongest baselines and reopen comparisons when they improve; no tracker submission performed."
+    },
+    {
+      "id": "S10",
+      "title": "Recent quantum runtime disadvantages",
+      "url": "https://arxiv.org/abs/2510.06337",
+      "kind": "primary paper",
+      "inspection": "ABSTRACT_AND_END_TO_END_METHOD_READ",
+      "primary_or_replacement": "https://arxiv.org/html/2510.06337v3",
+      "decision": "Implement a repeatable direct-classical comparison and total wall accounting. Do not infer unbounded conclusions from the paper cases."
+    },
+    {
+      "id": "S11",
+      "title": "Dry-run jobs",
+      "url": "https://quantum.cloud.ibm.com/docs/en/ibm-quantum-compute/dry-run-jobs",
+      "kind": "official documentation",
+      "inspection": "READ",
+      "primary_or_replacement": null,
+      "decision": "Cloud mock output is not simulation or physical measurement. Document separate plan/access requirements; do not introduce automatic cloud submissions."
+    },
+    {
+      "id": "S12",
+      "title": "Dawn of quantum advantage",
+      "url": "https://www.ibm.com/quantum/blog/quantum-advantage-era?lnk=hprc2id",
+      "kind": "vendor framework discussion",
+      "inspection": "READ",
+      "primary_or_replacement": "https://arxiv.org/abs/2506.20658v2",
+      "decision": "Validation and comparative useful performance remain separate requirements. Forecasts are not this package results."
+    },
+    {
+      "id": "S13",
+      "title": "Maximum execution time",
+      "url": "https://quantum.cloud.ibm.com/docs/en/guides/max-execution-time",
+      "kind": "official documentation",
+      "inspection": "READ_REDIRECT",
+      "primary_or_replacement": null,
+      "decision": "Keep provider QPU-usage cap separate from client wait timeout. Preserve actual usage after noncompletion."
+    },
+    {
+      "id": "S14",
+      "title": "Runtime disadvantages v2 mirror",
+      "url": "https://www.iitis.pl/sites/default/files/pubs/2510.06337v2.pdf",
+      "kind": "paper mirror",
+      "inspection": "FETCH_FAILED_502_USE_S10",
+      "primary_or_replacement": "https://arxiv.org/abs/2510.06337v3",
+      "decision": "The supplied older mirror was unavailable. Use current primary paper, noting revision changes; do not count as independent support."
+    },
+    {
+      "id": "S15",
+      "title": "QML route correction",
+      "url": "https://edukaizen.nl/quantum-oracle-sketching-qml-gene-expression/route-to-quantum-advantage-qml/",
+      "kind": "author project account",
+      "inspection": "RELEVANT_STATUS_READ",
+      "primary_or_replacement": null,
+      "decision": "Adopt the task-level baseline lesson; a classical classifier need not simulate the quantum circuit. No genomics/QML claim added."
+    },
+    {
+      "id": "S16",
+      "title": "Assessing QML advantage, plain URL",
+      "url": "https://assets-eu.researchsquare.com/files/rs-9311359/v1_covered_f37eb343-e0a8-4081-8d4d-fa3b611ab59d.pdf",
+      "kind": "review preprint",
+      "inspection": "FETCH_FAILED_403_S04_ACCESSIBLE",
+      "primary_or_replacement": "https://doi.org/10.21203/rs.3.rs-9311359/v1",
+      "decision": "Duplicate underlying PDF, accessed through S04; not another study."
+    },
+    {
+      "id": "S17",
+      "title": "IBM REST jobs",
+      "url": "https://quantum.cloud.ibm.com/docs/en/api/qiskit-runtime-rest/tags/jobs",
+      "kind": "official API reference",
+      "inspection": "FETCH_TIMEOUT_USE_SDK_REFERENCE",
+      "primary_or_replacement": "https://quantum.cloud.ibm.com/docs/en/api/qiskit-ibm-runtime/runtime-job-v2",
+      "decision": "Use the existing reviewed SDK path rather than invent REST calls. Preserve unknown/estimated/conflicting usage fields."
+    },
+    {
+      "id": "S18",
+      "title": "Quantum advantage framework v1 PDF",
+      "url": "https://www.quantumhorizon.it/wp-content/uploads/2025/07/2506.20658v1.pdf",
+      "kind": "primary framework paper mirror",
+      "inspection": "READ_AND_CHECKED_V2",
+      "primary_or_replacement": "https://arxiv.org/abs/2506.20658v2",
+      "decision": "Adopt scoped correctness and comparative efficiency requirements; no mathematical certificate supplied for arbitrary practical tasks."
+    },
+    {
+      "id": "S19",
+      "title": "IBM advantage news",
+      "url": "https://www.livescience.com/technology/quantum/ibm-scientists-claim-theyve-achieved-quantum-advantage-and-theyve-dared-others-to-prove-them-wrong",
+      "kind": "secondary",
+      "inspection": "RELEVANT_ARTICLE_READ",
+      "primary_or_replacement": "https://arxiv.org/abs/2607.24937",
+      "decision": "Trace the shared vendor/paper origin; do not treat syndicated reporting as independent confirmation or package capability."
+    },
+    {
+      "id": "S20",
+      "title": "BlueQubit prize report",
+      "url": "https://www.tomshardware.com/tech-industry/quantum-computing/quantum-computing-firm-dangles-usd22-500-bitcoin-prize-all-you-have-to-do-is-uncover-a-private-key-hidden-inside-a-quantum-optimized-problem",
+      "kind": "secondary",
+      "inspection": "RELEVANT_ARTICLE_READ",
+      "primary_or_replacement": "https://www.bluequbit.io/",
+      "decision": "Peaked-circuit challenge is not generic password or encryption cracking. No wallet interaction, challenge execution or arbitrary key search added."
+    },
+    {
+      "id": "S21",
+      "title": "Quantum LLM adapters news",
+      "url": "https://www.livescience.com/technology/quantum/scientists-trained-an-ai-model-using-an-ibm-quantum-computer-and-it-answered-questions-correctly-that-the-base-model-couldnt",
+      "kind": "secondary",
+      "inspection": "RELEVANT_ARTICLE_READ",
+      "primary_or_replacement": "https://arxiv.org/abs/2605.05914",
+      "decision": "Cayley-adapter preprint has different task, data and hardware requirements. Research-only; Workbench Assistant remains rule-based."
+    },
+    {
+      "id": "S22",
+      "title": "IBM twelve-month forecast",
+      "url": "https://www.itpro.com/technology/big-data/ibm-is-targeting-quantum-advantage-in-12-months-and-says-useful-quantum-computing-is-just-a-few-years-away",
+      "kind": "secondary",
+      "inspection": "READ_AFTER_CORRECTING_URL",
+      "primary_or_replacement": "https://arxiv.org/abs/2506.20658v2",
+      "decision": "Preserve November 2025 forecast as historical. No forecast, trading example or vendor ROI estimate becomes measured package benefit."
+    },
+    {
+      "id": "S23",
+      "title": "Nighthawk r2 report",
+      "url": "https://www.itpro.com/infrastructure/this-new-system-will-help-you-do-more-quantum-computing-faster-ibm-says-its-nighthawk-r2-quantum-processor-marks-a-step-change-in-compute-capability",
+      "kind": "secondary",
+      "inspection": "RELEVANT_ARTICLE_READ",
+      "primary_or_replacement": "https://www.ibm.com/quantum/blog/nighthawk-r2",
+      "decision": "Hardware throughput claims do not imply application latency or speedup. Existing named-backend validation remains required; no unsupported device profile invented."
+    }
+  ],
+  "dependence": "Redirects, duplicate PDFs, vendor announcements and derivative news are not independent evidence.",
+  "hardware_experiments_reproduced": false,
+  "production_acceptance": "NOT_ESTABLISHED"
+}

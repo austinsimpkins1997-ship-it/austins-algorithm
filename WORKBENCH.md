@@ -275,3 +275,7 @@ The native Planning page adds larger classical plans, isolated jobs, shared summ
 ## Security Lab — local 0.3.1 alpha
 
 The native Security Lab page runs named synthetic policy checks and bounded public teaching-oracle sequences through isolated jobs. Save/open inputs, inspect failure traces, stop work, and export recorded evidence. Circuit QASM needs the optional Python Qiskit extra. No live targets, passwords/hashes, adversary executors or practical quantum cracking advantage are implemented. See [Security Lab](SECURITY_LAB.md).
+
+## Practical evidence (0.3.2)
+
+Overview → **Run CPU comparison & export** creates a new evidence folder for the fixed public teaching task. It preserves the active project. The bounded CPU comparison exports protocol, raw trials, a readable summary, all 23 source decisions and a checksum manifest. It cannot declare quantum advantage or production acceptance. See [the guide](PRACTICAL_EVIDENCE.md).
