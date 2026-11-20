@@ -8,9 +8,39 @@ from types import SimpleNamespace
 
 from austins_algorithm.practical_evidence import benchmark, comparison_accounting, wilson_interval, sampling_evidence
 from austins_algorithm.device_experiment import _provider_metrics, summarize_austin_counts
+from austins_algorithm.practical_evidence import phase_diagnostic, _phase_scores
 
 
 class PracticalEvidenceTests(unittest.TestCase):
+    def test_phase_check_and_leakage(self):
+        check = phase_diagnostic()
+        self.assertTrue(check['passed'])
+        for row, expected in zip(check['cases'], [1.0, .5, 0.0], strict=True):
+            self.assertAlmostEqual(row['accepted_answer_probability'], 1)
+            self.assertAlmostEqual(row['interference_probability_011'], expected)
+        state = [0j] * 8
+        state[0], state[3], state[5] = 2**-.5, .5j, .5j
+        basis, coherence = _phase_scores(state)
+        self.assertAlmostEqual(basis, .5)
+        self.assertAlmostEqual(coherence, .5)
+
+    def test_phase_check_against_actual_austin_circuit(self):
+        try:
+            from qiskit.quantum_info import Statevector
+        except ImportError:
+            self.skipTest("Optional Qiskit unavailable")
+        import math
+        from austins_algorithm.qiskit_adapter import build_austin_circuit
+        for case in phase_diagnostic()['cases']:
+            circuit = build_austin_circuit().remove_final_measurements(inplace=False)
+            circuit.p(math.radians(case['phase_degrees_on_q2']), 2)
+            probs = Statevector.from_instruction(circuit).probabilities()
+            self.assertAlmostEqual(probs[3]+probs[5], case['accepted_answer_probability'])
+            circuit.cx(2, 1)
+            circuit.h(2)
+            probs = Statevector.from_instruction(circuit).probabilities()
+            self.assertAlmostEqual(probs[3], case['interference_probability_011'])
+
     def test_all_success_shots_do_not_prove_probability_one(self):
         interval = wilson_interval(64, 64)
         self.assertLess(interval['lower'], 1)
@@ -102,6 +132,8 @@ class PracticalEvidenceTests(unittest.TestCase):
             self.assertEqual(result.returncode, 0, result.stderr)
             report = json.loads((output/'comparison.json').read_text())
             self.assertTrue(report['all_output_sets_verified'])
+            self.assertTrue(report['phase_diagnostic']['passed'])
+            self.assertIn('180 degrees', (output/'SUMMARY.txt').read_text(encoding='utf-8'))
             self.assertEqual(len(json.loads((output/'manifest.json').read_text())['files']), 4)
             before = (output/'comparison.json').read_bytes()
             result = subprocess.run(command, capture_output=True, text=True, timeout=30)

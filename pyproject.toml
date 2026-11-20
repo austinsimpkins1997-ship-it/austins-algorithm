@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "chronorealm-austins-algorithm"
-version = "0.3.2a1"
+version = "0.3.2a2"
 description = "Local quantum-search experiments, bounded optimization, and decision-review workbench"
 readme = "README.md"
 requires-python = ">=3.10"

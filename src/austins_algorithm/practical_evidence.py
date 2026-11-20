@@ -82,6 +82,36 @@ def sampling_evidence(measurement):
             'interval_assumption': '95% Wilson interval assuming IID Bernoulli shots; correlated hardware noise may violate this assumption.'}
 
 
+def _phase_scores(amplitudes):
+    # CX(q2,q1), then H(q2), sends the equal-phase pair to |011>.
+    # Both probabilities are unconditional, so leakage reduces the score.
+    low, high = amplitudes[0b011], amplitudes[0b101]
+    answer_probability = abs(low)**2 + abs(high)**2
+    return answer_probability, abs((low + high) / math.sqrt(2))**2
+
+
+def phase_diagnostic():
+    """Test phase sensitivity of the Workbench's single-round Austin search on CPU."""
+    from .optimization import preview
+
+    problem = {'name': 'Austin phase check', 'clauses': [[1], [2, 3], [-2, -3]],
+               'variables': [{'name': f'q{i}', 'cost': 0} for i in range(3)]}
+    state = preview(problem, rounds=1)['frames'][-1]['amplitudes']
+    cases = []
+    for degrees, factor, expected in ((0, 1, 1.0), (90, 1j, 0.5), (180, -1, 0.0)):
+        rotated = [amp * factor if index & 4 else amp for index, amp in enumerate(state)]
+        basis, interference = _phase_scores(rotated)
+        passed = math.isclose(basis, 1.0, abs_tol=1e-10, rel_tol=0) and math.isclose(
+            interference, expected, abs_tol=1e-10, rel_tol=0)
+        cases.append({'phase_degrees_on_q2': degrees, 'accepted_answer_probability': basis,
+                      'interference_probability_011': interference, 'expected_interference': expected,
+                      'matches_reference': passed})
+    return {'schema': 'chronorealm.austin-phase-check/1', 'mode': 'IDEAL_CPU_STATEVECTOR',
+            'basis_order': 'q2 q1 q0', 'valid_answers': ['011', '101'],
+            'readout': 'CX(q2,q1), H(q2), then probability of 011', 'absolute_tolerance': 1e-10,
+            'cases': cases, 'passed': all(row['matches_reference'] for row in cases)}
+
+
 def benchmark(*, repeats=32, shots=64, seed=701):
     """Compare the same complete answer set; all work is ordinary CPU work."""
     for name, value, lower, upper in (('repeats', repeats, 1, 128), ('shots', shots, 1, 256), ('seed', seed, 0, 2**31-129)):
@@ -97,6 +127,7 @@ def benchmark(*, repeats=32, shots=64, seed=701):
                 'candidate': 'Classical ideal statevector simulation with exhaustive preprocessing',
                 'order': 'Alternate baseline-first and simulator-first',
                 'criterion': 'Exact equality with the complete independently specified answer set',
+                'phase_control': 'After timed trials, evaluate 0/90/180 degree q2 rotations. Expect answer probability 1 and interference 1, 0.5, 0 (absolute tolerance 1e-10).',
                 'resource_ceiling': {'predicate_preprocessing_evaluations': repeats*8, 'sampled_outcomes': repeats*shots}}
     protocol['source_review_sha256'] = hashlib.sha256(json.dumps(source_review(), sort_keys=True, separators=(',', ':')).encode()).hexdigest()
     rows = []
@@ -120,11 +151,12 @@ def benchmark(*, repeats=32, shots=64, seed=701):
     total_wall = perf_counter()-entire
     sums = {name: sum(row[name]['total_seconds'] for row in rows) for name in ('classical', 'simulator')}
     return {'schema': 'chronorealm.practical-comparison/1', 'protocol': protocol,
+            'phase_diagnostic': phase_diagnostic(),
             'recorded_at': datetime.now(timezone.utc).isoformat(), 'evidence_kind': 'LOCAL_CPU_OBSERVATIONS',
             'python': platform.python_version(), 'package_version': __version__,
             'source_sha256': {name: hashlib.sha256((Path(__file__).parent/name).read_bytes()).hexdigest()
                               if (Path(__file__).parent/name).is_file() else None
-                              for name in ('__init__.py', 'core.py', 'device_experiment.py', 'practical_evidence.py')},
+                              for name in ('__init__.py', 'core.py', 'device_experiment.py', 'practical_evidence.py', 'optimization.py')},
             'trials': rows,
             'all_output_sets_verified': all(row[name]['verified'] for row in rows for name in sums),
             'timing': {'whole_benchmark_seconds': total_wall, 'totals_seconds': sums,
@@ -150,6 +182,14 @@ def export_benchmark(directory, result):
                f"Trials: {result['protocol']['repeats']}; shots/trial: {result['protocol']['shots']}\n" +
                f"Total seconds: {result['timing']['totals_seconds']}\n\n" +
                result['next_action']+'\nPractical quantum advantage: NOT DEMONSTRATED.\nProduction acceptance: NOT ESTABLISHED.\n')
+    if 'phase_diagnostic' in result:
+        check = result['phase_diagnostic']
+        summary += '\nRelative phase check on the three-qubit search (ideal CPU probabilities)\n'
+        for case in check['cases']:
+            summary += (f"{case['phase_degrees_on_q2']} degrees: valid answers "
+                        f"{case['accepted_answer_probability']:.1%}, interference "
+                        f"{case['interference_probability_011']:.1%}\n")
+        summary += ('Phase check passed.\n' if check['passed'] else 'Phase check failed.\n')
     (directory/'SUMMARY.txt').write_text(summary, encoding='utf-8')
     manifest = {name: hashlib.sha256((directory/name).read_bytes()).hexdigest() for name in (*members, 'SUMMARY.txt')}
     (directory/'manifest.json').write_text(json.dumps({'algorithm': 'SHA-256', 'files': manifest}, indent=2)+'\n')
@@ -169,7 +209,7 @@ def main(argv=None):
         result = benchmark(repeats=args.repeats, shots=args.shots, seed=args.seed)
         summary = export_benchmark(args.output, result)
         print(summary)
-        if not result['all_output_sets_verified']:
+        if not result['all_output_sets_verified'] or not result['phase_diagnostic']['passed']:
             raise SystemExit(1)
     except (ValueError, OSError) as error:
         parser.error(str(error))

@@ -470,7 +470,7 @@ class Workbench:
             "Card", wraplength=680,
         ).pack(anchor="w", pady=(3, 0))
 
-        self._button(note, "Run CPU comparison & export", self.practical_check).pack(anchor="w", pady=(7, 0))
+        self._button(note, "Check answers and phase & export", self.practical_check).pack(anchor="w", pady=(7, 0))
 
     def practical_check(self, parent=None):
         """Small fixed CPU check, separate from the active project and QPU work."""
@@ -484,10 +484,13 @@ class Workbench:
         try:
             result = benchmark()
             summary = export_benchmark(destination, result)
-            self.message.set("CPU evidence exported. This fixed teaching example does not demonstrate quantum advantage.")
+            passed = result['all_output_sets_verified'] and result['phase_diagnostic']['passed']
+            self.message.set("Answer and phase checks passed. CPU evidence exported." if passed
+                             else "A CPU check failed. Open the exported summary for details.")
             if not supplied:
                 messagebox.showinfo("CPU comparison exported", summary + "\n" + str(destination), parent=self.root)
-            return {"directory": str(destination), "all_verified": result['all_output_sets_verified'],
+            return {"directory": str(destination), "all_verified": passed,
+                    "phase_verified": result['phase_diagnostic']['passed'],
                     "practical_quantum_advantage": result['practical_quantum_advantage']}
         except (ValueError, OSError) as error:
             self.message.set("CPU evidence check held: " + str(error))

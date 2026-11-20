@@ -285,7 +285,7 @@
                 "measure"
               ],
               "simulated_qubits": 2,
-              "aer_experiment_seconds": 0.0001024,
+              "aer_experiment_seconds": 0.0002403,
               "verified_hit_rate_wilson_95": [
                 0.3932559113685198,
                 0.7183466888495963
@@ -306,12 +306,12 @@
               "verified_hit_rate": 0.5625
             },
             "timing_seconds": {
-              "sample": 0.0004577999998218729,
-              "submit": 2.7299999601382297e-05,
-              "result_wait": 0.00042970000049535884,
-              "verify": 6.469999971159268e-05,
-              "count_format": 3.079999987676274e-05,
-              "count_verify": 3.1399999897985253e-05
+              "sample": 0.0008895999999367632,
+              "submit": 6.360000043059699e-05,
+              "result_wait": 0.0008244999989983626,
+              "verify": 0.00011830000221380033,
+              "count_format": 5.720000262954272e-05,
+              "count_verify": 5.6400000175926834e-05
             }
           },
           {
@@ -324,7 +324,7 @@
                 "measure"
               ],
               "simulated_qubits": 2,
-              "aer_experiment_seconds": 8.3e-05,
+              "aer_experiment_seconds": 0.0001792,
               "verified_hit_rate_wilson_95": [
                 0.33630882869327483,
                 0.6636911713067252
@@ -345,12 +345,12 @@
               "verified_hit_rate": 0.5
             },
             "timing_seconds": {
-              "sample": 0.0003364000003784895,
-              "submit": 2.5100000129896216e-05,
-              "result_wait": 0.0003102000000581029,
-              "verify": 4.389999958220869e-05,
-              "count_format": 2.1800000467919745e-05,
-              "count_verify": 1.9899999642802868e-05
+              "sample": 0.0007065999998303596,
+              "submit": 4.479999915929511e-05,
+              "result_wait": 0.0006600000015168916,
+              "verify": 8.789999992586672e-05,
+              "count_format": 4.239999907440506e-05,
+              "count_verify": 3.990000186604448e-05
             }
           }
         ],
@@ -377,7 +377,7 @@
                 "measure"
               ],
               "simulated_qubits": 2,
-              "aer_experiment_seconds": 8.56e-05,
+              "aer_experiment_seconds": 0.0001989,
               "verified_hit_rate_wilson_95": [
                 0.3932559113685198,
                 0.7183466888495963
@@ -398,12 +398,12 @@
               "verified_hit_rate": 0.5625
             },
             "timing_seconds": {
-              "sample": 0.0003623000002335175,
-              "submit": 2.6700000489654485e-05,
-              "result_wait": 0.00033489999987068586,
-              "verify": 4.019999960291898e-05,
-              "count_format": 1.82999992830446e-05,
-              "count_verify": 1.9600000086938962e-05
+              "sample": 0.0009132000013778452,
+              "submit": 7.339999865507707e-05,
+              "result_wait": 0.0008383000022149645,
+              "verify": 9.279999721911736e-05,
+              "count_format": 4.450000051292591e-05,
+              "count_verify": 4.13999987358693e-05
             }
           },
           {
@@ -416,7 +416,7 @@
                 "measure"
               ],
               "simulated_qubits": 2,
-              "aer_experiment_seconds": 8.22e-05,
+              "aer_experiment_seconds": 0.000193,
               "verified_hit_rate_wilson_95": [
                 0.3644951711897464,
                 0.6913061289193116
@@ -437,12 +437,12 @@
               "verified_hit_rate": 0.53125
             },
             "timing_seconds": {
-              "sample": 0.00032499999997526174,
-              "submit": 2.4199999643315095e-05,
-              "result_wait": 0.00030000000060681487,
-              "verify": 3.5600000046542846e-05,
-              "count_format": 1.6599999980826396e-05,
-              "count_verify": 1.6900000446185004e-05
+              "sample": 0.0007465000016964041,
+              "submit": 4.709999848273583e-05,
+              "result_wait": 0.0006981000005907845,
+              "verify": 7.790000017848797e-05,
+              "count_format": 3.640000068116933e-05,
+              "count_verify": 3.6699999327538535e-05
             }
           }
         ],
@@ -479,7 +479,7 @@
         ],
         "trace_real": 0.9999999920318168,
         "trace_imag": 0.0,
-        "wall_seconds": 0.014198199999555072
+        "wall_seconds": 0.03634500000043772
       },
       "complement": {
         "status": "COMPLETED",
@@ -490,7 +490,7 @@
         ],
         "trace_real": 0.9999999920318168,
         "trace_imag": 0.0,
-        "wall_seconds": 0.009778599999663129
+        "wall_seconds": 0.022452000001067063
       }
     },
     "versions": {
@@ -525,7 +525,7 @@
       "nodes_visited": 2,
       "forced_assignments": 1,
       "conflicts": 0,
-      "wall_seconds": 2.120000044669723e-05
+      "wall_seconds": 3.8300000596791506e-05
     },
     "candidates": {
       "direct": {
@@ -549,7 +549,7 @@
               "measure"
             ],
             "simulated_qubits": 2,
-            "aer_experiment_seconds": 5.83e-05,
+            "aer_experiment_seconds": 0.0001243,
             "verified_hit_rate_wilson_95": [
               0.15003898915214947,
               0.8499610108478506
@@ -567,12 +567,12 @@
             "verified_hit_rate": 0.5
           },
           "timing_seconds": {
-            "sample": 0.00032949999967968324,
-            "submit": 2.5999999706982635e-05,
-            "result_wait": 0.0003028999999514781,
-            "verify": 3.2300000384566374e-05,
-            "count_format": 1.5600000551785342e-05,
-            "count_verify": 1.4700000065204222e-05
+            "sample": 0.0007885999984864611,
+            "submit": 6.84000006003771e-05,
+            "result_wait": 0.0007188999989011791,
+            "verify": 6.7299999500392e-05,
+            "count_format": 3.2500000088475645e-05,
+            "count_verify": 2.979999771923758e-05
           }
         },
         "validation_batches": [
@@ -586,7 +586,7 @@
                 "measure"
               ],
               "simulated_qubits": 2,
-              "aer_experiment_seconds": 5.83e-05,
+              "aer_experiment_seconds": 0.0001243,
               "verified_hit_rate_wilson_95": [
                 0.15003898915214947,
                 0.8499610108478506
@@ -604,12 +604,12 @@
               "verified_hit_rate": 0.5
             },
             "timing_seconds": {
-              "sample": 0.00032949999967968324,
-              "submit": 2.5999999706982635e-05,
-              "result_wait": 0.0003028999999514781,
-              "verify": 3.2300000384566374e-05,
-              "count_format": 1.5600000551785342e-05,
-              "count_verify": 1.4700000065204222e-05
+              "sample": 0.0007885999984864611,
+              "submit": 6.84000006003771e-05,
+              "result_wait": 0.0007188999989011791,
+              "verify": 6.7299999500392e-05,
+              "count_format": 3.2500000088475645e-05,
+              "count_verify": 2.979999771923758e-05
             }
           }
         ],
@@ -646,7 +646,7 @@
               "measure"
             ],
             "simulated_qubits": 2,
-            "aer_experiment_seconds": 5.5e-05,
+            "aer_experiment_seconds": 0.0001134,
             "verified_hit_rate_wilson_95": [
               0.15003898915214947,
               0.8499610108478506
@@ -664,12 +664,12 @@
             "verified_hit_rate": 0.5
           },
           "timing_seconds": {
-            "sample": 0.0002967000000353437,
-            "submit": 2.2199999875738285e-05,
-            "result_wait": 0.0002739000001383829,
-            "verify": 2.8500000553322025e-05,
-            "count_format": 1.4000000192027073e-05,
-            "count_verify": 1.2800000149582047e-05
+            "sample": 0.0006318999985523988,
+            "submit": 4.2400002712383866e-05,
+            "result_wait": 0.0005882999976165593,
+            "verify": 5.810000220662914e-05,
+            "count_format": 2.7499998395796865e-05,
+            "count_verify": 2.640000093379058e-05
           }
         },
         "validation_batches": [
@@ -683,7 +683,7 @@
                 "measure"
               ],
               "simulated_qubits": 2,
-              "aer_experiment_seconds": 5.5e-05,
+              "aer_experiment_seconds": 0.0001134,
               "verified_hit_rate_wilson_95": [
                 0.15003898915214947,
                 0.8499610108478506
@@ -701,12 +701,12 @@
               "verified_hit_rate": 0.5
             },
             "timing_seconds": {
-              "sample": 0.0002967000000353437,
-              "submit": 2.2199999875738285e-05,
-              "result_wait": 0.0002739000001383829,
-              "verify": 2.8500000553322025e-05,
-              "count_format": 1.4000000192027073e-05,
-              "count_verify": 1.2800000149582047e-05
+              "sample": 0.0006318999985523988,
+              "submit": 4.2400002712383866e-05,
+              "result_wait": 0.0005882999976165593,
+              "verify": 5.810000220662914e-05,
+              "count_format": 2.7499998395796865e-05,
+              "count_verify": 2.640000093379058e-05
             }
           }
         ],
@@ -725,15 +725,15 @@
     },
     "local_cancellation_unconfirmed": false,
     "timing_seconds": {
-      "classical_reference": 2.5100000129896216e-05,
-      "backend_setup": 1.8680109000006269,
-      "compile_and_audit": 0.3743362999994133,
-      "noise_model_setup": 0.021009399999456946,
-      "density_preparation": 0.023996700000679994,
-      "calibration": 0.007834600000023784,
-      "budget_planning": 7.519999962823931e-05,
-      "holdout_validation": 0.0017904999995153048,
-      "workflow_wall": 2.2972638999999617
+      "classical_reference": 4.5500000851461664e-05,
+      "backend_setup": 5.785208000001148,
+      "compile_and_audit": 1.0388825000009092,
+      "noise_model_setup": 0.059123200000612997,
+      "density_preparation": 0.05883880000328645,
+      "calibration": 0.020280699998693308,
+      "budget_planning": 0.0001548000000184402,
+      "holdout_validation": 0.004311900000175228,
+      "workflow_wall": 6.967218099998718
     }
   }
 }

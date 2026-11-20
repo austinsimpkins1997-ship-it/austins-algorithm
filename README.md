@@ -2,9 +2,9 @@
 
 **A local workbench and Python toolkit for quantum-search experiments, bounded optimization, and evidence-based decision review.**
 
-**Workbench 0.3.2-alpha** · **Python package 0.3.2a1** · **Python 3.10+** · **[Apache-2.0](LICENSE)**
+**Workbench 0.3.2-alpha.2** · **Python package 0.3.2a2** · **Python 3.10+** · **[Apache-2.0](LICENSE)**
 
-Created by **Austin Gregory Simpkins and Chandler Middlebrooks / ChronoRealm**. Current source reviewed **November 17, 2026**.
+Created by **Austin Gregory Simpkins and Chandler Middlebrooks / ChronoRealm**. Current source reviewed **November 19, 2026**.
 
 Start with a small search problem, inspect each simulated step, compare a candidate with an exact classical answer, and save the evidence. For a decision involving several operating conditions, use Decision Review to compare plans, inspect missing checks, and rehearse recovery. The Windows application brings these workflows together with instructions, visualization, project files, and a clear Export action.
 
@@ -14,13 +14,13 @@ Start with a small search problem, inspect each simulated step, compare a candid
 
 | Item | Current implementation or record |
 |---|---|
-| Python distribution | `chronorealm-austins-algorithm` **0.3.2a1** |
-| Windows desktop | Workbench **0.3.2-alpha** |
+| Python distribution | `chronorealm-austins-algorithm` **0.3.2a2** |
+| Windows desktop | Workbench **0.3.2-alpha.2** |
 | Optional Python side system | `chronorealm-future-reader` **0.1.2** |
 | Existing weighted file formats | Application label **0.2.0-alpha**, replay-engine label **0.1.0** |
 | Declared project authors | Austin Gregory Simpkins and Chandler Middlebrooks / ChronoRealm |
 | Documentation editor | Codex, an AI assistant working on Austin's request |
-| Review date | November 17, 2026, using America/New_York for displayed local times |
+| Review date | November 19, 2026, using America/New_York for displayed local times |
 | Change attribution and signatures | Per-entry editor, date basis, editorial signature, source and content hash in the changelog |
 
 Project authorship follows the package and citation metadata. An entry's implementer follows that entry's evidence. Editorial signatures identify the record editor and review time. Cryptographic Git verification, artifact signing and hashes retain their own meanings. Historical implementers and original dates remain `UNKNOWN` where a record supplies insufficient detail. [Timestamped and attributed history](CHANGELOG.md)
@@ -49,26 +49,28 @@ On macOS or Linux, create the environment with `python3 -m venv .venv` and use `
 The 0.3 Workbench build is delivered to both maintained copies at this package-relative path. The dated release verification records its actual checks and installed-payload status.
 
 ```powershell
-& ".\.build\release-0.3.2a1\AustinsAlgorithmWorkbench.exe"
+& ".\.build\release-0.3.2a2\AustinsAlgorithmWorkbench.exe"
 ```
 
 This is a local build location. A fresh Git checkout needs the source installation above or its own executable build. The Windows executable bundles its Python runtime, Workbench assets, and Future Reader companion. It remains unsigned. Build instructions describe the required tools, output directory, and verification. [Build and check release artifacts](CONTRIBUTING.md#build-and-check-release-artifacts)
 
 ## Install the current Python distributions
 
-The Python release is `0.3.2a1`, matching the Workbench's `0.3.2-alpha` feature set using Python's alpha-version notation. The base wheel includes the main runtime, UI assets and offline HTML companion. The optional Python Future Reader controller is distributed alongside it as `chronorealm-future-reader` 0.1.2.
+The Python release is `0.3.2a2`, matching the Workbench's `0.3.2-alpha.2` feature set using Python's alpha-version notation. The base wheel includes the main runtime, UI assets and offline HTML companion. The optional Python Future Reader controller is distributed alongside it as `chronorealm-future-reader` 0.1.2.
 
 After placing both wheels in one directory, install the complete local Workbench functionality from that directory.
 
 ```powershell
-python -m pip install --no-index --find-links PATH-TO-WHEELS "chronorealm-austins-algorithm[future-reader]==0.3.2a1"
+python -m pip install --no-index --find-links PATH-TO-WHEELS "chronorealm-austins-algorithm[future-reader]==0.3.2a2"
 ```
 
-Installing the base wheel alone supports the CPU, optimization, Decision Review, Focus and export paths. The `[future-reader]` extra adds the native practice controller. Qiskit, IBM and Cirq still use their separate extras. Existing weighted archives retain their 0.2.0-alpha application and 0.1.0 replay-engine labels. These are file-format compatibility values. Installed library metadata reports 0.3.2a1.
+Installing the base wheel alone supports the CPU, optimization, Decision Review, Focus and export paths. The `[future-reader]` extra adds the native practice controller. Qiskit, IBM and Cirq still use their separate extras. Existing weighted archives retain their 0.2.0-alpha application and 0.1.0 replay-engine labels. These are file-format compatibility values. Installed library metadata reports 0.3.2a2.
 
 ## 0.3.2 practical-evidence update
 
-Overview now provides **Run CPU comparison & export**, with the same bounded `practical-check` CLI/Python workflow. It compares the complete public teaching answer set with direct classical construction, retains failed trials and exports source decisions alongside raw measurements. Physical comparisons now include finite-sample intervals, explicit usage status and usage collection after noncompletion. Read [the practical-evidence guide](PRACTICAL_EVIDENCE.md) for all 23 source dispositions and the acceptance boundary. Practical quantum advantage and production acceptance remain **NOT ESTABLISHED**; this is not a physical-device or universal-performance result. Current local 0.3.2 builds require their dated release closure before an installed-current claim or GitHub publication.
+The CPU comparison also checks the relative phase between the two valid answers, `011` and `101`. A modeled half-turn keeps both answers valid while changing the interference readout from 100% to 0%. Each export includes all three phase settings.
+
+Overview now provides **Check answers and phase & export**, with the same bounded `practical-check` CLI/Python workflow. It compares the complete public teaching answer set with direct classical construction, retains failed trials and exports source decisions alongside raw measurements. Physical comparisons now include finite-sample intervals, explicit usage status and usage collection after noncompletion. Read [the practical-evidence guide](PRACTICAL_EVIDENCE.md) for all 23 source dispositions and the acceptance boundary. Practical quantum advantage and production acceptance remain **NOT ESTABLISHED**; this is not a physical-device or universal-performance result. Current local 0.3.2 builds require their dated release closure before an installed-current claim or GitHub publication.
 
 ## Capabilities
 
@@ -225,7 +227,7 @@ Use [the complete Planning guide and first session](PLANNING.md), [the matched b
 
 ## Security Lab and bounded sequencing — November 17, 2026
 
-**0.3.2-alpha / Python 0.3.2a1** adds a native Security Lab page, CLI and isolated managed job for named synthetic authentication-policy fixtures. Inspect account retry limits, shared modeled login/reset/OTP budgets, restart persistence, expiry and unrelated-user behavior. All accounts and attempt outcomes are synthetic; this is not an authentication service, live test runner or password/hash cracker.
+**0.3.1-alpha / Python 0.3.1a1** added a native Security Lab page, CLI and isolated managed job for named synthetic authentication-policy fixtures. Inspect account retry limits, shared modeled login/reset/OTP budgets, restart persistence, expiry and unrelated-user behavior. All accounts and attempt outcomes are synthetic; this is not an authentication service, live test runner or password/hash cracker.
 
 The lab reuses the existing Planning solver for an illustrative defense-selection model and the existing Austin three-bit oracle for bounded sequencing. It orders preparation, oracle/diffusion, measurement, independent verification and evidence capture; compares finite round counts; selects using declared ideal probabilities; and checks a fresh seed. Optional Qiskit exports the public teaching circuit as OpenQASM. CPU oracle preprocessing, samples and elapsed time are recorded. **Quantum cracking advantage is NOT DEMONSTRATED.** No infinite resource, universal optimum, cryptographic break or physical-QPU result is claimed.
 
@@ -252,7 +254,7 @@ The software evidence includes the November 15, 2026 local Python-package delive
 
 Local delivery evidence is under `.build/package-current-20261115/verification.json`, `installed-verification.json`, and `distributions-current/build-result.json`. These generated files are available in the maintained local folders. A fresh checkout should build and verify its own artifacts using the contribution guide. Earlier test matrices, benchmark timings, CI runs and builds keep their original date and revision in the changelog and owning guides. [Change history](CHANGELOG.md) · [Build verification](CONTRIBUTING.md#build-and-check-release-artifacts)
 
-That November 15 delivery used Python library **0.2.6a1**, desktop **0.2.6-alpha**, and optional companion **0.1.2**. The current release is **0.3.2a1 / 0.3.2-alpha**. The weighted archive's application label **0.2.0-alpha** and replay-engine label **0.1.0** are file-format compatibility values. Decision Review has its own versioned project and archive formats. The current verifier preserves the exact known older package-version source variant while rejecting other rehashed source changes.
+That November 15 delivery used Python library **0.2.6a1**, desktop **0.2.6-alpha**, and optional companion **0.1.2**. The current release is **0.3.2a2 / 0.3.2-alpha.2**. The weighted archive's application label **0.2.0-alpha** and replay-engine label **0.1.0** are file-format compatibility values. Decision Review has its own versioned project and archive formats. The current verifier preserves the exact known older package-version source variant while rejecting other rehashed source changes.
 
 Full-suite results above used Python 3.12.15. The earlier system Python 3.14 attempt encountered a missing `secrets` standard-library module. Other operating-system and SDK combinations retain their separate dated evidence. A test result carries its tested scope and environment.
 
@@ -272,7 +274,7 @@ Both maintained source copies passed the full suite after this repair: **724 tes
 
 The six packaged commands passed locally: phase-cover regression, both diffuser regressions, placement receipt verification, placement identity checking and placement replay. Placement replay matched **8/8 histograms**, with no changed cell evaluations or model decisions. A new dependency-free release guard checks all four baseline versions and SDK pins, and legacy timing tests now construct their missing-timing condition explicitly. The earlier full-suite totals above retain their original revision; this repair has its own verification record.
 
-[Dated baseline identities, comparisons and limits](examples/smoke-regression/BASELINE_REFRESH_2026-11-15.json) · [Failed historical run](https://github.com/austinsimpkins1997-ship-it/austins-algorithm/actions/runs/43763164723). Local logs and recovery files are under `.build/manila-repair-20261115/`. At the November 15 record cutoff, hosted confirmation was pending. The follow-up [GitHub run 43768634823](https://github.com/austinsimpkins1997-ship-it/austins-algorithm/actions/runs/43768634823) passed for commit 7419bc7. That repair concerned **0.2.6a1 / 0.2.6-alpha**; the new **0.3.2a1 / 0.3.2-alpha** update has separate local verification and awaits its own publication.
+[Dated baseline identities, comparisons and limits](examples/smoke-regression/BASELINE_REFRESH_2026-11-15.json) · [Failed historical run](https://github.com/austinsimpkins1997-ship-it/austins-algorithm/actions/runs/43763164723). Local logs and recovery files are under `.build/manila-repair-20261115/`. At the November 15 record cutoff, hosted confirmation was pending. The follow-up [GitHub run 43768634823](https://github.com/austinsimpkins1997-ship-it/austins-algorithm/actions/runs/43768634823) passed for commit 7419bc7. That repair concerned **0.2.6a1 / 0.2.6-alpha**; the new **0.3.2a2 / 0.3.2-alpha.2** update has separate local verification and awaits its own publication.
 
 For a future package-version update, run the release guard and regenerate and compare the pinned smoke baselines before publishing. Do not edit old version labels to manufacture a match. Preserve the old receipts and verify the packaged source archive, including every mandatory replay command.
 
@@ -306,4 +308,6 @@ This source-documentation revision has its own review signature and integrity re
 
 Historical 0.3.1 update review: `2026-11-17T12:39:06.106302+00:00` (UTC observation clock). Editor and editorial signature: `Codex (AI assistant) / 2026-11-17T12:39:06.106302+00:00 / Security Lab and bounded sequencing`. Earlier documentation signatures retain their original revision scope. Final artifacts and local cryptographic integrity records are separate from Windows publisher trust.
 
-Current 0.3.2 documentation review: `2026-11-17T14:35:18.004992+00:00` (UTC observation clock). Editor and editorial signature: `Codex (AI assistant) / 2026-11-17T14:35:18.004992+00:00 / practical evidence, provider accounting and source review`. New local test, build, inventory, signature and recovery records are in `.build/evidence-20261117/`. Practical advantage and production acceptance remain unestablished.
+Historical 0.3.2a1 documentation review: `2026-11-17T14:35:18.004992+00:00` (UTC observation clock). Editor and editorial signature: `Codex (AI assistant) / 2026-11-17T14:35:18.004992+00:00 / practical evidence, provider accounting and source review`. New local test, build, inventory, signature and recovery records are in `.build/evidence-20261117/`. Practical advantage and production acceptance remain unestablished.
+
+Current editorial signature — Codex / 2026-11-19T23:20:19+00:00 / 0.3.2a2 phase diagnostic.

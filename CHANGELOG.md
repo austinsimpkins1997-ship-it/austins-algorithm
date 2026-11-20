@@ -1,6 +1,6 @@
 # Changelog
 
-Austin's Algorithm package version is 0.3.2a1. These records cover the published Git history and the local implementation milestones in [the roadmap](ROADMAP.md). Local times use the UTC offset shown.
+Austin's Algorithm package version is 0.3.2a2. These records cover the published Git history and the local implementation milestones in [the roadmap](ROADMAP.md). Local times use the UTC offset shown.
 
 ## Change-record attribution and signatures
 
@@ -13,6 +13,21 @@ Editorial signatures are textual attestations by the record editor. Git signatur
 New records should state the actual date with offset, editor name and role, source or verification evidence, and editorial signature. Use UNKNOWN for missing original attribution. Keep earlier entries and their provenance when recording a correction. Local observations, simulations, device measurements and published releases retain separate statuses.
 
 ## Current changes
+
+### 2026-11-19T23:20:19+00:00 — Relative-phase diagnostic (0.3.2a2)
+
+> Recorded change date — 2026-11-19T23:20:19+00:00 (UTC).
+>
+> Original implementer and review editor — Codex (AI assistant).
+>
+> Editorial signature — Codex / 2026-11-19T23:20:19+00:00 / CR-phase-f111adc23d.
+>
+> Source basis — Workbench phase study, public comparison command and phase regression suite.
+>
+> Change-text SHA-256 — `f111adc23d4e3b31ba666c636c72805582eda52f9e7ffc4694941893e2755cd0`.
+
+- Add a phase-sensitive control to the fixed three-qubit CPU comparison in the Workbench, CLI and evidence export. Check the simulated preparation against an independently constructed Qiskit readout when the SDK is available.
+- Preserve earlier saved-project runtime version compatibility. Update package metadata and the operator guides for this alpha revision.
 
 ### 2026-11-17T14:19:58.529925+00:00 — Practical evidence, source review and provider accounting (0.3.2 alpha)
 

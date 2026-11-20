@@ -278,4 +278,8 @@ The native Security Lab page runs named synthetic policy checks and bounded publ
 
 ## Practical evidence (0.3.2)
 
-Overview → **Run CPU comparison & export** creates a new evidence folder for the fixed public teaching task. It preserves the active project. The bounded CPU comparison exports protocol, raw trials, a readable summary, all 23 source decisions and a checksum manifest. It cannot declare quantum advantage or production acceptance. See [the guide](PRACTICAL_EVIDENCE.md).
+Overview → **Check answers and phase & export** creates a new evidence folder for the fixed public teaching task. It preserves the active project. The bounded CPU comparison exports protocol, raw trials, a readable summary, all 23 source decisions and a checksum manifest. It cannot declare quantum advantage or production acceptance. See [the guide](PRACTICAL_EVIDENCE.md).
+
+## Relative phase check
+
+The CPU comparison also checks the relative phase between the two valid answers, `011` and `101`. A modeled half-turn keeps both answers valid while changing the interference readout from 100% to 0%. Each export includes all three phase settings. The offline Workbench preview produces the state. After a rotation of 0, 90 or 180 degrees on q2, CX(q2,q1) and H(q2) convert relative phase into an observable probability for 011. The expected values are 1, 1/2 and 0. Probabilities include all outcomes. The phase study runs outside the timed answer comparison. A failed check remains in the export and causes a nonzero CLI exit. This circuit diagnostic measures an ideal model. Hardware noise and application speed require separate evidence.

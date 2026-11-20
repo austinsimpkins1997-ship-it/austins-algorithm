@@ -4,7 +4,7 @@ Reviewed November 17, 2026. Editor: Codex (AI assistant), at Austin's request. T
 
 ## Run the matched check
 
-In the Windows Workbench, open Overview and select **Run CPU comparison & export**. Choose a parent folder; a new timestamped evidence folder is created. This runs a fixed public teaching problem, independently checks complete answer sets, and exports protocol, raw trials, readable summary, the source decision ledger and integrity manifest. It does not modify the active project or contact a provider.
+In the Windows Workbench, open Overview and select **Check answers and phase & export**. Choose a parent folder; a new timestamped evidence folder is created. This runs a fixed public teaching problem, independently checks complete answer sets, and exports protocol, raw trials, readable summary, the source decision ledger and integrity manifest. It does not modify the active project or contact a provider.
 
 ```powershell
 python -m austins_algorithm practical-check --output NEW-EVIDENCE-DIRECTORY --repeats 32 --shots 64 --seed 701
@@ -59,3 +59,7 @@ The Tessa preprint supports examining loading, local connectivity, basis count, 
 The source suites, built-wheel identity, actual installed hidden native workflows and bounded planning references are technical evidence for the local alpha. They do not substitute for a human operator, independent reviewer or named deployment approver. The prepared acceptance protocol and signed phase-one record are under `.build/acceptance-20261117`; no operator measurements were invented. Windows publisher signing, hosted identity/tenant controls, deployment security/privacy/accessibility and production acceptance remain unverified. The unrelated legacy homophone browser journey remains separate and unresolved.
 
 To resume the physical experiment, configure a legitimate provider account locally, identify a useful nontrivial workload, named backend/instance and allowed shots/time/paid-use budget, then use the existing preflight and explicitly authorized submission. Keep keys out of chat and exports. To accept the program in an organization, name the deployment, accountable owner and representative human checks first. This documentation is not approval or a schedule.
+
+## Relative phase check
+
+The CPU comparison also checks the relative phase between the two valid answers, `011` and `101`. A modeled half-turn keeps both answers valid while changing the interference readout from 100% to 0%. Each export includes all three phase settings. The offline Workbench preview produces the state. After a rotation of 0, 90 or 180 degrees on q2, CX(q2,q1) and H(q2) convert relative phase into an observable probability for 011. The expected values are 1, 1/2 and 0. Probabilities include all outcomes. The phase study runs outside the timed answer comparison. A failed check remains in the export and causes a nonzero CLI exit. This circuit diagnostic measures an ideal model. Hardware noise and application speed require separate evidence.
